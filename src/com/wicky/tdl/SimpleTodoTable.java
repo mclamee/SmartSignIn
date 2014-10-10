@@ -123,6 +123,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         rowSorter.setSortable(1, false);
         rowSorter.setSortable(2, false);
         rowSorter.setSortable(3, false);
+        rowSorter.setSortable(4, false);
         this.setRowSorter(rowSorter);
     }
 
@@ -138,6 +139,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         colmodel.getColumn(1).setPreferredWidth(320);
         colmodel.getColumn(2).setPreferredWidth(200);
         colmodel.getColumn(3).setPreferredWidth(30);
+        colmodel.getColumn(4).setPreferredWidth(30);
     }
     
     @Override

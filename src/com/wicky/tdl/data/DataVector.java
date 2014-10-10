@@ -14,17 +14,24 @@ public class DataVector extends Vector<SubVector> implements Serializable{
             Messages.getString("RecordView.table.column_title_id"),
             Messages.getString("RecordView.table.column_title_qrcode"),
             Messages.getString("RecordView.table.column_title_name"),
+            Messages.getString("RecordView.table.column_title_salutaion"),
             Messages.getString("RecordView.table.column_title_choose")
             }));
     
-    private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{String.class, String.class, String.class, Boolean.class});
+    private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{
+    		String.class, 
+    		String.class, 
+    		String.class, 
+    		String.class, 
+    		Boolean.class
+    		});
     
-    public synchronized boolean add(String qrCode, String name, Boolean flag) {
-        return this.add(new SubVector(qrCode, name, flag));
+    public synchronized boolean add(String qrCode, String name, String salutaion, Boolean flag) {
+        return this.add(new SubVector(qrCode, name, salutaion, flag));
     }
     
-    public synchronized boolean add(String qrCode, String name) {
-        return this.add(new SubVector(qrCode,name));
+    public synchronized boolean add(String qrCode, String name, String salutaion) {
+        return this.add(new SubVector(qrCode, name, salutaion));
     }
     
     public Vector<String> getTitles() {
@@ -58,7 +65,7 @@ public class DataVector extends Vector<SubVector> implements Serializable{
     }
     
     public synchronized boolean add(Vector<Object> dat) {
-        return this.add((String)dat.get(1), (String)dat.get(2), (Boolean)dat.get(3));
+        return this.add((String)dat.get(1), (String)dat.get(2), (String)dat.get(3), (Boolean)dat.get(4));
     }
     
     @Override

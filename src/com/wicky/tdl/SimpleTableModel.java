@@ -18,11 +18,11 @@ public class SimpleTableModel extends DefaultTableModel {
     
     public SimpleTableModel() {
         data = new DataVector();
-        data.add("NO1024","薛鹏飞", false);
-        data.add("NO1025","吕静泽", false);
-        data.add("NO1026","张曜嵩", false);
-        data.add("NO1027","王宁", false);
-        data.add("NO1028","杨洁", false);
+        data.add("NO1024","薛鹏飞", "先生", false);
+        data.add("NO1025","吕静泽", "先生", false);
+        data.add("NO1026","张曜嵩", "先生", false);
+        data.add("NO1027","王宁", "先生", false);
+        data.add("NO1028","杨洁", "女士", false);
         
         this.setDataVector(data, data.getTitles());
     }
@@ -48,7 +48,7 @@ public class SimpleTableModel extends DefaultTableModel {
     }
     
     public int addRow() {
-        insertRow(getRowCount(), new SubVector("", ""));
+        insertRow(getRowCount(), new SubVector("", "", ""));
         return this.data.size();
     }
     
