@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.vguang.VguangApi;
 import com.wicky.util.DrawableUtils;
 
 
@@ -46,8 +47,8 @@ public class MainView extends JFrame implements ActionListener {
 	private JButton jbtSetup;
 	
 	public static RecordView RECORD_VIEW;
-	public static SetupView SETUP_VIEW = new SetupView();
-	public static SignInView SIGNIN_VIEW = new SignInView();
+	public static SetupView SETUP_VIEW;
+	public static SignInView SIGNIN_VIEW;
 	
 	/**
 	 * 界面初始化.
@@ -114,7 +115,11 @@ public class MainView extends JFrame implements ActionListener {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		mJframe = new MainView();		
+		mJframe = new MainView();
+		
+		RECORD_VIEW = new RecordView();
+        SETUP_VIEW = new SetupView();
+        SIGNIN_VIEW = new SignInView();
 	}	
 	
 	public static JFrame getFrame()
@@ -140,11 +145,8 @@ public class MainView extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == jbtRecord){
 			mContentPanel.remove(mMainJpanel); 
-			if(RECORD_VIEW == null){
-			    RECORD_VIEW = new RecordView();
-			}
 			mContentPanel.add(RECORD_VIEW); 
-//			VguangApi.closeDevice();
+			closeDevice();
 			mContentPanel.revalidate();
 			mContentPanel.repaint(); 
 		}else if(e.getSource() == jbtSetup){
@@ -163,11 +165,16 @@ public class MainView extends JFrame implements ActionListener {
 		}
 	}
 	
+	public void closeDevice(){
+	    //关闭设备
+	    VguangApi.closeDevice();
+	}
+	
 	public void applySettingsAndOpenDevice(){
         //应用设置
-//        SETUP_VIEW.applySetting();
+        SETUP_VIEW.applySetting();
         //打开设备
-//        VguangApi.openDevice();
+        VguangApi.openDevice();
 	}
 	
 	public JPanel getMainJpanel()

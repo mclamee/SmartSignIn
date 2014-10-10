@@ -1,5 +1,6 @@
 package com.ssi.view;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,41 +41,11 @@ public class SetupView extends JPanel implements ActionListener{
 	 * Create the application.
 	 */
 	public SetupView() {
+        Dimension frameSize = MainView.getFrame().getSize();
+        int frameWidth = (int)frameSize.getWidth();
+        int frameHeight = (int)frameSize.getHeight();
+        
 		//初始化控件
-		initialize();
-	}
-
-	//应用设置
-	public void applySetting(){
-		//设置QR状态
-		VguangApi.setQRable(chckbxQr.isSelected());
-		//设置DM状态
-		VguangApi.setDMable(checkboxDm.isSelected());
-		//设置Bar状态
-		VguangApi.setBarcode(chckbxBar.isSelected());
-		
-		// 设置解码间隔时间，单位毫秒
-		VguangApi.setDeodeIntervalTime(StringToInt(textDecodeTime.getText(), 300));
-		
-		//设置自动休眠状态
-		VguangApi.setAI(chckbxAi.isSelected());
-		int aiLimit = StringToInt(textAiLimit.getText(), 20);
-		if(aiLimit < 1 || aiLimit > 64){
-			aiLimit = 20;
-		}
-		// 设置自动休眠灵敏度
-		VguangApi.setAISensitivity(aiLimit);
-		// 设置自动休眠响应时间，单位秒
-		VguangApi.setAIResponseTime(StringToInt(textAiResponeTime.getText(), 30));
-
-		//设置扬声器状态
-		VguangApi.setBeepable(chckbxBeep.isSelected());
-	}
-	
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
         this.setOpaque(false);
         this.setLayout(null);
         
@@ -292,6 +263,33 @@ public class SetupView extends JPanel implements ActionListener{
 		this.add(btnNewButton);
 
 	}
+	
+	//应用设置
+    public void applySetting(){
+        //设置QR状态
+        VguangApi.setQRable(chckbxQr.isSelected());
+        //设置DM状态
+        VguangApi.setDMable(checkboxDm.isSelected());
+        //设置Bar状态
+        VguangApi.setBarcode(chckbxBar.isSelected());
+        
+        // 设置解码间隔时间，单位毫秒
+        VguangApi.setDeodeIntervalTime(StringToInt(textDecodeTime.getText(), 300));
+        
+        //设置自动休眠状态
+        VguangApi.setAI(chckbxAi.isSelected());
+        int aiLimit = StringToInt(textAiLimit.getText(), 20);
+        if(aiLimit < 1 || aiLimit > 64){
+            aiLimit = 20;
+        }
+        // 设置自动休眠灵敏度
+        VguangApi.setAISensitivity(aiLimit);
+        // 设置自动休眠响应时间，单位秒
+        VguangApi.setAIResponseTime(StringToInt(textAiResponeTime.getText(), 30));
+
+        //设置扬声器状态
+        VguangApi.setBeepable(chckbxBeep.isSelected());
+    }
 	
 	public void setResultString(final String str){
 		//在主线程中更新UI

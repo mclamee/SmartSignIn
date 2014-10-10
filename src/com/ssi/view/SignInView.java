@@ -1,6 +1,7 @@
 package com.ssi.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +32,10 @@ public class SignInView extends JPanel implements ActionListener {
 	 * 初始化按钮. 初始化按钮图片背景、大小、鼠标点击事件
 	 */
 	public SignInView() {
-
+        Dimension frameSize = MainView.getFrame().getSize();
+        int frameWidth = (int)frameSize.getWidth();
+        int frameHeight = (int)frameSize.getHeight();
+        
 	    ImageIcon imgHome = new ImageIcon("res/home.png");
 		jbtHome = DrawableUtils.createImageButton("", imgHome, null);
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
@@ -39,14 +43,15 @@ public class SignInView extends JPanel implements ActionListener {
 		DrawableUtils.setMouseListener(jbtHome, "res/home");
 
 		resultArea = new JTextArea("");
-		resultArea.setBounds(40, 230, 560, 400);
+		resultArea.setBounds(40, 230, frameWidth - 43, 300);
 		resultArea.setOpaque(false);
 		resultArea.setEditable(false);
 		resultArea.setLineWrap(true);
 		resultArea.setForeground(Color.BLACK);
 		Font font = new Font("宋体", Font.BOLD, 70);
 		resultArea.setFont(font);
-		resultArea.setText("王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。王先生，欢迎光临拓德公司。");
+		resultArea.setForeground(Color.blue);
+		resultArea.setText("王先生，欢迎光临拓德公司。");
 
 		setOpaque(false);
 		setLayout(null);
