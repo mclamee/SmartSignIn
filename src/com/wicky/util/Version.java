@@ -1,4 +1,4 @@
-package com.iflytek.util;
+package com.wicky.util;
 
 public class Version {
 	/**

@@ -1,6 +1,6 @@
 package com.vguang;
 
-import com.iflytek.view.MainView;
+import com.ssi.view.MainView;
 
 public class VguangApi {
 	public static final int DEVICE_VALID = 1;  //设备有效
@@ -21,7 +21,7 @@ public class VguangApi {
 		
 		if(arch.indexOf("64") != -1) {
 			// x64
-			System.loadLibrary("x64/win7/dll_vguang_java");
+		    System.loadLibrary("x64/win7/dll_vguang_java");
 		}else if(os.indexOf("XP") != -1) {
 			// x86 WinXP
 			System.loadLibrary("x32/xp/dll_vguang_java");
@@ -65,6 +65,8 @@ public class VguangApi {
 	public static void decodeCallBack(byte[] decodeStrBytes) {
 		String str = new String(decodeStrBytes);
 		MainView.SETUP_VIEW.setResultString(str);
+		MainView.SIGNIN_VIEW.setResultString(str);
+        System.out.println("decodeCallBack, str: " + str);
 		return;
 	}
 	/**
@@ -73,6 +75,7 @@ public class VguangApi {
 	 */
 	public static void deviceStatusCallBack(int status) {
 		MainView.SETUP_VIEW.setDeviceStatus(status);
+        System.out.println("deviceStatusCallBack, status" + status);
 		return;
 	}
 }

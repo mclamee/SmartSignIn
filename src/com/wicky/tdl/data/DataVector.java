@@ -5,18 +5,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import com.ssi.i18n.Messages;
+
 public class DataVector extends Vector<SubVector> implements Serializable{
     private static final long serialVersionUID = -999861995984107110L;
     
-    private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{"Id","Desc","Detail", "Done"}));
+    private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
+            Messages.getString("RecordView.table.column_title_id"),
+            Messages.getString("RecordView.table.column_title_qrcode"),
+            Messages.getString("RecordView.table.column_title_name"),
+            Messages.getString("RecordView.table.column_title_choose")
+            }));
+    
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{String.class, String.class, String.class, Boolean.class});
     
-    public synchronized boolean add(String desc, String detail, Boolean flag) {
-        return this.add(new SubVector(desc, detail, flag));
+    public synchronized boolean add(String qrCode, String name, Boolean flag) {
+        return this.add(new SubVector(qrCode, name, flag));
     }
     
-    public synchronized boolean add(String desc, String detail) {
-        return this.add(new SubVector(desc,detail));
+    public synchronized boolean add(String qrCode, String name) {
+        return this.add(new SubVector(qrCode,name));
     }
     
     public Vector<String> getTitles() {
@@ -56,13 +64,13 @@ public class DataVector extends Vector<SubVector> implements Serializable{
     @Override
     public synchronized String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\n");
+        sb.append("{\n"); //$NON-NLS-1$
         
         for (int i = 0;i < this.size();i++) {
             SubVector sub = this.get(i);
-            sb.append("  ").append(i+1).append(":\"").append(sub).append("\",\n");
+            sb.append("  ").append(i+1).append(":\"").append(sub).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        sb.append("}\n");
+        sb.append("}\n"); //$NON-NLS-1$
         return sb.toString();
     }
 }

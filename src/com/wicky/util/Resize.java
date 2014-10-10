@@ -1,4 +1,4 @@
-package com.iflytek.util;
+package com.wicky.util;
 
 	import java.awt.Graphics2D;
 	import java.awt.RenderingHints;

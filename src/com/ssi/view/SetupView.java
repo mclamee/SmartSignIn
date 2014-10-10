@@ -1,4 +1,4 @@
-package com.iflytek.view;
+package com.ssi.view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -16,17 +16,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.iflytek.speech.SpeechConfig.RATE;
-import com.iflytek.speech.SpeechError;
-import com.iflytek.speech.SynthesizerPlayer;
-import com.iflytek.speech.SynthesizerPlayerListener;
-import com.iflytek.util.DrawableUtils;
-import com.iflytek.util.Version;
 import com.vguang.VguangApi;
+import com.wicky.util.DrawableUtils;
 
 public class SetupView extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 8096656238618262028L;
+	
+	private JButton jbtHome;
 	private JTextArea decodeTextArea;
 	private JLabel lblDeviceStatus;
 	private JTextField textDecodeTime;
@@ -37,21 +34,18 @@ public class SetupView extends JPanel implements ActionListener{
 	private JCheckBox chckbxBar;
 	private JCheckBox chckbxBeep;
 	private JCheckBox chckbxAi;
-	
+
+	   
 	/**
 	 * Create the application.
 	 */
 	public SetupView() {
 		//初始化控件
 		initialize();
-		//应用设置
-		applySetting();
-		//打开设备
-		VguangApi.openDevice();
 	}
 
 	//应用设置
-	private void applySetting(){
+	public void applySetting(){
 		//设置QR状态
 		VguangApi.setQRable(chckbxQr.isSelected());
 		//设置DM状态
@@ -296,58 +290,14 @@ public class SetupView extends JPanel implements ActionListener{
 		});
 		btnNewButton.setBounds(234, 413, 93, 23);
 		this.add(btnNewButton);
-		
-		if (SynthesizerPlayer.getSynthesizerPlayer() == null)
-			SynthesizerPlayer.createSynthesizerPlayer("appid=" + Version.getAppid());
-		
-		
-		// FULL SCREEN
-//        JButton fullsButton = new JButton("全屏显示");  
-//        fullsButton.setBounds(0, 413, 93, 23);
-//        fullsButton.addActionListener(new java.awt.event.ActionListener() {  
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {  
-//                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();  
-//                //通过调用GraphicsEnvironment的getDefaultScreenDevice方法获得当前的屏幕设备了  
-//                GraphicsDevice gd = ge.getDefaultScreenDevice();  
-//                // 全屏设置  
-//                gd.setFullScreenWindow(frame);  
-//            }  
-//        });  
-//        this.add(fullsButton);  
+
 	}
-	
-	private String last = "";
 	
 	public void setResultString(final String str){
 		//在主线程中更新UI
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				decodeTextArea.setText(str);
-				
-				System.out.println("str: " + str);
-				
-				///////////////////////////////////////
-				SynthesizerPlayer synthesizer = SynthesizerPlayer
-						.getSynthesizerPlayer();
-				
-				System.out.println(synthesizer.getState());
-				
-				if(!last.equals(str) || !"PLAYING".equals(synthesizer.getState().toString())) {
-					if("PLAYING".equals(synthesizer.getState().toString())) {
-						synthesizer.cancel();
-					}
-					synthesizer.setVolume(100);
-					
-					synthesizer.setSampleRate(RATE.rate22k);
-					// 设置发音人为小宇
-					synthesizer.setVoiceName("xiaoyan");
-					// 设置朗读速度为50
-					synthesizer.setSpeed(60);
-					// 合成文本为TEXT_CONTENT的句子，设置监听器为mSynListener
-					synthesizer.playText(decodeTextArea.getText().trim() + "，王先生、欢迎光临", null, mSynListener);
-					
-					last = str;
-				}
 			}
 		});
 	}
@@ -377,41 +327,7 @@ public class SetupView extends JPanel implements ActionListener{
 		}
 		return defautValue;
 	}
-	
-	
-	private SynthesizerPlayerListener mSynListener = new SynthesizerPlayerListener() {
 
-		@Override
-		public void onEnd(SpeechError error) {
-		}
-
-		@Override
-		public void onBufferPercent(int percent, int beginPos, int endPos,
-				String args) {
-
-		}
-
-		@Override
-		public void onPlayBegin() {
-
-		}
-
-		@Override
-		public void onPlayPaused() {
-
-		}
-
-		@Override
-		public void onPlayPercent(int percent, int beginPos, int endPos) {
-		}
-
-		@Override
-		public void onPlayResumed() {
-
-		}
-	};
-	private JButton jbtHome;
-	
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == jbtHome) {

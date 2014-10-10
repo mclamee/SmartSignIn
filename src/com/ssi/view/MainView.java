@@ -1,4 +1,4 @@
-package com.iflytek.view;
+package com.ssi.view;
 /* The Java Version MSC Project
  * All rights reserved.
  *
@@ -26,7 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.iflytek.util.DrawableUtils;
+import com.wicky.util.DrawableUtils;
 
 
 
@@ -47,7 +47,7 @@ public class MainView extends JFrame implements ActionListener {
 	
 	public static RecordView RECORD_VIEW;
 	public static SetupView SETUP_VIEW = new SetupView();
-	public static SignInView SIGNIN_VIEW;
+	public static SignInView SIGNIN_VIEW = new SignInView();
 	
 	/**
 	 * 界面初始化.
@@ -140,22 +140,34 @@ public class MainView extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == jbtRecord){
 			mContentPanel.remove(mMainJpanel); 
-			RECORD_VIEW = new RecordView();
+			if(RECORD_VIEW == null){
+			    RECORD_VIEW = new RecordView();
+			}
 			mContentPanel.add(RECORD_VIEW); 
+//			VguangApi.closeDevice();
 			mContentPanel.revalidate();
 			mContentPanel.repaint(); 
 		}else if(e.getSource() == jbtSetup){
 			mContentPanel.remove(mMainJpanel); 
-			mContentPanel.add(SETUP_VIEW); 
+			SETUP_VIEW = new SetupView();
+			mContentPanel.add(SETUP_VIEW);
+			applySettingsAndOpenDevice();
 			mContentPanel.revalidate();
 			mContentPanel.repaint(); 
 		}else if(e.getSource() == jbtSignIn){
-			mContentPanel.remove(mMainJpanel); 
-			SIGNIN_VIEW = new SignInView();
+			mContentPanel.remove(mMainJpanel);
 			mContentPanel.add(SIGNIN_VIEW); 
+			applySettingsAndOpenDevice();
 			mContentPanel.revalidate();
-			mContentPanel.repaint(); 		
+			mContentPanel.repaint();
 		}
+	}
+	
+	public void applySettingsAndOpenDevice(){
+        //应用设置
+//        SETUP_VIEW.applySetting();
+        //打开设备
+//        VguangApi.openDevice();
 	}
 	
 	public JPanel getMainJpanel()

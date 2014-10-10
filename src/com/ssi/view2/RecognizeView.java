@@ -1,4 +1,4 @@
-package com.iflytek.view;
+package com.ssi.view2;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,8 +18,9 @@ import com.iflytek.speech.RecognizerListener;
 import com.iflytek.speech.RecognizerResult;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SpeechRecognizer;
-import com.iflytek.util.DrawableUtils;
-import com.iflytek.util.Version;
+import com.ssi.view.MainView;
+import com.wicky.util.DrawableUtils;
+import com.wicky.util.Version;
 
 
 public class RecognizeView extends JPanel implements ActionListener {	

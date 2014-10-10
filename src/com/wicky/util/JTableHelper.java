@@ -1,4 +1,4 @@
-package com.iflytek.util;
+package com.wicky.util;
 /*
 This file is part of JNesBR.
 
@@ -26,7 +26,7 @@ import javax.swing.JViewport;
  */
 public class JTableHelper {
 
-    public static void scrollToCenter(JTable table, int rowIndex, int vColIndex) {
+    public static void scrollCellToCenter(JTable table, int rowIndex, int vColIndex) {
         if (!(table.getParent() instanceof JViewport)) {
             return;
         }

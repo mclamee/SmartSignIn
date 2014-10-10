@@ -1,6 +1,5 @@
-package com.iflytek.view;
+package com.ssi.view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,10 +21,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
-import com.iflytek.util.DrawableUtils;
-import com.iflytek.util.JTableHelper;
+import com.ssi.i18n.Messages;
 import com.wicky.tdl.SimpleTodoTable;
+import com.wicky.util.DrawableUtils;
+import com.wicky.util.JTableHelper;
 
 public class RecordView extends JPanel implements ActionListener {
     private static final long serialVersionUID = 4479482587513212049L;
@@ -36,73 +37,81 @@ public class RecordView extends JPanel implements ActionListener {
 	
     private SimpleTodoTable todoTable;
     
-    private JTextField jtfFilter;
+    private JTextField tfSearch;
     
     public RecordView() {
-        todoTable = new SimpleTodoTable();
-        todoTable.setOpaque(false);
-        todoTable.setBackground(null);
-        
-        ImageIcon imgHome = new ImageIcon("res/home.png");
-        btnHome = DrawableUtils.createImageButton("", imgHome, null);
-        btnHome.setBounds(20, 20, imgHome.getIconWidth(),
-                imgHome.getIconHeight());
-        DrawableUtils.setMouseListener(btnHome, "res/home");
-        btnHome.addActionListener(this);
+        Dimension frameSize = MainView.getFrame().getSize();
+        int frameWidth = (int)frameSize.getWidth();
+        int frameHeight = (int)frameSize.getHeight();
         
         this.setOpaque(false);
         this.setLayout(null);
         
+        todoTable = new SimpleTodoTable();
+        
+        ImageIcon imgHome = new ImageIcon("res/home.png"); //$NON-NLS-1$
+        btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
+        btnHome.setBounds(20, 20, imgHome.getIconWidth(),
+                imgHome.getIconHeight());
+        DrawableUtils.setMouseListener(btnHome, "res/home"); //$NON-NLS-1$
+        btnHome.addActionListener(this);
         this.add(btnHome);
         
-        this.add(getNorthPanel());
-        this.add(getCenterPanel());
-        this.add(getSouthPanel());
+        JButton btnAdd2 = getBtnAdd();
+        btnAdd2.setBounds(100, 15, 150, 25);
+        this.add(btnAdd2);
         
-    }
-
-    private JPanel getNorthPanel() {
-        JPanel northPanel = new JPanel();
-        northPanel.setBounds(0, 0, 100, 100);
-        northPanel.add(getBtnAdd());
-        northPanel.add(getBtnClear());
-        return northPanel;
+        JButton btnClear2 = getBtnClear();
+        btnClear2.setBounds(100, 40, 150, 25);
+        this.add(btnClear2);
+        
+        JScrollPane panelTable = getPanelTable();
+        panelTable.setBounds(0, 70, frameWidth - 3, frameHeight - 200);
+        this.add(panelTable);
+        
+        JLabel labelSearch = getLabelSearch();
+        labelSearch.setBounds(0, frameHeight - 120, 170, 30);
+        this.add(labelSearch);
+        
+        JTextField tfSearch2 = getTfSearch();
+        tfSearch2.setBounds(170, frameHeight - 120, frameWidth - 170 - 10, 30);
+        this.add(tfSearch2);
+        
     }
     
     private JButton getBtnAdd() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnAdd = new JButton("Add New");
+        btnAdd = new JButton(Messages.getString("RecordView.btn_add")); //$NON-NLS-1$
         btnAdd.setPreferredSize(btnSize);
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = todoTable.dataModel.addRow();
                 todoTable.stopCellEditing();
-                jtfFilter.setText(null);
+                tfSearch.setText(null);
                 todoTable.refreshTable();
                 ListSelectionModel model = todoTable.getSelectionModel();
                 model.clearSelection();
                 model.setSelectionInterval(--row, row);
-                JTableHelper.scrollToCenter(todoTable, row, 1);
+                JTableHelper.scrollCellToCenter(todoTable, row, 1);
             }
         });
-        btnAdd.setBounds(100, 20, 150, 25);
         return btnAdd;
     }
     
     private JButton getBtnClear() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnClear = new JButton("Delete Finishied");
+        btnClear = new JButton(Messages.getString("RecordView.btn_clear")); //$NON-NLS-1$
         btnClear.setPreferredSize(btnSize);
         btnClear.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
-                jtfFilter.setText(null);
-                int result = JOptionPane.showConfirmDialog(todoTable, "Are you sure to delete all the finishied entries?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                tfSearch.setText(null);
+                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("RecordView.btn_clear_confirm"), Messages.getString("RecordView.btn_clear_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
                 if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
                     for (int rowId = 0;rowId < rowCount;rowId++) {
@@ -119,70 +128,61 @@ public class RecordView extends JPanel implements ActionListener {
         return btnClear;
     }
     
-    private JScrollPane getCenterPanel() {
-        JFrame frame = MainView.getFrame();
-        Dimension size = frame.getSize();
-        
+    private JScrollPane getPanelTable() {
         JScrollPane scrollpane = new JScrollPane(todoTable);
-        scrollpane.setBounds(0, 100, (int)size.getWidth(), (int)(size.getHeight() - 200));
         scrollpane.setOpaque(false);
-        
         scrollpane.setBackground(null);
         scrollpane.setBorder(null);
         
         return scrollpane;
     }
-    
-    private JPanel getSouthPanel() {
-        JFrame frame = MainView.getFrame();
-        Dimension size = frame.getSize();
-        
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBounds(100, 100 , 500, 500);
-        
-        JLabel label = new JLabel("  Specify a word to search:   ");
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                jtfFilter.requestFocus();
-                jtfFilter.selectAll();
-            }
-        });
-        label.setToolTipText("Type anything here. Tip: Use \"true\" or \"false\" to filter entry status. ");
-        
-        jtfFilter = new JTextField();
-        jtfFilter.setForeground(Color.RED);
-        jtfFilter.setFont(jtfFilter.getFont().deriveFont(Font.BOLD));
-        
-        panel.add(label, BorderLayout.WEST);
-        panel.add(jtfFilter, BorderLayout.CENTER);
-        panel.add(new JLabel(" "), BorderLayout.EAST);
 
-        jtfFilter.addFocusListener(new FocusAdapter() {
+    private JTextField getTfSearch() {
+        tfSearch = new JTextField();
+        tfSearch.setForeground(Color.RED);
+        tfSearch.setFont(tfSearch.getFont().deriveFont(Font.BOLD));
+        tfSearch.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
                 super.focusGained(e);
                 todoTable.stopCellEditing();
             }
         });
-        jtfFilter.addKeyListener(new KeyAdapter() {
+        tfSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                    jtfFilter.setText(null);
+                    tfSearch.setText(null);
                 }
             }
         });
-        jtfFilter.getDocument().addDocumentListener(todoTable);
-        return panel;
+        tfSearch.getDocument().addDocumentListener(todoTable);
+        return tfSearch;
     }
 
-	
+    private JLabel getLabelSearch() {
+        JLabel label = new JLabel(Messages.getString("RecordView.label_search")); //$NON-NLS-1$
+        label.setHorizontalAlignment(SwingConstants.RIGHT);
+        label.setHorizontalTextPosition(SwingConstants.RIGHT);
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                tfSearch.requestFocus();
+                tfSearch.selectAll();
+            }
+        });
+        label.setToolTipText(Messages.getString("RecordView.label_search_tip")); //$NON-NLS-1$
+        return label;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnHome) {
+            todoTable.stopCellEditing();
+            todoTable.refreshTable();
+            
             JFrame frame = MainView.getFrame();
             frame.getContentPane().remove(this);
             JPanel panel = ((MainView) frame).getMainJpanel();

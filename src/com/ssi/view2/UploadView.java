@@ -1,4 +1,4 @@
-package com.iflytek.view;
+package com.ssi.view2;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -22,8 +22,9 @@ import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SpeechListener;
 import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechUser;
-import com.iflytek.util.DrawableUtils;
-import com.iflytek.util.Version;
+import com.ssi.view.MainView;
+import com.wicky.util.DrawableUtils;
+import com.wicky.util.Version;
 
 public class UploadView extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;

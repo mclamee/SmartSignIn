@@ -24,6 +24,8 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
 
+import com.ssi.i18n.Messages;
+
 
 /**
  * Main class for the simple todo table project
@@ -56,7 +58,6 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                stopCellEditing();
                 
                 int r = SimpleTodoTable.this.rowAtPoint(e.getPoint());
                 if (r >= 0 && r < SimpleTodoTable.this.getRowCount()) {
@@ -69,8 +70,9 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                 if (rowindex < 0)
                     return;
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
+                    stopCellEditing();
                     JPopupMenu popup = new JPopupMenu();
-                    JMenuItem delItm = new JMenuItem("Delete");
+                    JMenuItem delItm = new JMenuItem(Messages.getString("RecordView.table.menu_delete")); //$NON-NLS-1$
                     delItm.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -98,7 +100,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                         stopCellEditing();
                         int rowCount = dataModel.getRowCount();
                         if(rowCount != 0){
-                            int result = JOptionPane.showConfirmDialog(SimpleTodoTable.this, "Are you sure to delete this row?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                            int result = JOptionPane.showConfirmDialog(SimpleTodoTable.this, Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
                             if(result == JOptionPane.YES_OPTION){
                                 dataModel.removeRow(selectedRow);
                                 if(selectedRow < dataModel.getRowCount()){

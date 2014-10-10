@@ -18,11 +18,11 @@ public class SimpleTableModel extends DefaultTableModel {
     
     public SimpleTableModel() {
         data = new DataVector();
-        data.add("The 1st Task I need to do","10%", false);
-        data.add("The Task In Progress","1. Plan(50%) 2. Get it Done", false);
-        data.add("The Task Already Done","100%", true);
-        data.add("Call William in the afternoon","18702832137", false);
-        data.add("Write feedback Email to William","quiet_dog@163.com", false);
+        data.add("NO1024","薛鹏飞", false);
+        data.add("NO1025","吕静泽", false);
+        data.add("NO1026","张曜嵩", false);
+        data.add("NO1027","王宁", false);
+        data.add("NO1028","杨洁", false);
         
         this.setDataVector(data, data.getTitles());
     }

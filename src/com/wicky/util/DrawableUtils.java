@@ -1,4 +1,4 @@
-package com.iflytek.util;
+package com.wicky.util;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
