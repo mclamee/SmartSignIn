@@ -12,11 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import com.iflytek.speech.SpeechConfig.RATE;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SynthesizerPlayer;
 import com.iflytek.speech.SynthesizerPlayerListener;
-import com.iflytek.speech.SpeechConfig.RATE;
+import com.ssi.model.SignInModel;
 import com.wicky.util.DrawableUtils;
+import com.wicky.util.StringUtil;
 import com.wicky.util.Version;
 
 public class SignInView extends JPanel implements ActionListener {
@@ -27,6 +29,8 @@ public class SignInView extends JPanel implements ActionListener {
 	private JTextArea resultArea;
 
 	private String lastCallBack = "";
+	
+	private SignInModel model = new SignInModel();
 	
 	/**
 	 * 初始化按钮. 初始化按钮图片背景、大小、鼠标点击事件
@@ -51,7 +55,6 @@ public class SignInView extends JPanel implements ActionListener {
 		Font font = new Font("宋体", Font.BOLD, 70);
 		resultArea.setFont(font);
 		resultArea.setForeground(Color.blue);
-		resultArea.setText("王先生，欢迎光临拓德公司。");
 
 		setOpaque(false);
 		setLayout(null);
@@ -134,6 +137,8 @@ public class SignInView extends JPanel implements ActionListener {
      * @author williamz@synnex.com
      */
     public void setResultString(String callback) {
+    	resultArea.setText("");
+    	
         SynthesizerPlayer synthesizer = SynthesizerPlayer
                 .getSynthesizerPlayer();
         
@@ -151,9 +156,17 @@ public class SignInView extends JPanel implements ActionListener {
             // 设置朗读速度为50
             synthesizer.setSpeed(60);
             // 合成文本为TEXT_CONTENT的句子，设置监听器为mSynListener
-            synthesizer.playText(callback.trim() + "，王先生、欢迎光临", null, mSynListener);
+            String message = model.lookupMessage(callback);
+            if(!StringUtil.isEmpty(message)){
+            	synthesizer.playText(message, null, mSynListener);
+            	resultArea.setText(message);
+            }
             
             lastCallBack = callback;
         }
     }
+
+	public void initDataMap() {
+		this.model.initDataMap();
+	}
 }

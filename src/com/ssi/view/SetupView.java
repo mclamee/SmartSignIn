@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -36,7 +37,8 @@ public class SetupView extends JPanel implements ActionListener{
 	private JCheckBox chckbxBeep;
 	private JCheckBox chckbxAi;
 
-	   
+	public static Locale currentLocale = new Locale("zh", "CN");
+	
 	/**
 	 * Create the application.
 	 */

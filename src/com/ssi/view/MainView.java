@@ -173,6 +173,8 @@ public class MainView extends JFrame implements ActionListener {
 	public void applySettingsAndOpenDevice(){
         //应用设置
         SETUP_VIEW.applySetting();
+        //初始化数据
+        SIGNIN_VIEW.initDataMap();
         //打开设备
         VguangApi.openDevice();
 	}

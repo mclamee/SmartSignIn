@@ -24,6 +24,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
 import com.ssi.i18n.Messages;
+import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 import com.wicky.util.DrawableUtils;
 import com.wicky.util.JTableHelper;
@@ -111,7 +112,9 @@ public class RecordView extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
                 tfSearch.setText(null);
-                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("RecordView.btn_clear_confirm"), Messages.getString("RecordView.btn_clear_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("RecordView.btn_clear_confirm"), 
+                		Messages.getString("RecordView.btn_clear_confirm_title"), 
+                		JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
                 if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
                     for (int rowId = 0;rowId < rowCount;rowId++) {
@@ -191,5 +194,9 @@ public class RecordView extends JPanel implements ActionListener {
             frame.getContentPane().repaint();
         }
     }
+
+	public SimpleTableModel getTableModel() {
+		return todoTable.dataModel;
+	}
 
 }

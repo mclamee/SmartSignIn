@@ -21,8 +21,21 @@ public class SubVector extends Vector<Object> implements Serializable{
     public synchronized String toString() {
         return "{"+Messages.getString("RecordView.table.column_title_qrcode")+":\""+this.get(1)
                 +"\", "+Messages.getString("RecordView.table.column_title_name")+":\""+this.get(2)
-                +"\", "+Messages.getString("RecordView.table.column_title_choose")+":\""+this.get(3)
-                +"\", "+Messages.getString("RecordView.table.column_title_salutaion")+":\""+this.get(4)
+                +"\", "+Messages.getString("RecordView.table.column_title_salutaion")+":\""+this.get(3)
+                +"\", "+Messages.getString("RecordView.table.column_title_choose")+":\""+this.get(4)
                 +"\"}";
+    }
+    
+    public String getQrCode(){
+    	return (String) this.get(1);
+    }
+    public String getName(){
+    	return (String) this.get(2);
+    }
+    public String getSalutaion(){
+    	return (String) this.get(3);
+    }
+    public String getChoose(){
+    	return (String) this.get(4);
     }
 }

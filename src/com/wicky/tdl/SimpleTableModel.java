@@ -82,4 +82,12 @@ public class SimpleTableModel extends DefaultTableModel {
         super.removeRow(row);
     }
 
+	public DataVector getData() {
+		return data;
+	}
+
+	public void setData(DataVector data) {
+		this.data = data;
+	}
+
 }
