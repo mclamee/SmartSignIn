@@ -16,9 +16,14 @@ package com.ssi.view;
 
 
 import java.awt.BorderLayout;
+import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,8 +31,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.vguang.VguangApi;
 import com.wicky.util.DrawableUtils;
+import com.wicky.util.Resize;
 
 
 
@@ -57,8 +62,12 @@ public class MainView extends JFrame implements ActionListener {
 	public MainView()
 	{
 //		Setting.saveLogFile(LOG_LEVEL.all, "./msc.log");
+	    
+	    System.out.println("Current Resoluation: "+DrawableUtils.getScreenWidth()+" x "+DrawableUtils.getScreenHeight());
+	    
 		//设置界面大小，背景图片
 		ImageIcon background = new ImageIcon("img/index_bg.png");
+		background = resizeImageToScreenSize(background);
 		JLabel label = new JLabel(background);
 		label.setBounds(0, 0, background.getIconWidth(), background
 	                .getIconHeight());
@@ -106,9 +115,31 @@ public class MainView extends JFrame implements ActionListener {
 		
 		setLocationRelativeTo(null); 
 		setContentPane(mContentPanel);
+		
+        /** 
+         * true无边框 全屏显示 
+         * false有边框 全屏显示 
+         */  
+        this.setUndecorated(true);  
 		setVisible(true);
+		
+	    // 全屏设置  
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        gd.setFullScreenWindow(this);
 	}
-	
+
+    private ImageIcon resizeImageToScreenSize(ImageIcon imageIcon) {
+        Image img = imageIcon.getImage();
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        // Draw the image on to the buffered image
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+        imageIcon = new ImageIcon(Resize.rize(bimage, 
+                DrawableUtils.getScreenWidth(), DrawableUtils.getScreenHeight()));
+        return imageIcon;
+    }
 	
 	/**
 	 * Demo入口函数.
@@ -167,16 +198,16 @@ public class MainView extends JFrame implements ActionListener {
 	
 	public void closeDevice(){
 	    //关闭设备
-	    VguangApi.closeDevice();
+//	    VguangApi.closeDevice();
 	}
 	
 	public void applySettingsAndOpenDevice(){
         //应用设置
-        SETUP_VIEW.applySetting();
+//        SETUP_VIEW.applySetting();
         //初始化数据
         SIGNIN_VIEW.initDataMap();
         //打开设备
-        VguangApi.openDevice();
+//        VguangApi.openDevice();
 	}
 	
 	public JPanel getMainJpanel()
