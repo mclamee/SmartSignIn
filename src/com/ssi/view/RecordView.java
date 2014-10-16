@@ -36,7 +36,8 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton btnAdd;
     private JButton btnClear;
 	
-    private SimpleTodoTable todoTable;
+    // init simple to-do table at first
+    private SimpleTodoTable todoTable = new SimpleTodoTable();
     
     private JTextField tfSearch;
     
@@ -47,8 +48,6 @@ public class RecordView extends JPanel implements ActionListener {
         
         this.setOpaque(false);
         this.setLayout(null);
-        
-        todoTable = new SimpleTodoTable();
         
         ImageIcon imgHome = new ImageIcon("res/home.png"); //$NON-NLS-1$
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
@@ -67,7 +66,7 @@ public class RecordView extends JPanel implements ActionListener {
         this.add(btnClear2);
         
         JScrollPane panelTable = getPanelTable();
-        panelTable.setBounds(0, 70, frameWidth - 3, frameHeight - 200);
+        panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
         
         JLabel labelSearch = getLabelSearch();

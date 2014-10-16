@@ -66,7 +66,15 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.openDevice();
 			}
 		});
-		buttonBegin.setBounds(123, 413, 93, 23);
+		
+		
+		int btnLine1YIdx = 180 + 380;
+		int btnLine2YIdx = 180 + 413;
+		
+		int inputLineYIdx = 180 + 78;
+		int statusLineYIdx = 180 + 324;
+		
+        buttonBegin.setBounds(123, btnLine2YIdx, 93, 23);
 		this.add(buttonBegin);
 		
 		JButton buttonEnd = new JButton("关闭设备");
@@ -77,7 +85,7 @@ public class SetupView extends JPanel implements ActionListener{
 				lblDeviceStatus.setEnabled(false);
 			}
 		});
-		buttonEnd.setBounds(347, 413, 93, 23);
+		buttonEnd.setBounds(347, btnLine2YIdx, 93, 23);
 		this.add(buttonEnd);
 		
 		JButton buttonQuit = new JButton("退出程序");
@@ -87,20 +95,20 @@ public class SetupView extends JPanel implements ActionListener{
 				System.exit(0);
 			}
 		});
-		buttonQuit.setBounds(464, 413, 93, 23);
+		buttonQuit.setBounds(464, btnLine2YIdx, 93, 23);
 		this.add(buttonQuit);
 		
 		decodeTextArea = new JTextArea();
 		decodeTextArea.setRows(5);
 		decodeTextArea.setLineWrap(true);
 		decodeTextArea.setColumns(10);
-		decodeTextArea.setBounds(113, 78, 347, 211);
+		decodeTextArea.setBounds(113, inputLineYIdx, 347, 211);
 		this.add(decodeTextArea);
 		
 		JLabel label = new JLabel("解码结果：");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
 		label.setFont(new Font("宋体", Font.BOLD, 14));
-		label.setBounds(10, 78, 93, 23);
+		label.setBounds(10, inputLineYIdx, 93, 23);
 		this.add(label);
 		
 		chckbxQr = new JCheckBox("QR");
@@ -179,7 +187,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(1);
 			}
 		});
-		buttonBeep1.setBounds(265, 380, 93, 23);
+		buttonBeep1.setBounds(265, btnLine1YIdx, 93, 23);
 		this.add(buttonBeep1);
 		
 		JButton buttonBeep2 = new JButton("响二声");
@@ -188,7 +196,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(2);
 			}
 		});
-		buttonBeep2.setBounds(374, 380, 93, 23);
+		buttonBeep2.setBounds(374, btnLine1YIdx, 93, 23);
 		this.add(buttonBeep2);
 		
 		JButton buttonBeep3 = new JButton("响三声");
@@ -197,17 +205,17 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(3);
 			}
 		});
-		buttonBeep3.setBounds(477, 380, 93, 23);
+		buttonBeep3.setBounds(477, btnLine1YIdx, 93, 23);
 		this.add(buttonBeep3);
 		
 		JLabel lblNewLabel_5 = new JLabel("设备状态：");
 		lblNewLabel_5.setFont(new Font("宋体", Font.BOLD, 14));
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_5.setBounds(10, 324, 93, 23);
+		lblNewLabel_5.setBounds(10, statusLineYIdx, 93, 23);
 		this.add(lblNewLabel_5);
 		
 		lblDeviceStatus = new JLabel("设备无效");
-		lblDeviceStatus.setBounds(122, 324, 93, 23);
+		lblDeviceStatus.setBounds(122, statusLineYIdx, 93, 23);
 		lblDeviceStatus.setEnabled(false);
 		this.add(lblDeviceStatus);
 		
@@ -217,7 +225,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.lightOn();
 			}
 		});
-		buttonLightOn.setBounds(113, 380, 66, 23);
+		buttonLightOn.setBounds(113, btnLine1YIdx, 66, 23);
 		this.add(buttonLightOn);
 		
 		JButton buttonLightOff = new JButton("关灯");
@@ -226,7 +234,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.lightOff();
 			}
 		});
-		buttonLightOff.setBounds(189, 380, 66, 23);
+		buttonLightOff.setBounds(189, btnLine1YIdx, 66, 23);
 		this.add(buttonLightOff);
 		
 		JLabel label_2 = new JLabel("毫秒");
@@ -261,7 +269,7 @@ public class SetupView extends JPanel implements ActionListener{
 				applySetting();
 			}
 		});
-		btnNewButton.setBounds(234, 413, 93, 23);
+		btnNewButton.setBounds(234, btnLine2YIdx, 93, 23);
 		this.add(btnNewButton);
 
 	}
