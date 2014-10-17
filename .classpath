@@ -8,5 +8,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/json-jena-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/Msc.jar"/>
+	<classpathentry kind="lib" path="lib/beautyeye_lnf.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

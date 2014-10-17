@@ -1,6 +1,6 @@
 package com.vguang;
 
-import com.ssi.view.MainView;
+import com.ssi.main.Application;
 
 public class VguangApi {
 	public static final int DEVICE_VALID = 1;  //设备有效
@@ -64,8 +64,8 @@ public class VguangApi {
 	 */
 	public static void decodeCallBack(byte[] decodeStrBytes) {
 		String str = new String(decodeStrBytes);
-		MainView.SETUP_VIEW.setResultString(str);
-		MainView.SIGNIN_VIEW.setResultString(str);
+		Application.SETUP_VIEW.setResultString(str);
+		Application.SIGNIN_VIEW.setResultString(str);
         System.out.println("decodeCallBack, str: " + str);
 		return;
 	}
@@ -74,7 +74,7 @@ public class VguangApi {
 	 * @param status 设备状态,DEVICE_VALID(1)-设备有效,DEVICE_INVALID(2)-设备无效 
 	 */
 	public static void deviceStatusCallBack(int status) {
-		MainView.SETUP_VIEW.setDeviceStatus(status);
+		Application.SETUP_VIEW.setDeviceStatus(status);
         System.out.println("deviceStatusCallBack, status" + status);
 		return;
 	}

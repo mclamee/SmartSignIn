@@ -3,7 +3,7 @@ package com.ssi.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ssi.view.MainView;
+import com.ssi.main.Application;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.data.DataVector;
 import com.wicky.tdl.data.SubVector;
@@ -32,7 +32,7 @@ public class SignInModel {
 		return name+salutaion+","+tailMessage;
 	}
 	public void initDataMap() {
-		SimpleTableModel tableModel = MainView.RECORD_VIEW.getTableModel();
+		SimpleTableModel tableModel = Application.RECORD_VIEW.getTableModel();
 		DataVector data = tableModel.getData();
 		for (SubVector subVector : data) {
 			dataMap.put(StringUtil.trimAndUpper(subVector.getQrCode()), subVector);

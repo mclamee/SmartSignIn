@@ -24,6 +24,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
 import com.ssi.i18n.Messages;
+import com.ssi.main.Application;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 import com.wicky.util.DrawableUtils;
@@ -42,7 +43,7 @@ public class RecordView extends JPanel implements ActionListener {
     private JTextField tfSearch;
     
     public RecordView() {
-        Dimension frameSize = MainView.getFrame().getSize();
+        Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
         
@@ -185,7 +186,7 @@ public class RecordView extends JPanel implements ActionListener {
             todoTable.stopCellEditing();
             todoTable.refreshTable();
             
-            JFrame frame = MainView.getFrame();
+            JFrame frame = Application.MAIN_FRAME;
             frame.getContentPane().remove(this);
             JPanel panel = ((MainView) frame).getMainJpanel();
             frame.getContentPane().add(panel);

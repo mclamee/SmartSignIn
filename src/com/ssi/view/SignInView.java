@@ -16,6 +16,7 @@ import com.iflytek.speech.SpeechConfig.RATE;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SynthesizerPlayer;
 import com.iflytek.speech.SynthesizerPlayerListener;
+import com.ssi.main.Application;
 import com.ssi.model.SignInModel;
 import com.wicky.util.DrawableUtils;
 import com.wicky.util.StringUtil;
@@ -36,7 +37,7 @@ public class SignInView extends JPanel implements ActionListener {
 	 * 初始化按钮. 初始化按钮图片背景、大小、鼠标点击事件
 	 */
 	public SignInView() {
-        Dimension frameSize = MainView.getFrame().getSize();
+        Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
         
@@ -89,7 +90,7 @@ public class SignInView extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	    if (e.getSource() == jbtHome) {
-			JFrame frame = MainView.getFrame();
+			JFrame frame = Application.MAIN_FRAME;
 			frame.getContentPane().remove(this);
 			JPanel panel = ((MainView) frame).getMainJpanel();
 			frame.getContentPane().add(panel);

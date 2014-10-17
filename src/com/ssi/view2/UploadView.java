@@ -22,6 +22,7 @@ import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SpeechListener;
 import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechUser;
+import com.ssi.main.Application;
 import com.ssi.view.MainView;
 import com.wicky.util.DrawableUtils;
 import com.wicky.util.Version;
@@ -122,7 +123,7 @@ public class UploadView extends JPanel implements ActionListener {
 			SpeechRecognizer recognizer = SpeechRecognizer.getRecognizer();
 			recognizer.startListening(resultListener, "sms", null, null);
 		} else if (e.getSource() == jbtHome) {
-			JFrame frame = MainView.getFrame();
+			JFrame frame = Application.MAIN_FRAME;
 			frame.getContentPane().remove(this);
 			JPanel panel = ((MainView) frame).getMainJpanel();
 			frame.getContentPane().add(panel);

@@ -18,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.ssi.main.Application;
 import com.vguang.VguangApi;
 import com.wicky.util.DrawableUtils;
 
@@ -43,7 +44,7 @@ public class SetupView extends JPanel implements ActionListener{
 	 * Create the application.
 	 */
 	public SetupView() {
-        Dimension frameSize = MainView.getFrame().getSize();
+        Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
         
@@ -339,7 +340,7 @@ public class SetupView extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == jbtHome) {
-            JFrame frame = MainView.getFrame();
+            JFrame frame = Application.MAIN_FRAME;
             frame.getContentPane().remove(this);
             JPanel panel = ((MainView) frame).getMainJpanel();
             frame.getContentPane().add(panel);

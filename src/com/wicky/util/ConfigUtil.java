@@ -6,16 +6,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author williamz<quiet_dog@163.com> 2014-08-13
  */
 public class ConfigUtil {
-    private static final String FILE_PATH = System.getProperty("user.home") + "/ssi_config.properties";
-    private static final String FILE_PATH2 = System.getProperty("user.dir") + "/ssi_config.properties";
+    private static final String CONFIG_FILENAME = "/ssi_config.properties";
+    private static final String CONFIG_PATH_USER_HOME = System.getProperty("user.home") + CONFIG_FILENAME;
+    private static final String CONFIG_PATH_APP_DIR = System.getProperty("user.dir") + CONFIG_FILENAME;
 
     private static Properties CONFIG = new Properties();
 
@@ -23,13 +27,13 @@ public class ConfigUtil {
         BufferedInputStream inStream = null;
         try {
 
-            File configFile = new File(FILE_PATH);
+            File configFile = new File(CONFIG_PATH_USER_HOME);
             if (!configFile.exists() || !configFile.isFile()) {
-                configFile = new File(FILE_PATH2);
+                configFile = new File(CONFIG_PATH_APP_DIR);
             }
             inStream = new BufferedInputStream(new FileInputStream(configFile));
             CONFIG.load(inStream);
-            CONFIG.setProperty("configFilePath", FILE_PATH2);
+            CONFIG.setProperty("configFilePath", configFile.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -41,6 +45,8 @@ public class ConfigUtil {
                 }
             }
         }
+        System.setProperty("PROFILE_HOME", CONFIG.getProperty("configFilePath"));
+        System.setProperty("PID", ManagementFactory.getRuntimeMXBean().getName());
     }
 
     // public static void main(String[] args) {
@@ -51,6 +57,9 @@ public class ConfigUtil {
     private ConfigUtil() {
     }
 
+    public static void init(){
+    }
+    
     public static String get(String key) {
         String property = CONFIG.getProperty(key);
         if (property == null) return "";

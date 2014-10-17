@@ -18,6 +18,7 @@ import com.iflytek.speech.RecognizerListener;
 import com.iflytek.speech.RecognizerResult;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SpeechRecognizer;
+import com.ssi.main.Application;
 import com.ssi.view.MainView;
 import com.wicky.util.DrawableUtils;
 import com.wicky.util.Version;
@@ -127,7 +128,7 @@ public class RecognizeView extends JPanel implements ActionListener {
 			recognizer.cancel();
 		}else if(e.getSource() == jbtHome)
 		{
-			JFrame frame = MainView.getFrame();
+			JFrame frame = Application.MAIN_FRAME;
 			frame.getContentPane().remove(this);
 			JPanel panel = ((MainView) frame).getMainJpanel();
 			frame.getContentPane().add(panel);
