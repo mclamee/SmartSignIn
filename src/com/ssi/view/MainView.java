@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import org.apache.log4j.Logger;
 
 import com.ssi.main.Application;
+import com.vguang.VguangApi;
 import com.wicky.util.DrawableUtils;
 import com.wicky.util.ResizeUtil;
 
@@ -168,16 +169,16 @@ public class MainView extends JFrame implements ActionListener {
 	
 	public void closeDevice(){
 	    //关闭设备
-//	    VguangApi.closeDevice();
+	    VguangApi.closeDevice();
 	}
 	
 	public void applySettingsAndOpenDevice(){
         //应用设置
-//        SETUP_VIEW.applySetting();
+		Application.SETUP_VIEW.applySetting();
         //初始化数据
 	    Application.SIGNIN_VIEW.initDataMap();
         //打开设备
-//        VguangApi.openDevice();
+        VguangApi.openDevice();
 	}
 	
 	public JPanel getMainJpanel()

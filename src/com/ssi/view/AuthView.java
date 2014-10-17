@@ -15,10 +15,10 @@ import javax.swing.JTextField;
 import com.ssi.main.Application;
 import com.wicky.util.ConfigUtil;
 
-public class AuthFrame extends JFrame{
+public class AuthView extends JFrame{
     private static final long serialVersionUID = -4907857102233644371L;
     
-    public AuthFrame() {
+    public AuthView() {
         setTitle("Authrization");
         
         ImageIcon background = new ImageIcon("img/auth_bg.png");
@@ -83,9 +83,9 @@ public class AuthFrame extends JFrame{
                 ConfigUtil.save();
                 if(Application.authorization()){
                     Application.initMainFrame();
-                    AuthFrame.this.dispose();
+                    AuthView.this.dispose();
                 }else{
-                    JOptionPane.showMessageDialog(AuthFrame.this, "Authoriation failed! Please check your inputs.");
+                    JOptionPane.showMessageDialog(AuthView.this, "Authoriation failed! Please check your inputs.");
                 }
             }
         });

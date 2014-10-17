@@ -8,13 +8,11 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JFrame;
-
 import org.apache.log4j.Logger;
 
 import sun.misc.BASE64Decoder;
 
-import com.ssi.view.AuthFrame;
+import com.ssi.view.AuthView;
 import com.ssi.view.MainView;
 import com.ssi.view.RecordView;
 import com.ssi.view.SetupView;
@@ -32,8 +30,8 @@ public class Application {
     
     public static Logger LOG = Logger.getLogger(Application.class);
     
-    public static JFrame MAIN_FRAME;
-    public static JFrame AUTH_FRAME;
+    public static MainView MAIN_FRAME;
+    public static AuthView AUTH_FRAME;
     
     public static RecordView RECORD_VIEW;
     public static SetupView SETUP_VIEW;
@@ -53,7 +51,7 @@ public class Application {
     }
 
     public static void initAuthFrame() {
-        AUTH_FRAME = new AuthFrame();
+        AUTH_FRAME = new AuthView();
     }
 
     public static void initMainFrame() {
