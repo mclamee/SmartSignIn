@@ -1,2 +1,0 @@
-java -Djava.library.path=D:\snx_work_mrp\SmartSignIn\bin -classpath ".;D:\snx_work_mrp\SmartSignIn\bin;D:\snx_work_mrp\SmartSignIn\lib\json-jena-1.0.jar;D:\snx_work_mrp\SmartSignIn\lib\Msc.jar;D:\snx_work_mrp\SmartSignIn" com.iflytek.view.MainView
-pause

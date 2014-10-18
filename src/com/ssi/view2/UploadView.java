@@ -23,9 +23,9 @@ import com.iflytek.speech.SpeechListener;
 import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechUser;
 import com.ssi.main.Application;
+import com.ssi.util.DrawableUtils;
+import com.ssi.util.Version;
 import com.ssi.view.MainView;
-import com.wicky.util.DrawableUtils;
-import com.wicky.util.Version;
 
 public class UploadView extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;

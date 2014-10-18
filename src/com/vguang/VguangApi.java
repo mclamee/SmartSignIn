@@ -1,23 +1,22 @@
 package com.vguang;
 
+import org.apache.log4j.Logger;
+
 import com.ssi.main.Application;
 
 public class VguangApi {
+	
+	private static Logger LOG = Logger.getLogger(VguangApi.class);
+	
 	public static final int DEVICE_VALID = 1;  //设备有效
 	public static final int DEVICE_INVALID = 2; //设备无效
 	static {
-		
-//		Properties ps = System.getProperties();
-//		
-//		for(Object key: ps.keySet()) {
-//			System.out.println("K: "+key+"\n  V: "+ps.get(key));
-//		}
-		
+		LOG.info("initialize Vguang API ... ");
 		String arch = System.getProperty("os.arch"); 
 		String os= System.getProperty("os.name").toUpperCase(); 
 		
-		System.out.println("Architecture: " + arch);
-		System.out.println("OS: "+os);
+		LOG.debug("Architecture: " + arch);
+		LOG.debug("OS: "+os);
 		
 		if(arch.indexOf("64") != -1) {
 			// x64
@@ -29,6 +28,9 @@ public class VguangApi {
 			// x86 Other
 			System.loadLibrary("x32/win7/dll_vguang_java");
 		}
+		
+		LOG.info("initialize Vguang API ... OK!");
+		LOG.info("------------------------- SCANNER STANDBY -------------------------");
 	}
 
 	// 设置QR引擎状态，true时qr引擎开启；false时qr引擎关闭
@@ -66,7 +68,7 @@ public class VguangApi {
 		String str = new String(decodeStrBytes);
 		Application.SETUP_VIEW.setResultString(str);
 		Application.SIGNIN_VIEW.setResultString(str);
-        System.out.println("decodeCallBack, str: " + str);
+        LOG.debug("decodeCallBack, str: " + str);
 		return;
 	}
 	/**
@@ -75,7 +77,7 @@ public class VguangApi {
 	 */
 	public static void deviceStatusCallBack(int status) {
 		Application.SETUP_VIEW.setDeviceStatus(status);
-        System.out.println("deviceStatusCallBack, status" + status);
+        LOG.debug("deviceStatusCallBack, status" + status);
 		return;
 	}
 }

@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ssi.main.Application;
+import com.ssi.util.StringUtil;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.data.DataVector;
 import com.wicky.tdl.data.SubVector;
-import com.wicky.util.StringUtil;
 
 
 public class SignInModel {

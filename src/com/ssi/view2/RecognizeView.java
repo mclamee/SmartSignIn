@@ -19,9 +19,9 @@ import com.iflytek.speech.RecognizerResult;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SpeechRecognizer;
 import com.ssi.main.Application;
+import com.ssi.util.DrawableUtils;
+import com.ssi.util.Version;
 import com.ssi.view.MainView;
-import com.wicky.util.DrawableUtils;
-import com.wicky.util.Version;
 
 
 public class RecognizeView extends JPanel implements ActionListener {	

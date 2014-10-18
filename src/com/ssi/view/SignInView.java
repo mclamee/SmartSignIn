@@ -18,9 +18,9 @@ import com.iflytek.speech.SynthesizerPlayer;
 import com.iflytek.speech.SynthesizerPlayerListener;
 import com.ssi.main.Application;
 import com.ssi.model.SignInModel;
-import com.wicky.util.DrawableUtils;
-import com.wicky.util.StringUtil;
-import com.wicky.util.Version;
+import com.ssi.util.DrawableUtils;
+import com.ssi.util.StringUtil;
+import com.ssi.util.Version;
 
 public class SignInView extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class SignInView extends JPanel implements ActionListener {
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
         
-	    ImageIcon imgHome = new ImageIcon("res/home.png");
+	    ImageIcon imgHome = new ImageIcon("img/home.png");
 		jbtHome = DrawableUtils.createImageButton("", imgHome, null);
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
 				imgHome.getIconHeight());

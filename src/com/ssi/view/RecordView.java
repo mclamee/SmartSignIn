@@ -25,10 +25,10 @@ import javax.swing.SwingConstants;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
+import com.ssi.util.DrawableUtils;
+import com.ssi.util.JTableHelper;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
-import com.wicky.util.DrawableUtils;
-import com.wicky.util.JTableHelper;
 
 public class RecordView extends JPanel implements ActionListener {
     private static final long serialVersionUID = 4479482587513212049L;
@@ -50,7 +50,7 @@ public class RecordView extends JPanel implements ActionListener {
         this.setOpaque(false);
         this.setLayout(null);
         
-        ImageIcon imgHome = new ImageIcon("res/home.png"); //$NON-NLS-1$
+        ImageIcon imgHome = new ImageIcon("img/home.png"); //$NON-NLS-1$
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
         btnHome.setBounds(20, 20, imgHome.getIconWidth(),
                 imgHome.getIconHeight());

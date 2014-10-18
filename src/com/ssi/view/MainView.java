@@ -30,10 +30,11 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
+import com.ssi.main.SSIConfig;
 import com.ssi.main.Application;
+import com.ssi.util.DrawableUtils;
+import com.ssi.util.ResizeUtil;
 import com.vguang.VguangApi;
-import com.wicky.util.DrawableUtils;
-import com.wicky.util.ResizeUtil;
 
 
 
@@ -65,7 +66,9 @@ public class MainView extends JFrame implements ActionListener {
 	    
 		//设置界面大小，背景图片
 		ImageIcon background = new ImageIcon("img/index_bg.png");
-		background = ResizeUtil.resizeImageToScreenSize(background);
+		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+			background = ResizeUtil.resizeImageToScreenSize(background);
+		}
 		JLabel label = new JLabel(background);
 		label.setBounds(0, 0, background.getIconWidth(), background
 	                .getIconHeight());
@@ -114,17 +117,21 @@ public class MainView extends JFrame implements ActionListener {
 		setLocationRelativeTo(null); 
 		setContentPane(mContentPanel);
 		
-        /** 
-         * true无边框 全屏显示 
-         * false有边框 全屏显示 
-         */  
-        this.setUndecorated(true);  
+		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+	        /** 
+	         * true无边框 全屏显示 
+	         * false有边框 全屏显示 
+	         */  
+	        this.setUndecorated(true);
+        }  
 		setVisible(true);
 		
-	    // 全屏设置  
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        gd.setFullScreenWindow(this);
+		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+		    // 全屏设置  
+	        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	        GraphicsDevice gd = ge.getDefaultScreenDevice();
+	        gd.setFullScreenWindow(this);
+		}
 	}
 
 

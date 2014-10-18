@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.ssi.main.Application;
+import com.ssi.util.DrawableUtils;
 import com.vguang.VguangApi;
-import com.wicky.util.DrawableUtils;
 
 public class SetupView extends JPanel implements ActionListener{
 
@@ -52,7 +52,7 @@ public class SetupView extends JPanel implements ActionListener{
         this.setOpaque(false);
         this.setLayout(null);
         
-		ImageIcon imgHome = new ImageIcon("res/home.png");
+		ImageIcon imgHome = new ImageIcon("img/home.png");
 		jbtHome = DrawableUtils.createImageButton("", imgHome, null);
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
 				imgHome.getIconHeight());

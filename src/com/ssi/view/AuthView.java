@@ -13,7 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.ssi.main.Application;
-import com.wicky.util.ConfigUtil;
+import com.ssi.main.SSIConfig;
+import com.ssi.model.AuthorizationException;
 
 public class AuthView extends JFrame{
     private static final long serialVersionUID = -4907857102233644371L;
@@ -63,7 +64,7 @@ public class AuthView extends JFrame{
         panel.add(lbUser);
         final JTextField txUser = new JTextField();
         txUser.setBounds(column2, row1, txfWidth, eleHeight);
-        txUser.setText(ConfigUtil.get("user"));
+        txUser.setText(SSIConfig.get("user"));
         panel.add(txUser);
         
         JLabel lbAuth = new JLabel("Authorization Key: ");
@@ -71,26 +72,28 @@ public class AuthView extends JFrame{
         panel.add(lbAuth);
         final JTextField txAuth = new JTextField();
         txAuth.setBounds(column2, row2, txfWidth, eleHeight);
-        txAuth.setText(ConfigUtil.get("authKey"));
+        txAuth.setText(SSIConfig.get("authKey"));
         panel.add(txAuth);
         
-        JButton btnOk = new JButton("OK");
-        btnOk.addActionListener(new ActionListener() {
+        JButton btnAuth = new JButton("Authorize");
+        btnAuth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ConfigUtil.put("user", txUser.getText());
-                ConfigUtil.put("authKey", txAuth.getText());
-                ConfigUtil.save();
-                if(Application.authorization()){
-                    Application.initMainFrame();
-                    AuthView.this.dispose();
-                }else{
-                    JOptionPane.showMessageDialog(AuthView.this, "Authoriation failed! Please check your inputs.");
-                }
+                SSIConfig.put("user", txUser.getText());
+                SSIConfig.put("authKey", txAuth.getText());
+                SSIConfig.save();
+                try {
+					if(Application.authorization()){
+					    Application.initMainFrame();
+					    AuthView.this.dispose();
+					}
+				} catch (AuthorizationException e1) {
+                    JOptionPane.showMessageDialog(AuthView.this, e1.getMessage());
+				}
             }
         });
-        btnOk.setBounds(column2, row3, titleWidth, eleHeight);
-        panel.add(btnOk);
+        btnAuth.setBounds(column2, row3, titleWidth, eleHeight);
+        panel.add(btnAuth);
         JButton btnCancel = new JButton("Exit");
         btnCancel.addActionListener(new ActionListener() {
             @Override
