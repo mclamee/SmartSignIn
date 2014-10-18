@@ -176,9 +176,8 @@ public class UploadView extends JPanel implements ActionListener {
 		/**
 		 * 获取识别结果. 获取ArrayList类型的识别结果，并对结果进行累加，显示到Area里
 		 */
-		@SuppressWarnings("unchecked")
 		@Override
-		public void onResults(ArrayList results, boolean islast) {
+		public void onResults(@SuppressWarnings("rawtypes") ArrayList results, boolean islast) {
 			String text = "";
 			for (int i = 0; i < results.size(); i++) {
 				RecognizerResult result = (RecognizerResult) results.get(i);

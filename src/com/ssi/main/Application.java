@@ -88,9 +88,14 @@ public class Application {
 	public static void initMainFrame() {
 		LOG.info("> initializing main frames ...");
 		MAIN_FRAME = new MainView();
+        // setup window close hook method
 		RECORD_VIEW = new RecordView();
 		SETUP_VIEW = new SetupView();
 		SIGNIN_VIEW = new SignInView();
+		
+		// interactions
+		MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
+		
 		LOG.info("> initializing main frames ... OK!");
 	}
 

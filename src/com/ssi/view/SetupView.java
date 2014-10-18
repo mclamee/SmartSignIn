@@ -10,6 +10,7 @@ import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -40,6 +41,9 @@ public class SetupView extends JPanel implements ActionListener{
 
 	public static Locale currentLocale = new Locale("zh", "CN");
 	
+	private int totalPaddingTop;
+	private int totalPaddingLeft;
+	
 	/**
 	 * Create the application.
 	 */
@@ -48,8 +52,11 @@ public class SetupView extends JPanel implements ActionListener{
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
         
+        totalPaddingTop = 2 * frameHeight / 12;
+        totalPaddingLeft = 2 * frameWidth / 12;
+        
 		//初始化控件
-        this.setOpaque(false);
+//        this.setOpaque(false);
         this.setLayout(null);
         
 		ImageIcon imgHome = new ImageIcon("img/home.png");
@@ -60,7 +67,6 @@ public class SetupView extends JPanel implements ActionListener{
 		jbtHome.addActionListener(this);
 		this.add(jbtHome);
 		
-		
 		JButton buttonBegin = new JButton("打开设备");
 		buttonBegin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -68,15 +74,13 @@ public class SetupView extends JPanel implements ActionListener{
 			}
 		});
 		
+		int btnLine1YIdx = 380;
+		int btnLine2YIdx = 413;
 		
-		int btnLine1YIdx = 180 + 380;
-		int btnLine2YIdx = 180 + 413;
+		int inputLineYIdx = 78;
+		int statusLineYIdx = 324;
 		
-		int inputLineYIdx = 180 + 78;
-		int statusLineYIdx = 180 + 324;
-		
-        buttonBegin.setBounds(123, btnLine2YIdx, 93, 23);
-		this.add(buttonBegin);
+        addComponent(buttonBegin, 123, btnLine2YIdx, 93, 23);
 		
 		JButton buttonEnd = new JButton("关闭设备");
 		buttonEnd.addActionListener(new ActionListener() {
@@ -86,101 +90,83 @@ public class SetupView extends JPanel implements ActionListener{
 				lblDeviceStatus.setEnabled(false);
 			}
 		});
-		buttonEnd.setBounds(347, btnLine2YIdx, 93, 23);
-		this.add(buttonEnd);
+		addComponent(buttonEnd, 347, btnLine2YIdx, 93, 23);
 		
-		JButton buttonQuit = new JButton("退出程序");
-		buttonQuit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				VguangApi.closeDevice();
-				System.exit(0);
-			}
-		});
-		buttonQuit.setBounds(464, btnLine2YIdx, 93, 23);
-		this.add(buttonQuit);
+//		JButton buttonQuit = new JButton("退出程序");
+//		buttonQuit.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				VguangApi.closeDevice();
+//				System.exit(0);
+//			}
+//		});
+//		addComponent(buttonQuit, 464, btnLine2YIdx, 93, 23);
 		
 		decodeTextArea = new JTextArea();
 		decodeTextArea.setRows(5);
 		decodeTextArea.setLineWrap(true);
 		decodeTextArea.setColumns(10);
-		decodeTextArea.setBounds(113, inputLineYIdx, 347, 211);
-		this.add(decodeTextArea);
+		addComponent(decodeTextArea, 113, inputLineYIdx, 347, 211);
 		
 		JLabel label = new JLabel("解码结果：");
 		label.setHorizontalAlignment(SwingConstants.RIGHT);
 		label.setFont(new Font("宋体", Font.BOLD, 14));
-		label.setBounds(10, inputLineYIdx, 93, 23);
-		this.add(label);
+		addComponent(label, 10, inputLineYIdx, 93, 23);
 		
 		chckbxQr = new JCheckBox("QR");
 		chckbxQr.setSelected(true);
-		chckbxQr.setBounds(567, 60, 87, 23);
-		this.add(chckbxQr);
+		addComponent(chckbxQr, 567, 60, 87, 23);
 		
 		checkboxDm = new JCheckBox("DM");
 		checkboxDm.setSelected(true);
-		checkboxDm.setBounds(567, 87, 103, 23);
-		this.add(checkboxDm);
+		addComponent(checkboxDm, 567, 87, 103, 23);
 		
 		chckbxBar = new JCheckBox("条形码");
 		chckbxBar.setSelected(true);
-		chckbxBar.setBounds(567, 112, 103, 23);
-		this.add(chckbxBar);
+		addComponent(chckbxBar, 567, 112, 103, 23);
 		
 		chckbxBeep = new JCheckBox("蜂鸣器");
 		chckbxBeep.setSelected(true);
-		chckbxBeep.setBounds(581, 311, 103, 23);
-		this.add(chckbxBeep);
+		addComponent(chckbxBeep, 581, 311, 103, 23);
 		
 		chckbxAi = new JCheckBox("自动休眠");
 		chckbxAi.setSelected(true);
-		chckbxAi.setBounds(567, 201, 103, 23);
-		this.add(chckbxAi);
+		addComponent(chckbxAi, 567, 201, 103, 23);
 		
 		JLabel lblNewLabel = new JLabel("灵敏度：");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setBounds(533, 233, 66, 15);
-		this.add(lblNewLabel);
+		addComponent(lblNewLabel, 533, 233, 66, 15);
 		
 		JLabel lblNewLabel_1 = new JLabel("响应时间：");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(533, 264, 66, 15);
-		this.add(lblNewLabel_1);
+		addComponent(lblNewLabel_1, 533, 264, 66, 15);
 		
 		JLabel lblNewLabel_2 = new JLabel("解码间隔时间：");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2.setBounds(507, 144, 93, 15);
-		this.add(lblNewLabel_2);
+		addComponent(lblNewLabel_2, 507, 144, 93, 15);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(507, 168, 191, 2);
-		this.add(separator);
+		addComponent(separator, 507, 168, 191, 2);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(507, 49, 191, 2);
-		this.add(separator_1);
+		addComponent(separator_1, 507, 49, 191, 2);
 		
 		JLabel label_1 = new JLabel("码制：");
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
 		label_1.setFont(new Font("宋体", Font.BOLD, 14));
-		label_1.setBounds(507, 60, 54, 23);
-		this.add(label_1);
+		addComponent(label_1, 507, 60, 54, 23);
 		
 		JLabel lblNewLabel_3 = new JLabel("自动休眠：");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setFont(new Font("宋体", Font.BOLD, 14));
-		lblNewLabel_3.setBounds(507, 180, 93, 15);
-		this.add(lblNewLabel_3);
+		addComponent(lblNewLabel_3, 507, 180, 93, 15);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(518, 303, 180, 2);
-		this.add(separator_2);
+		addComponent(separator_2, 518, 303, 180, 2);
 		
 		JLabel lblNewLabel_4 = new JLabel("蜂鸣器：");
 		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_4.setFont(new Font("宋体", Font.BOLD, 14));
-		lblNewLabel_4.setBounds(507, 315, 66, 15);
-		this.add(lblNewLabel_4);
+		addComponent(lblNewLabel_4, 507, 315, 66, 15);
 		
 		JButton buttonBeep1 = new JButton("响一声");
 		buttonBeep1.addActionListener(new ActionListener() {
@@ -188,8 +174,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(1);
 			}
 		});
-		buttonBeep1.setBounds(265, btnLine1YIdx, 93, 23);
-		this.add(buttonBeep1);
+		addComponent(buttonBeep1, 265, btnLine1YIdx, 93, 23);
 		
 		JButton buttonBeep2 = new JButton("响二声");
 		buttonBeep2.addActionListener(new ActionListener() {
@@ -197,8 +182,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(2);
 			}
 		});
-		buttonBeep2.setBounds(374, btnLine1YIdx, 93, 23);
-		this.add(buttonBeep2);
+		addComponent(buttonBeep2, 374, btnLine1YIdx, 93, 23);
 		
 		JButton buttonBeep3 = new JButton("响三声");
 		buttonBeep3.addActionListener(new ActionListener() {
@@ -206,19 +190,16 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.beep(3);
 			}
 		});
-		buttonBeep3.setBounds(477, btnLine1YIdx, 93, 23);
-		this.add(buttonBeep3);
+		addComponent(buttonBeep3, 477, btnLine1YIdx, 93, 23);
 		
 		JLabel lblNewLabel_5 = new JLabel("设备状态：");
 		lblNewLabel_5.setFont(new Font("宋体", Font.BOLD, 14));
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_5.setBounds(10, statusLineYIdx, 93, 23);
-		this.add(lblNewLabel_5);
+		addComponent(lblNewLabel_5, 10, statusLineYIdx, 93, 23);
 		
 		lblDeviceStatus = new JLabel("设备无效");
-		lblDeviceStatus.setBounds(122, statusLineYIdx, 93, 23);
 		lblDeviceStatus.setEnabled(false);
-		this.add(lblDeviceStatus);
+		addComponent(lblDeviceStatus, 122, statusLineYIdx, 93, 23);
 		
 		JButton buttonLightOn = new JButton("开灯");
 		buttonLightOn.addActionListener(new ActionListener() {
@@ -226,8 +207,7 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.lightOn();
 			}
 		});
-		buttonLightOn.setBounds(113, btnLine1YIdx, 66, 23);
-		this.add(buttonLightOn);
+		addComponent(buttonLightOn, 113, btnLine1YIdx, 66, 23);
 		
 		JButton buttonLightOff = new JButton("关灯");
 		buttonLightOff.addActionListener(new ActionListener() {
@@ -235,33 +215,27 @@ public class SetupView extends JPanel implements ActionListener{
 				VguangApi.lightOff();
 			}
 		});
-		buttonLightOff.setBounds(189, btnLine1YIdx, 66, 23);
-		this.add(buttonLightOff);
+		addComponent(buttonLightOff, 189, btnLine1YIdx, 66, 23);
 		
 		JLabel label_2 = new JLabel("毫秒");
-		label_2.setBounds(684, 144, 32, 15);
-		this.add(label_2);
+		addComponent(label_2, 684, 144, 32, 15);
 		
 		JLabel lblNewLabel_11 = new JLabel("秒");
-		lblNewLabel_11.setBounds(684, 315, 32, 15);
-		this.add(lblNewLabel_11);
+		addComponent(lblNewLabel_11, 684, 315, 32, 15);
 		
 		textDecodeTime = new JTextField();
 		textDecodeTime.setText("1000");
-		textDecodeTime.setBounds(604, 141, 66, 21);
-		this.add(textDecodeTime);
+		addComponent(textDecodeTime, 604, 141, 66, 21);
 		textDecodeTime.setColumns(10);
 		
 		textAiLimit = new JTextField();
 		textAiLimit.setText("20");
-		textAiLimit.setBounds(604, 230, 66, 21);
-		this.add(textAiLimit);
+		addComponent(textAiLimit, 604, 230, 66, 21);
 		textAiLimit.setColumns(10);
 		
 		textAiResponeTime = new JTextField();
 		textAiResponeTime.setText("300");
-		textAiResponeTime.setBounds(604, 261, 66, 21);
-		this.add(textAiResponeTime);
+		addComponent(textAiResponeTime, 604, 261, 66, 21);
 		textAiResponeTime.setColumns(10);
 		
 		JButton btnNewButton = new JButton("更新设置");
@@ -270,9 +244,12 @@ public class SetupView extends JPanel implements ActionListener{
 				applySetting();
 			}
 		});
-		btnNewButton.setBounds(234, btnLine2YIdx, 93, 23);
-		this.add(btnNewButton);
+		addComponent(btnNewButton, 234, btnLine2YIdx, 93, 23);
+	}
 
+	private void addComponent(JComponent comp, int x, int y, int width, int height){
+		comp.setBounds(this.totalPaddingLeft + x, this.totalPaddingTop + y, width, height);
+		this.add(comp);
 	}
 	
 	//应用设置

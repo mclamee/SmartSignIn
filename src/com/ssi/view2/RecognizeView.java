@@ -25,8 +25,9 @@ import com.ssi.view.MainView;
 
 
 public class RecognizeView extends JPanel implements ActionListener {	
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = -8565844880238906442L;
+
 	JLabel labelWav;
 	
 	private JButton jbtEntire;
@@ -162,9 +163,8 @@ public class RecognizeView extends JPanel implements ActionListener {
 		 * 获取识别结果.
 		 * 获取ArrayList类型的识别结果，并对结果进行累加，显示到Area里
 		 */
-		@SuppressWarnings("unchecked")
 		@Override
-		public void onResults(ArrayList results,
+		public void onResults(@SuppressWarnings("rawtypes") ArrayList results,
 				boolean islast) {
 			String text = "";
 			for(int i = 0; i < results.size(); i++)

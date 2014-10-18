@@ -30,8 +30,8 @@ import javax.swing.JPanel;
 
 import org.apache.log4j.Logger;
 
-import com.ssi.main.SSIConfig;
 import com.ssi.main.Application;
+import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.ResizeUtil;
 import com.vguang.VguangApi;
@@ -43,10 +43,11 @@ import com.vguang.VguangApi;
  * @author williamz
  * 2014-10-09
  */
-@SuppressWarnings("serial")
 public class MainView extends JFrame implements ActionListener {
     
-    private Logger log = Logger.getLogger(this.getClass());
+	private static final long serialVersionUID = 4333872831401104854L;
+
+	private Logger log = Logger.getLogger(this.getClass());
     
 	private JPanel mMainJpanel;
 	private JPanel mContentPanel;

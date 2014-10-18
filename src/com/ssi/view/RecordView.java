@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,6 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
+import org.apache.log4j.Logger;
+
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
 import com.ssi.util.DrawableUtils;
@@ -31,7 +34,10 @@ import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 
 public class RecordView extends JPanel implements ActionListener {
+	
     private static final long serialVersionUID = 4479482587513212049L;
+    
+    private static Logger LOG = Logger.getLogger(RecordView.class);
     
     private JButton btnHome;
     private JButton btnAdd;
@@ -77,7 +83,6 @@ public class RecordView extends JPanel implements ActionListener {
         JTextField tfSearch2 = getTfSearch();
         tfSearch2.setBounds(170, frameHeight - 120, frameWidth - 170 - 10, 30);
         this.add(tfSearch2);
-        
     }
     
     private JButton getBtnAdd() {
@@ -198,5 +203,8 @@ public class RecordView extends JPanel implements ActionListener {
 	public SimpleTableModel getTableModel() {
 		return todoTable.dataModel;
 	}
-
+	
+	public WindowAdapter getWindowListener(){
+		return todoTable.getWindowListener();
+	}
 }

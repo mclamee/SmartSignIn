@@ -14,17 +14,18 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import com.ssi.util.StringUtil;
+
 /**
  * @author williamz<quiet_dog@163.com> 2014-08-13
  */
 public class SSIConfig {
 	
-    private static final String CONFIG_FILENAME = "application.properties";
-    private static final String CONFIG_PATH_USER_HOME = System.getProperty("user.home") + "/.ssi/";
-    private static final String CONFIG_PATH_APP_DIR = System.getProperty("user.dir") + "/conf/";
-
+    private static final String CONFIG_FILENAME = "/application.properties";
+    private static final String CONFIG_PATH_USER_HOME = System.getProperty("user.home") + "/.ssi";
+    private static final String CONFIG_PATH_APP_DIR = System.getProperty("user.dir") + "/conf";
+    
     private static Properties CONFIG = new Properties();
-
     private static Logger LOG;
     
     static {
@@ -75,9 +76,40 @@ public class SSIConfig {
     private SSIConfig() {
     }
 
-    public static void init(){
+	public static void init(){
+		checkDefaultValues();
     	LOG.info("------------------------- CONFIGURATION STANDBY -------------------------");
     }
+	
+    private static void checkDefaultValues() {
+    	
+    	String font = SSIConfig.get("font");
+    	if(StringUtil.isEmpty(font)){
+    		SSIConfig.put("font", "微软雅黑");
+    	}
+    	
+    	String debugAuth = SSIConfig.get("debug.authorization");
+    	if(StringUtil.isEmpty(debugAuth)){
+    		SSIConfig.put("debug.authorization", "off");
+    	}
+    	
+    	String debuFullSc = SSIConfig.get("debug.fullscreen");
+    	if(StringUtil.isEmpty(debuFullSc)){
+    		SSIConfig.put("debug.fullscreen", "on");
+    	}
+    	
+    	String saveIntervalMinute = SSIConfig.get("saveIntervalMinute");
+    	if(StringUtil.isEmpty(saveIntervalMinute)){
+    		SSIConfig.put("saveIntervalMinute", "1");
+    	}
+    	
+    	String dataFileName = SSIConfig.get("dataFileName");
+    	if(StringUtil.isEmpty(dataFileName)){
+    		SSIConfig.put("dataFileName", "/tbl.db");
+    	}
+    	
+    	SSIConfig.save();
+	}
     
     public static String get(String key) {
         String property = CONFIG.getProperty(key);
@@ -85,6 +117,14 @@ public class SSIConfig {
         return property;
     }
 
+    public static String getFileName(String key) {
+       String fileName = get(key);
+       if(!StringUtil.isEmpty(fileName) && !fileName.contains(":") && !fileName.startsWith("/")){
+    	   return "/" + fileName;
+       }
+       return fileName;
+    }
+    
     public static Integer getInt(String key) {
         try {
             return Integer.valueOf(get(key));
@@ -134,5 +174,4 @@ public class SSIConfig {
     public static void put(String key, String value) {
         CONFIG.put(key, value);
     }
-
 }
