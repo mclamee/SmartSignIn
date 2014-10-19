@@ -60,7 +60,7 @@ public class RecordView extends JPanel implements ActionListener {
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
         btnHome.setBounds(20, 20, imgHome.getIconWidth(),
                 imgHome.getIconHeight());
-        DrawableUtils.setMouseListener(btnHome, "res/home"); //$NON-NLS-1$
+        DrawableUtils.setMouseListener(btnHome, "img/home"); //$NON-NLS-1$
         btnHome.addActionListener(this);
         this.add(btnHome);
         

@@ -1,5 +1,6 @@
 package com.ssi.model;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,13 @@ public class SignInModel {
 		}
 		callback = StringUtil.trimAndUpper(callback);
 		SubVector subVector = dataMap.get(callback);
-		if(subVector == null)return null;
+		if(subVector == null){
+			// TODO when subVector is null, add it to the list
+			return null;
+		}
+		// record sign-in details to subVector
+		Date today = new Date();
+		
 		return generateMessage(subVector);
 
 	}

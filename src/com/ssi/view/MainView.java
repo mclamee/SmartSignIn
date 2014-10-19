@@ -135,8 +135,6 @@ public class MainView extends JFrame implements ActionListener {
 		}
 	}
 
-
-	
 	public JButton createImageButton(ImageIcon img)
 	{
 		JButton button = new JButton("");

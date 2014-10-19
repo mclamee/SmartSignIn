@@ -63,7 +63,7 @@ public class SetupView extends JPanel implements ActionListener{
 		jbtHome = DrawableUtils.createImageButton("", imgHome, null);
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
 				imgHome.getIconHeight());
-		DrawableUtils.setMouseListener(jbtHome, "res/home");
+		DrawableUtils.setMouseListener(jbtHome, "img/home");
 		jbtHome.addActionListener(this);
 		this.add(jbtHome);
 		
