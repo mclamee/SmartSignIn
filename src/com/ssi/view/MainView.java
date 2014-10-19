@@ -54,6 +54,7 @@ public class MainView extends JFrame implements ActionListener {
 
 	private JButton jbtSignIn;
 	private JButton jbtRecord;
+	private JButton jbtStaff;
 	private JButton jbtSetup;
 	
 	/**
@@ -88,6 +89,11 @@ public class MainView extends JFrame implements ActionListener {
 		jbtRecord.setBounds(60, 150, imgRecord.getIconWidth(), imgRecord.getIconHeight());	
 		DrawableUtils.setMouseListener(jbtRecord, "img/btn_record");
 		
+		ImageIcon imgStaff = new ImageIcon("img/btn_staff.png");
+		jbtStaff = this.createImageButton(imgStaff);
+		jbtStaff.setBounds(60, 150, imgStaff.getIconWidth(), imgStaff.getIconHeight());	
+		DrawableUtils.setMouseListener(jbtStaff, "img/btn_staff");
+		
 		ImageIcon imgSignIn = new ImageIcon("img/btn_signin.png");
 		jbtSignIn = this.createImageButton(imgSignIn);
 		jbtSignIn.setBounds(240, 150, imgSignIn.getIconWidth(), imgSignIn.getIconHeight());
@@ -98,16 +104,18 @@ public class MainView extends JFrame implements ActionListener {
 		jbtSetup.setBounds(420, 150, imgSetup.getIconWidth(), imgSetup.getIconHeight());
 		DrawableUtils.setMouseListener(jbtSetup, "img/btn_setup");
 
-		GridLayout gridlayout = new GridLayout(0, 3); 
+		GridLayout gridlayout = new GridLayout(0, 4); 
 		gridlayout.setHgap(10);   
 		mMainJpanel = new JPanel(gridlayout);
 		mMainJpanel.setOpaque(false);
 		
 		mMainJpanel.add(jbtRecord);
+		mMainJpanel.add(jbtStaff);
 		mMainJpanel.add(jbtSignIn);
 		mMainJpanel.add(jbtSetup);
 	
 		jbtRecord.addActionListener(this);
+		jbtStaff.addActionListener(this);
 		jbtSignIn.addActionListener(this);
 		jbtSetup.addActionListener(this);
 		
@@ -157,9 +165,14 @@ public class MainView extends JFrame implements ActionListener {
 			closeDevice();
 			mContentPanel.revalidate();
 			mContentPanel.repaint(); 
+		}else if(e.getSource() == jbtStaff){
+			mContentPanel.remove(mMainJpanel); 
+			mContentPanel.add(Application.STAFF_VIEW); 
+			closeDevice();
+			mContentPanel.revalidate();
+			mContentPanel.repaint(); 
 		}else if(e.getSource() == jbtSetup){
 			mContentPanel.remove(mMainJpanel); 
-//			Application.SETUP_VIEW = new SetupView();
 			mContentPanel.add(Application.SETUP_VIEW);
 			applySettingsAndOpenDevice();
 			mContentPanel.revalidate();

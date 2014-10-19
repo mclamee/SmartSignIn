@@ -103,9 +103,14 @@ public class SSIConfig {
     		SSIConfig.put("saveIntervalMinute", "1");
     	}
     	
-    	String dataFileName = SSIConfig.get("dataFileName");
-    	if(StringUtil.isEmpty(dataFileName)){
-    		SSIConfig.put("dataFileName", "/tbl.db");
+    	String recordDataFileName = SSIConfig.get("RecordView.dataFileName");
+    	if(StringUtil.isEmpty(recordDataFileName)){
+    		SSIConfig.put("RecordView.dataFileName", "/rv_tbl.db");
+    	}
+    	
+    	String staffDataFileName = SSIConfig.get("StaffView.dataFileName");
+    	if(StringUtil.isEmpty(staffDataFileName)){
+    		SSIConfig.put("StaffView.dataFileName", "/sv_tbl.db");
     	}
     	
     	SSIConfig.save();

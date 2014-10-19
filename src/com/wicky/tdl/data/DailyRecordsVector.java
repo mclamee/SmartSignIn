@@ -6,14 +6,14 @@ import java.util.Vector;
 
 import com.ssi.i18n.Messages;
 
-public class SubVector extends Vector<Object> implements Serializable{
+public class DailyRecordsVector extends Vector<Object> implements Serializable{
     private static final long serialVersionUID = -8903166408920564591L;
     
-    public SubVector(String qrCode, String name, String salutaion, Boolean flag) {
+    public DailyRecordsVector(String qrCode, String name, String salutaion, Boolean flag) {
         super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, flag}));
     }
     
-    public SubVector(String qrCode, String name, String salutaion) {
+    public DailyRecordsVector(String qrCode, String name, String salutaion) {
         super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, Boolean.FALSE}));
     }
     

@@ -6,21 +6,21 @@ import java.util.Map;
 
 import com.ssi.main.Application;
 import com.ssi.util.StringUtil;
-import com.wicky.tdl.SimpleTableModel;
-import com.wicky.tdl.data.DataVector;
-import com.wicky.tdl.data.SubVector;
+import com.wicky.tdl.data.IDataVector;
+import com.wicky.tdl.data.ISubDataVector;
+import com.wicky.tdl.data.SignInSubVector;
 
 
 public class SignInModel {
 	
-	private Map<String, SubVector> dataMap = new HashMap<>();
+	private Map<String, ISubDataVector> dataMap = new HashMap<>();
 	
 	public String lookupMessage(String callback){
 		if(StringUtil.isEmpty(callback)){
 			return null;
 		}
 		callback = StringUtil.trimAndUpper(callback);
-		SubVector subVector = dataMap.get(callback);
+		ISubDataVector subVector = dataMap.get(callback);
 		if(subVector == null){
 			// TODO when subVector is null, add it to the list
 			return null;
@@ -32,17 +32,20 @@ public class SignInModel {
 
 	}
 	
-	private String generateMessage(SubVector subVector) {
-		String name = subVector.getName();
-		String salutaion = subVector.getSalutaion();
+	private String generateMessage(ISubDataVector subVector) {
+		SignInSubVector signInSubVector = (SignInSubVector)subVector;
+		String name = signInSubVector.getName();
+		String salutaion = signInSubVector.getSalutaion();
 		String tailMessage = "欢迎光临拓德公司!";
 		return name+salutaion+","+tailMessage;
 	}
+	
 	public void initDataMap() {
 		SimpleTableModel tableModel = Application.RECORD_VIEW.getTableModel();
-		DataVector data = tableModel.getData();
-		for (SubVector subVector : data) {
-			dataMap.put(StringUtil.trimAndUpper(subVector.getQrCode()), subVector);
+		IDataVector<ISubDataVector> data = tableModel.getData();
+		for (ISubDataVector subVector : data) {
+			SignInSubVector signInSubVector = (SignInSubVector)subVector;
+			dataMap.put(StringUtil.trimAndUpper(signInSubVector.getQrCode()), subVector);
 		}
 	}
 	

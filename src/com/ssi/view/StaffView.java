@@ -33,11 +33,11 @@ import com.ssi.util.DrawableUtils;
 import com.ssi.util.JTableHelper;
 import com.wicky.tdl.SimpleTodoTable;
 
-public class RecordView extends JPanel implements ActionListener {
+public class StaffView extends JPanel implements ActionListener {
 	
     private static final long serialVersionUID = 4479482587513212049L;
     
-    private static Logger LOG = Logger.getLogger(RecordView.class);
+    private static Logger LOG = Logger.getLogger(StaffView.class);
     
     private JButton btnHome;
     private JButton btnAdd;
@@ -48,7 +48,7 @@ public class RecordView extends JPanel implements ActionListener {
     
     private JTextField tfSearch;
     
-    public RecordView() {
+    public StaffView() {
         Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
         int frameHeight = (int)frameSize.getHeight();
@@ -88,7 +88,7 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton getBtnAdd() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnAdd = new JButton(Messages.getString("RecordView.btn_add")); //$NON-NLS-1$
+        btnAdd = new JButton(Messages.getString("StaffView.btn_add")); //$NON-NLS-1$
         btnAdd.setPreferredSize(btnSize);
         btnAdd.addActionListener(new ActionListener() {
             @Override
@@ -109,7 +109,7 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton getBtnClear() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnClear = new JButton(Messages.getString("RecordView.btn_clear")); //$NON-NLS-1$
+        btnClear = new JButton(Messages.getString("StaffView.btn_clear")); //$NON-NLS-1$
         btnClear.setPreferredSize(btnSize);
         btnClear.addActionListener(new ActionListener() {
             
@@ -117,8 +117,8 @@ public class RecordView extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
                 tfSearch.setText(null);
-//                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("RecordView.btn_clear_confirm"), 
-//                		Messages.getString("RecordView.btn_clear_confirm_title"), 
+//                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("StaffView.btn_clear_confirm"), 
+//                		Messages.getString("StaffView.btn_clear_confirm_title"), 
 //                		JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
 //                if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
@@ -170,7 +170,7 @@ public class RecordView extends JPanel implements ActionListener {
     }
 
     private JLabel getLabelSearch() {
-        JLabel label = new JLabel(Messages.getString("RecordView.label_search")); //$NON-NLS-1$
+        JLabel label = new JLabel(Messages.getString("StaffView.label_search")); //$NON-NLS-1$
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         label.setHorizontalTextPosition(SwingConstants.RIGHT);
         label.addMouseListener(new MouseAdapter() {
@@ -181,7 +181,7 @@ public class RecordView extends JPanel implements ActionListener {
                 tfSearch.selectAll();
             }
         });
-        label.setToolTipText(Messages.getString("RecordView.label_search_tip")); //$NON-NLS-1$
+        label.setToolTipText(Messages.getString("StaffView.label_search_tip")); //$NON-NLS-1$
         return label;
     }
 

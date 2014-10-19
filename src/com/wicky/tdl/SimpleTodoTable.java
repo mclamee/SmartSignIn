@@ -1,6 +1,5 @@
 package com.wicky.tdl;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -22,7 +21,6 @@ import java.io.WriteAbortedException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -36,7 +34,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -46,7 +43,9 @@ import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.SSIConfig;
-import com.wicky.tdl.data.DataVector;
+import com.ssi.model.SimpleTableModel;
+import com.wicky.tdl.data.IDataVector;
+import com.wicky.tdl.data.ISubDataVector;
 
 
 /**
@@ -70,9 +69,10 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 
 	private File dataFile;
     
-    public SimpleTodoTable(){
+    public SimpleTodoTable(String viewName){
+    	LOG.info("VIEWNAME: " + viewName);
         // 1. create data model
-        dataModel = new SimpleTableModel();
+		dataModel = new SimpleTableModel(viewName);
         dataModel.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -81,7 +81,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         });
         
         // 2. load data vector from saved file
-        DataVector data = loadDataFromFile();
+        IDataVector<ISubDataVector> data = loadDataFromFile(viewName);
         
         // 3. assemble data model
         if(data != null){
@@ -92,7 +92,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         this.setModel(dataModel);
         
         // 5. adjust column width
-        adjustColumnWidth();
+        this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        dataModel.adjustColumnWidth(columnModel);
         
         // 6. setup UI to support drag and drop rows
         this.setUI(new DragDropRowTableUI());
@@ -134,31 +135,31 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         listMod.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listMod.addListSelectionListener(this);
 
-        this.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE){
-                    int selectedRow = SimpleTodoTable.this.getSelectedRow();
-                    if(selectedRow != -1){
-                        stopCellEditing();
-                        int rowCount = dataModel.getRowCount();
-                        if(rowCount != 0){
-                            int result = JOptionPane.showConfirmDialog(SimpleTodoTable.this, Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
-                            if(result == JOptionPane.YES_OPTION){
-                                dataModel.removeRow(selectedRow);
-                                if(selectedRow < dataModel.getRowCount()){
-                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
-                                }
-                                stopCellEditing();
-                                refreshTable();
-                            }
-                        }
-                    }
-
-                }
-            }
-        });
+//        this.addKeyListener(new KeyAdapter() {
+//
+//            @Override
+//            public void keyReleased(KeyEvent e) {
+//                if(e.getKeyCode() == KeyEvent.VK_DELETE){
+//                    int selectedRow = SimpleTodoTable.this.getSelectedRow();
+//                    if(selectedRow != -1){
+//                        stopCellEditing();
+//                        int rowCount = dataModel.getRowCount();
+//                        if(rowCount != 0){
+//                            int result = JOptionPane.showConfirmDialog(SimpleTodoTable.this, Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+//                            if(result == JOptionPane.YES_OPTION){
+//                                dataModel.removeRow(selectedRow);
+//                                if(selectedRow < dataModel.getRowCount()){
+//                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
+//                                }
+//                                stopCellEditing();
+//                                refreshTable();
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
+//        });
         
         ////////////////
         // setup row sorter
@@ -190,8 +191,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
     }
 
-	private DataVector loadDataFromFile(){
-		dataFile = new File(SSIConfig.get("profileHome"), SSIConfig.get("dataFileName"));
+	private IDataVector<ISubDataVector> loadDataFromFile(String viewName){
+		dataFile = new File(SSIConfig.get("profileHome"), SSIConfig.get(viewName+".dataFileName"));
         if(dataFile.isDirectory())dataFile.delete();
         if(!dataFile.exists()){
             try {
@@ -207,19 +208,14 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 			}
             LOG.debug("No data file exists, creating new file: ["+dataFile.getAbsolutePath()+"]");
         }
-        DataVector data = null;
+        IDataVector<ISubDataVector> data = null;
         try {
             LOG.debug("Reading data file ... ");
 			in = new ObjectInputStream(new FileInputStream(dataFile));
             if(in != null){
                 Object object = in.readObject();
-                if(object instanceof DataVector){
-                    data = (DataVector) object;
-                    LOG.debug(">> Success!");
-                }else if(object instanceof Vector<?>){
-                    // old data found
-                    LOG.debug("Old data detected, upgrading ...");
-                    dataModel.initOldData((Vector<?>)object);
+                if(object instanceof IDataVector){
+                    data = (IDataVector<ISubDataVector>) object;
                     LOG.debug(">> Success!");
                 }else{
                     LOG.debug(">> Canceled!");
@@ -266,33 +262,18 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         }
         return null;
 	}
-
-    /**
-     * 调整列宽
-     */
-    private void adjustColumnWidth() {
-        // Tweak the appearance of the table by manipulating its column model
-        TableColumnModel colmodel = this.getColumnModel();
-        this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        // Set column widths
-        colmodel.getColumn(0).setPreferredWidth(1);
-        colmodel.getColumn(1).setPreferredWidth(320);
-        colmodel.getColumn(2).setPreferredWidth(200);
-        colmodel.getColumn(3).setPreferredWidth(30);
-        colmodel.getColumn(4).setPreferredWidth(30);
-    }
     
-    @Override
-    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-        Component com = super.prepareRenderer(renderer, row, column);
-        
-        if(getValueAt(row, 3).equals(true)){
-            com.setForeground(Color.GRAY);
-        }else{
-            com.setForeground(Color.BLACK);
-        }
-        return com;
-    }
+//    @Override
+//    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+//        Component com = super.prepareRenderer(renderer, row, column);
+//        
+//        if(getValueAt(row, 3).equals(true)){
+//            com.setForeground(Color.GRAY);
+//        }else{
+//            com.setForeground(Color.BLACK);
+//        }
+//        return com;
+//    }
     
     public void refreshTable() {
         this.setModel(this.getModel());

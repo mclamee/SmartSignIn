@@ -25,6 +25,7 @@ import com.ssi.view.MainView;
 import com.ssi.view.RecordView;
 import com.ssi.view.SetupView;
 import com.ssi.view.SignInView;
+import com.ssi.view.StaffView;
 
 public class Application {
 
@@ -39,6 +40,7 @@ public class Application {
 	public static AuthView AUTH_FRAME;
 
 	public static RecordView RECORD_VIEW;
+	public static StaffView STAFF_VIEW;
 	public static SetupView SETUP_VIEW;
 	public static SignInView SIGNIN_VIEW;
 
@@ -90,11 +92,13 @@ public class Application {
 		MAIN_FRAME = new MainView();
         // setup window close hook method
 		RECORD_VIEW = new RecordView();
+		STAFF_VIEW = new StaffView();
 		SETUP_VIEW = new SetupView();
 		SIGNIN_VIEW = new SignInView();
 		
 		// interactions
 		MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
+		MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
 		
 		LOG.info("> initializing main frames ... OK!");
 	}

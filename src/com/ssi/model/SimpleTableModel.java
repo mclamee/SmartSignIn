@@ -1,10 +1,12 @@
-package com.wicky.tdl;
+package com.ssi.model;
 import java.util.Vector;
 
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
-import com.wicky.tdl.data.DataVector;
-import com.wicky.tdl.data.SubVector;
+import com.wicky.tdl.data.IDataVector;
+import com.wicky.tdl.data.ISubDataVector;
 
 /**
  * Table Model Class for Simple Table: 
@@ -14,17 +16,15 @@ public class SimpleTableModel extends DefaultTableModel {
     
     private static final long serialVersionUID = -3231068754665325732L;
     
-    private DataVector data;
+    private IDataVector<ISubDataVector> data;
     
-    public SimpleTableModel() {
-        data = new DataVector();
-        data.add("NO1024","薛鹏飞", "先生", false);
-        data.add("NO1025","吕静泽", "先生", false);
-        data.add("NO1026","张曜嵩", "先生", false);
-        data.add("NO1027","王宁", "先生", false);
-        data.add("NO1028","杨洁", "女士", false);
-        
-        this.setDataVector(data, data.getTitles());
+    private String viewName;
+    
+    public SimpleTableModel(String viewName) {
+    	this.viewName = viewName;
+    	IDataVector<ISubDataVector> dataVector = DataFactory.getDataVector(viewName);
+    	this.data = (IDataVector<ISubDataVector>) dataVector;
+        this.setDataVector((Vector<ISubDataVector>) dataVector, dataVector.getTitles());
     }
     
     @Override
@@ -48,7 +48,7 @@ public class SimpleTableModel extends DefaultTableModel {
     }
     
     public int addRow() {
-        insertRow(getRowCount(), new SubVector("", "", ""));
+        insertRow(getRowCount(), DataFactory.createSubDataVector(viewName));
         return this.data.size();
     }
     
@@ -56,25 +56,19 @@ public class SimpleTableModel extends DefaultTableModel {
         return data.getColumnIdx(colName);
     }
 
-    public DataVector exportData() {
+    public IDataVector<ISubDataVector> exportData() {
         return data;
     }
 
-    public void initData(DataVector data) {
-        if(data instanceof DataVector){
+    public void initData(IDataVector<ISubDataVector> data) {
+        if(data instanceof IDataVector){
             this.data = data;
-            this.setDataVector(data, data.getTitles());
+            this.setDataVector((Vector<ISubDataVector>) data, data.getTitles());
         }
     }
-
-    public void initOldData(Vector<?> old) {
-        this.data = new DataVector();
-        for (Object obj:old) {
-            @SuppressWarnings("unchecked")
-            Vector<Object> dat = (Vector<Object>) obj;
-            data.add(dat);
-        }
-        this.setDataVector(data, data.getTitles());
+    
+    public boolean getFlag(int row){
+    	return this.data.getFlag(row);
     }
     
     @Override
@@ -82,12 +76,16 @@ public class SimpleTableModel extends DefaultTableModel {
         super.removeRow(row);
     }
 
-	public DataVector getData() {
+	public IDataVector<ISubDataVector> getData() {
 		return data;
 	}
 
-	public void setData(DataVector data) {
+	public void setData(IDataVector<ISubDataVector> data) {
 		this.data = data;
+	}
+
+	public void adjustColumnWidth(TableColumnModel colmodel) {
+		DataFactory.adjustColumnWidth(colmodel, viewName);
 	}
 
 }

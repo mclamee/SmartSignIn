@@ -2,36 +2,33 @@ package com.wicky.tdl.data;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import com.ssi.i18n.Messages;
 
-public class DataVector extends Vector<SubVector> implements Serializable{
-    private static final long serialVersionUID = -999861995984107110L;
-    
-    private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
-            Messages.getString("RecordView.table.column_title_id"),
-            Messages.getString("RecordView.table.column_title_qrcode"),
-            Messages.getString("RecordView.table.column_title_name"),
-            Messages.getString("RecordView.table.column_title_salutaion"),
-            Messages.getString("RecordView.table.column_title_choose")
+public class TimesheetDataVector extends Vector<ISubDataVector> implements Serializable, IDataVector<ISubDataVector>{
+	private static final long serialVersionUID = -5470225425540779635L;
+
+	private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
+            Messages.getString("StaffView.timesheet.table.column_title_id"),
+            Messages.getString("StaffView.timesheet.table.column_title_date"),
+            Messages.getString("StaffView.timesheet.table.column_title_workhrs"),
+            Messages.getString("StaffView.timesheet.table.column_title_counts"),
+            Messages.getString("StaffView.timesheet.table.column_title_detail")
             }));
     
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{
     		String.class, 
-    		String.class, 
-    		String.class, 
-    		String.class, 
-    		Boolean.class
+    		Date.class, 
+    		Integer.class, 
+    		Integer.class, 
+    		Object.class
     		});
     
-    public synchronized boolean add(String qrCode, String name, String salutaion, Boolean flag) {
-        return this.add(new SubVector(qrCode, name, salutaion, flag));
-    }
-    
-    public synchronized boolean add(String qrCode, String name, String salutaion) {
-        return this.add(new SubVector(qrCode, name, salutaion));
+    public synchronized boolean add(Date date, Integer workhrs, Integer counts, Object detail) {
+        return this.add(new TimesheetSubVector(date, workhrs, counts, detail));
     }
     
     public Vector<String> getTitles() {
@@ -60,12 +57,8 @@ public class DataVector extends Vector<SubVector> implements Serializable{
         if (column == 0) {
             return row + 1;
         }
-        SubVector rowVector = this.elementAt(row);
+        ISubDataVector rowVector = this.elementAt(row);
         return rowVector.elementAt(column);
-    }
-    
-    public synchronized boolean add(Vector<Object> dat) {
-        return this.add((String)dat.get(1), (String)dat.get(2), (String)dat.get(3), (Boolean)dat.get(4));
     }
     
     @Override
@@ -74,10 +67,15 @@ public class DataVector extends Vector<SubVector> implements Serializable{
         sb.append("{\n"); //$NON-NLS-1$
         
         for (int i = 0;i < this.size();i++) {
-            SubVector sub = this.get(i);
+            ISubDataVector sub = this.get(i);
             sb.append("  ").append(i+1).append(":\"").append(sub).append("\",\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         sb.append("}\n"); //$NON-NLS-1$
         return sb.toString();
     }
+    
+	@Override
+	public boolean getFlag(int row) {
+		return false;
+	}
 }
