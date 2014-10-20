@@ -17,4 +17,7 @@ public interface IDataVector<T> extends Iterable<T>{
 	Object elementAt(int column);
 
 	boolean getFlag(int row);
+	
+	String getTitle();
+	String getMessage();
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ssi.main.Application;
-import com.ssi.main.data.SignInSubVector;
+import com.ssi.main.data.RecordSubVector;
 import com.ssi.util.StringUtil;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
@@ -34,7 +34,7 @@ public class SignInModel {
 	}
 	
 	private String generateMessage(ISubDataVector subVector) {
-		SignInSubVector signInSubVector = (SignInSubVector)subVector;
+		RecordSubVector signInSubVector = (RecordSubVector)subVector;
 		String name = signInSubVector.getName();
 		String salutaion = signInSubVector.getSalutaion();
 		String tailMessage = "欢迎光临拓德公司!";
@@ -45,7 +45,7 @@ public class SignInModel {
 		SimpleTableModel tableModel = Application.RECORD_VIEW.getTableModel();
 		IDataVector<ISubDataVector> data = tableModel.getData();
 		for (ISubDataVector subVector : data) {
-			SignInSubVector signInSubVector = (SignInSubVector)subVector;
+			RecordSubVector signInSubVector = (RecordSubVector)subVector;
 			dataMap.put(StringUtil.trimAndUpper(signInSubVector.getQrCode()), subVector);
 		}
 	}

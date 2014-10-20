@@ -188,7 +188,7 @@ public class MainView extends JFrame implements ActionListener {
 	
 	public void closeDevice(){
 	    //关闭设备
-	    VguangApi.closeDevice();
+//	    VguangApi.closeDevice();
 	}
 	
 	public void applySettingsAndOpenDevice(){
@@ -197,7 +197,7 @@ public class MainView extends JFrame implements ActionListener {
         //初始化数据
 	    Application.SIGNIN_VIEW.initDataMap();
         //打开设备
-        VguangApi.openDevice();
+//        VguangApi.openDevice();
 	}
 	
 	public JPanel getMainJpanel()

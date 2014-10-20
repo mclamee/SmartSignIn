@@ -83,10 +83,9 @@ public class AuthView extends JFrame{
                 SSIConfig.put("authKey", txAuth.getText());
                 SSIConfig.save();
                 try {
-					if(Application.authorization()){
-					    Application.initMainFrame();
-					    AuthView.this.dispose();
-					}
+					Application.authorization();
+				    Application.initMainFrame();
+				    AuthView.this.dispose();
 				} catch (AuthorizationException e1) {
                     JOptionPane.showMessageDialog(AuthView.this, e1.getMessage());
 				}

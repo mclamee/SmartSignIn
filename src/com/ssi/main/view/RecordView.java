@@ -117,10 +117,10 @@ public class RecordView extends JPanel implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
                 tfSearch.setText(null);
-//                int result = JOptionPane.showConfirmDialog(todoTable, Messages.getString("RecordView.btn_clear_confirm"), 
-//                		Messages.getString("RecordView.btn_clear_confirm_title"), 
-//                		JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
-//                if(result == JOptionPane.YES_OPTION){
+                int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("RecordView.btn_clear_confirm"), 
+                		Messages.getString("RecordView.btn_clear_confirm_title"), 
+                		JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
                     for (int rowId = 0;rowId < rowCount;rowId++) {
                         Boolean value = (Boolean) todoTable.dataModel.getFlag(rowId);
@@ -130,7 +130,7 @@ public class RecordView extends JPanel implements ActionListener {
                         }
                     }
                     todoTable.refreshTable();
-//                }
+                }
             }
         });
         return btnClear;

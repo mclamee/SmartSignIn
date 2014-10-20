@@ -9,18 +9,19 @@ import com.ssi.i18n.Messages;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 
-public class StaffDataVector extends Vector<ISubDataVector> implements Serializable, IDataVector<ISubDataVector>{
+public class RecordDataVector extends Vector<ISubDataVector> implements Serializable, IDataVector<ISubDataVector>{
     private static final long serialVersionUID = -999861995984107110L;
     
     private String title;
     private String message;
     
     private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
-            Messages.getString("StaffView.table.column_title_id"),
-            Messages.getString("StaffView.table.column_title_qrcode"),
-            Messages.getString("StaffView.table.column_title_name"),
-            Messages.getString("StaffView.table.column_title_title"),
-            Messages.getString("StaffView.table.column_title_choose")
+            Messages.getString("RecordView.table.column_title_id"),
+            Messages.getString("RecordView.table.column_title_qrcode"),
+            Messages.getString("RecordView.table.column_title_name"),
+            Messages.getString("RecordView.table.column_title_salutaion"),
+            Messages.getString("RecordView.table.column_title_more"),
+            Messages.getString("RecordView.table.column_title_choose")
             }));
     
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{
@@ -28,15 +29,16 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
     		String.class, 
     		String.class, 
     		String.class, 
+    		IDataVector.class,
     		Boolean.class
     		});
     
-    public synchronized boolean add(String qrCode, String name, String title, Boolean flag) {
-        return this.add(new StaffSubVector(qrCode, name, title, flag));
+    public synchronized boolean add(String qrCode, String name, String salutaion, Boolean flag) {
+        return this.add(new RecordSubVector(qrCode, name, salutaion, flag));
     }
     
-    public synchronized boolean add(String qrCode, String name, String title) {
-        return this.add(new StaffSubVector(qrCode, name, title));
+    public synchronized boolean add(String qrCode, String name, String salutaion) {
+        return this.add(new RecordSubVector(qrCode, name, salutaion));
     }
     
     public Vector<String> getTitles() {
@@ -81,7 +83,7 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
         sb.append("}\n"); //$NON-NLS-1$
         return sb.toString();
     }
-    
+
 	@Override
 	public boolean getFlag(int row) {
 		return (boolean)this.getValueAt(row, columnTypes.size() - 1);
@@ -114,5 +116,5 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
     public void setMessage(String message) {
         this.message = message;
     }
-	
+
 }

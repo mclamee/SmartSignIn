@@ -34,7 +34,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
@@ -42,7 +41,10 @@ import javax.swing.text.BadLocationException;
 import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
+import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
+import com.ssi.main.view.MoreInfoDialog;
+import com.ssi.util.StringUtil;
 
 
 /**
@@ -90,7 +92,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         
         // 5. adjust column width
         this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        dataModel.adjustColumnWidth(columnModel);
+        dataModel.adjustColumnWidth(this);
         
         // 6. setup UI to support drag and drop rows
         this.setUI(new DragDropRowTableUI());
@@ -132,64 +134,69 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         listMod.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listMod.addListSelectionListener(this);
 
-//        this.addKeyListener(new KeyAdapter() {
-//
-//            @Override
-//            public void keyReleased(KeyEvent e) {
-//                if(e.getKeyCode() == KeyEvent.VK_DELETE){
-//                    int selectedRow = SimpleTodoTable.this.getSelectedRow();
-//                    if(selectedRow != -1){
-//                        stopCellEditing();
-//                        int rowCount = dataModel.getRowCount();
-//                        if(rowCount != 0){
-//                            int result = JOptionPane.showConfirmDialog(SimpleTodoTable.this, Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
-//                            if(result == JOptionPane.YES_OPTION){
-//                                dataModel.removeRow(selectedRow);
-//                                if(selectedRow < dataModel.getRowCount()){
-//                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
-//                                }
-//                                stopCellEditing();
-//                                refreshTable();
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            }
-//        });
+        this.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE){
+                    int selectedRow = SimpleTodoTable.this.getSelectedRow();
+                    if(selectedRow != -1){
+                        stopCellEditing();
+                        int rowCount = dataModel.getRowCount();
+                        if(rowCount != 0){
+                            int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                            if(result == JOptionPane.YES_OPTION){
+                                dataModel.removeRow(selectedRow);
+                                if(selectedRow < dataModel.getRowCount()){
+                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
+                                }
+                                stopCellEditing();
+                                refreshTable();
+                            }
+                        }
+                    }
+                }
+            }
+        });
         
         ////////////////
         // setup row sorter
-        rowSorter = new TableRowSorter<TableModel>(this.getModel());
-        rowSorter.setSortable(0, false);
-        rowSorter.setSortable(1, false);
-        rowSorter.setSortable(2, false);
-        rowSorter.setSortable(3, false);
-        rowSorter.setSortable(4, false);
+        createRowSorter();
         this.setRowSorter(rowSorter);
         
-        // setup timer to support automatic save
-        int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute"))) < 60000)?60000:
-        	((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute")));
-        this.timer = new Timer();
-        this.timer.schedule(new TimerTask() {
-            
-            @Override
-            public void run() {
-                if(dataChanged){
-                    runing = true;
-                    LOG.debug("Timmer Start! Save Interval Minites: " + SSIConfig.get("saveIntervalMinute"));
-                    saveDataToFile();
-                    runing = false;
+        if(dataFile != null){
+            // setup timer to support automatic save
+            int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute"))) < 60000)?60000:
+                ((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute")));
+            this.timer = new Timer();
+            this.timer.schedule(new TimerTask() {
+                
+                @Override
+                public void run() {
+                    if(dataChanged){
+                        runing = true;
+                        LOG.debug("Timmer Start! Save Interval Minites: " + SSIConfig.get("saveIntervalMinute"));
+                        saveDataToFile();
+                        runing = false;
+                    }
+                    dataChanged = false;
                 }
-                dataChanged = false;
-            }
 
-        }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
+            }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
+        }
+    }
+
+    private void createRowSorter() {
+        rowSorter = new TableRowSorter<TableModel>(this.getModel());
+        for (int i=0; i<this.getColumnCount(); i++) {
+            rowSorter.setSortable(i, false);
+        }
     }
 
 	private IDataVector<ISubDataVector> loadDataFromFile(String viewName){
-		dataFile = new File(SSIConfig.get("profileHome"), SSIConfig.get(viewName+".dataFileName"));
+		String dataFileName = SSIConfig.get(viewName+".dataFileName");
+		if(StringUtil.isEmpty(dataFileName))return null;
+        dataFile = new File(SSIConfig.get("profileHome"), dataFileName);
         if(dataFile.isDirectory())dataFile.delete();
         if(!dataFile.exists()){
             try {
@@ -323,6 +330,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
     }
     
     public void saveDataToFile() {
+        if(dataFile == null) return;
         try {
             LOG.debug("Saving data ... ");
             out = new ObjectOutputStream(new FileOutputStream(dataFile));
@@ -361,4 +369,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 			}
 		};
 	}
+
+    public void showDialog(String title, String msg, IDataVector<ISubDataVector> data) {
+        new MoreInfoDialog(Application.MAIN_FRAME, title, msg, data);
+    }
 }

@@ -12,7 +12,10 @@ import com.wicky.tdl.ISubDataVector;
 
 public class TimesheetDataVector extends Vector<ISubDataVector> implements Serializable, IDataVector<ISubDataVector>{
 	private static final long serialVersionUID = -5470225425540779635L;
-
+    
+	private String title;
+    private String message;
+    
 	private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
             Messages.getString("StaffView.timesheet.table.column_title_id"),
             Messages.getString("StaffView.timesheet.table.column_title_date"),
@@ -80,4 +83,32 @@ public class TimesheetDataVector extends Vector<ISubDataVector> implements Seria
 	public boolean getFlag(int row) {
 		return false;
 	}
+
+    /**
+     * @return the title
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * @param title the title to set
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

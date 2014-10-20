@@ -67,9 +67,8 @@ public class Application {
 		// check application authorizations
 		if (!debugMode || SSIConfig.getBoolean("debug.authorization") == true) {
 			try {
-				if (Application.authorization()) {
-					Application.initMainFrame();
-				}
+		        Application.authorization();
+				Application.initMainFrame();
 			} catch (AuthorizationException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 				Application.initAuthFrame();
@@ -77,7 +76,6 @@ public class Application {
 		} else {
 			Application.initMainFrame();
 		}
-		
 		LOG.info("------------------------- SYSTEM STANDBY -------------------------");
 	}
 
@@ -103,7 +101,7 @@ public class Application {
 		LOG.info("> initializing main frames ... OK!");
 	}
 
-	public static boolean authorization() throws AuthorizationException {
+	public static void authorization() throws AuthorizationException {
 		String user = SSIConfig.get("user");
 		String authKey = SSIConfig.get("authKey");
 		BASE64Decoder decoder = new BASE64Decoder();
@@ -126,7 +124,7 @@ public class Application {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					inputStream));
 			String line = reader.readLine();
-			if (!StringUtil.isEmpty(line) && line != "false") {
+			if (!StringUtil.isEmpty(line) && !"false".equals(line)) {
 				int idxOfD = line.indexOf("D");
 				int idxOfA = line.indexOf("a");
 				if (idxOfD != -1 && idxOfA != -1) {
@@ -146,7 +144,7 @@ public class Application {
 								String todayStr = fmt.format(new Date());
 								if (source.equals(todayStr)) {
 									LOG.debug("Authorized to '" + user + "' successfully!");
-									return true;
+									return;
 								}
 							} catch (NumberFormatException e) {
 								throw new AuthorizationException(
@@ -157,11 +155,10 @@ public class Application {
 					}
 				}
 			}
+			throw new AuthorizationException("Authorization failed! Response is null or false.");
 		} catch (IOException e) {
 			throw new AuthorizationException("Network issue! Please check your Internet connection.");
 		}
-		LOG.debug("Authorization failed!");
-		return false;
 	}
 	
     private static void setupApplicationStyle() {
