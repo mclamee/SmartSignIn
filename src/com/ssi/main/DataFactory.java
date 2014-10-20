@@ -52,16 +52,19 @@ public class DataFactory {
 		    columnModel.getColumn(2).setPreferredWidth(200);
 		    columnModel.getColumn(3).setPreferredWidth(30);
 		    columnModel.getColumn(4).setPreferredWidth(10);
-		    applyMoreInfoButton(simpleTodoTable, columnModel);
 		    columnModel.getColumn(5).setPreferredWidth(30);
 		}else if(viewName.equals(StaffView.class.getSimpleName())){
 			
 		}
 	}
 
-    private static void applyMoreInfoButton(SimpleTodoTable simpleTodoTable, TableColumnModel columnModel) {
-        columnModel.getColumn(4).setCellEditor(new MyButtonEditor(simpleTodoTable));
-        columnModel.getColumn(4).setCellRenderer(new MyButtonRender());
-    }
-
+	public static void setupEditorAndRenderer(SimpleTodoTable simpleTodoTable, String viewName) {
+		if(viewName.equals(RecordView.class.getSimpleName())){
+			TableColumnModel columnModel = simpleTodoTable.getColumnModel();
+			columnModel.getColumn(4).setCellEditor(new MyButtonEditor(simpleTodoTable));
+	        columnModel.getColumn(4).setCellRenderer(new MyButtonRender());
+		}else if(viewName.equals(StaffView.class.getSimpleName())){
+			
+		}
+	}
 }

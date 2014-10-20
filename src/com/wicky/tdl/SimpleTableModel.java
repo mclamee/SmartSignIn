@@ -87,4 +87,8 @@ public class SimpleTableModel extends DefaultTableModel {
 		DataFactory.adjustColumnWidth(simpleTodoTable, viewName);
 	}
 
+	public void setupEditorAndRenderer(SimpleTodoTable simpleTodoTable) {
+		DataFactory.setupEditorAndRenderer(simpleTodoTable, viewName);
+	}
+
 }

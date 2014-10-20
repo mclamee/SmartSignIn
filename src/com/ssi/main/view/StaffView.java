@@ -72,6 +72,10 @@ public class StaffView extends JPanel implements ActionListener {
         btnClear2.setBounds(100, 40, 150, 25);
         this.add(btnClear2);
         
+        JButton btnClear3 = getBtn3();
+        btnClear3.setBounds(260, 40, 150, 25);
+        this.add(btnClear3);
+        
         JScrollPane panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
@@ -104,6 +108,36 @@ public class StaffView extends JPanel implements ActionListener {
             }
         });
         return btnAdd;
+    }
+    
+    private JButton getBtn3() {
+    	Dimension btnSize = new Dimension(150, 25);
+    	
+    	JButton btnClear = new JButton("生成报表"); //$NON-NLS-1$
+    	btnClear.setPreferredSize(btnSize);
+    	btnClear.addActionListener(new ActionListener() {
+    		
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			todoTable.stopCellEditing();
+    			tfSearch.setText(null);
+    			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("StaffView.btn_clear_confirm"), 
+    					Messages.getString("StaffView.btn_clear_confirm_title"), 
+    					JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+    			if(result == JOptionPane.YES_OPTION){
+    				int rowCount = todoTable.dataModel.getRowCount();
+    				for (int rowId = 0;rowId < rowCount;rowId++) {
+    					Boolean value = (Boolean) todoTable.dataModel.getFlag(rowId);
+    					if(value){
+    						todoTable.dataModel.removeRow(rowId);
+    						rowId--;rowCount--;
+    					}
+    				}
+    				todoTable.refreshTable();
+    			}
+    		}
+    	});
+    	return btnClear;
     }
     
     private JButton getBtnClear() {

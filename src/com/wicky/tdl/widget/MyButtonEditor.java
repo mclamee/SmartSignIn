@@ -34,12 +34,12 @@ public class MyButtonEditor extends DefaultCellEditor
     {  
         // DefautlCellEditor有此构造器，需要传入一个，但这个不会使用到，直接new一个即可。   
         super(new JTextField());  
+        this.table = table;
   
         // 设置点击几次激活编辑。   
         this.setClickCountToStart(1);  
   
         this.initButton();  
-        this.table = table;
     }  
   
     private void initButton()  

@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
+import com.ssi.main.data.StaffDataVector;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.JTableHelper;
 import com.wicky.tdl.SimpleTableModel;
@@ -44,8 +45,6 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton btnAdd;
     private JButton btnClear;
     
-    private JDesktopPane desktopPane;
-	
     // init simple to-do table at first
     private SimpleTodoTable todoTable = new SimpleTodoTable(this.getClass().getSimpleName());
     
@@ -75,13 +74,30 @@ public class RecordView extends JPanel implements ActionListener {
         btnClear2.setBounds(100, 40, 150, 25);
         this.add(btnClear2);
         
+        SimpleTodoTable view = new SimpleTodoTable("123");
+        ((SimpleTableModel)view.getModel()).initData(new StaffDataVector());
+		JScrollPane scrollpane = new JScrollPane(view);
+        scrollpane.setOpaque(false);
+        scrollpane.setBackground(Color.BLACK);
+        scrollpane.setBounds(100, 170, frameWidth - 400, frameHeight - 100);
+        this.add(scrollpane);
+        
+//        jPanel=new JPanel();  
+//        jPanel.setLayout(new java.awt.CardLayout());  
+//        jPanel.add(new subPanel1(),"p1");  
+//        jPanel.add(new subPanel2(),"p2");  
+//        //显示p1  
+//        ((CardLayout)this.jPanel.getLayout()).show(jPanel2,"p1");  
+//        //显示下一张panel  
+//        ((CardLayout)this.jPanel.getLayout()).next();  
+//        //同理还有first。。。等等自己看api吧：）  
+//        // 另外，有时还需要加上这句才能马上出效果  
+//        jPanel.validate();  
+        
+        
         JScrollPane panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
-        
-        desktopPane = new JDesktopPane();
-        desktopPane.setBounds(0, 70, frameWidth, frameHeight - 200);
-        this.add(desktopPane);
         
         JLabel labelSearch = getLabelSearch();
         labelSearch.setBounds(0, frameHeight - 120, 170, 30);

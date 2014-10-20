@@ -26,14 +26,14 @@ public class MoreInfoDialog extends JInternalFrame implements ActionListener {
     private SimpleTodoTable todoTable = new SimpleTodoTable(this.getClass().getSimpleName());
 
     public MoreInfoDialog(Container parent, String title, String message, IDataVector<ISubDataVector> data) {
-        super(title, false, true, false, false);
-        if (parent != null) {// 只要窗口不为空
-            Dimension parentSize = parent.getSize();// 得到一个尺寸 窗口获得的尺寸
-            Point p = parent.getLocation();// 窗口的位置这个点给p
-            // 设置位置为
-            setLocation(p.x + parentSize.width / 4, p.y + parentSize.height / 4);
-        }
-
+        super(title, true, true, true, true);
+//        if (parent != null) {// 只要窗口不为空
+//            Dimension parentSize = parent.getSize();// 得到一个尺寸 窗口获得的尺寸
+//            Point p = parent.getLocation();// 窗口的位置这个点给p
+//            // 设置位置为
+//            setLocation(p.x + parentSize.width / 4, p.y + parentSize.height / 4);
+//        }
+        
         getContentPane().add(new JLabel(message), BorderLayout.NORTH);
 
         JPanel centerPanel = new JPanel();

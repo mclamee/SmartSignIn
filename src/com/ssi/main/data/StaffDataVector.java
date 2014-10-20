@@ -20,6 +20,7 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
             Messages.getString("StaffView.table.column_title_qrcode"),
             Messages.getString("StaffView.table.column_title_name"),
             Messages.getString("StaffView.table.column_title_title"),
+            Messages.getString("StaffView.table.column_title_more"),
             Messages.getString("StaffView.table.column_title_choose")
             }));
     
@@ -28,6 +29,7 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
     		String.class, 
     		String.class, 
     		String.class, 
+    		IDataVector.class,
     		Boolean.class
     		});
     

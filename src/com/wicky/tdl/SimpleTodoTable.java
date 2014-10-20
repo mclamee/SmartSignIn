@@ -90,14 +90,17 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         // 4. setup data model
         this.setModel(dataModel);
         
-        // 5. adjust column width
+        // 5. Setup Editor and Renderer
+        dataModel.setupEditorAndRenderer(this);
+        
+        // 6. adjust column width
         this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         dataModel.adjustColumnWidth(this);
         
-        // 6. setup UI to support drag and drop rows
+        // 7. setup UI to support drag and drop rows
         this.setUI(new DragDropRowTableUI());
         
-        // 7. add other components and bind events
+        // 8. add other components and bind events
         this.setSelectionBackground(Color.CYAN);
         this.addMouseListener(new MouseAdapter() {
             @Override
