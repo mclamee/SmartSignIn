@@ -18,14 +18,14 @@ import org.apache.log4j.Logger;
 
 import sun.misc.BASE64Decoder;
 
-import com.ssi.model.AuthorizationException;
+import com.ssi.main.model.AuthorizationException;
+import com.ssi.main.view.AuthView;
+import com.ssi.main.view.MainView;
+import com.ssi.main.view.RecordView;
+import com.ssi.main.view.SetupView;
+import com.ssi.main.view.SignInView;
+import com.ssi.main.view.StaffView;
 import com.ssi.util.StringUtil;
-import com.ssi.view.AuthView;
-import com.ssi.view.MainView;
-import com.ssi.view.RecordView;
-import com.ssi.view.SetupView;
-import com.ssi.view.SignInView;
-import com.ssi.view.StaffView;
 
 public class Application {
 

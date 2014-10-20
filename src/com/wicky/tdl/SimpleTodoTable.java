@@ -43,9 +43,6 @@ import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.SSIConfig;
-import com.ssi.model.SimpleTableModel;
-import com.wicky.tdl.data.IDataVector;
-import com.wicky.tdl.data.ISubDataVector;
 
 
 /**

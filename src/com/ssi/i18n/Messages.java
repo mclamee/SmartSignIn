@@ -13,7 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import com.ssi.view.SetupView;
+import com.ssi.main.view.SetupView;
 
 /**
  * <b>Description</b>: 
