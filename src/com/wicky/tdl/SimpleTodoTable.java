@@ -371,6 +371,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 	}
 
     public void showDialog(String title, String msg, IDataVector<ISubDataVector> data) {
-        new MoreInfoDialog(Application.MAIN_FRAME, title, msg, data);
+        MoreInfoDialog moreInfoDialog = new MoreInfoDialog(this.getParent().getParent(), title, msg, data);
+        this.getParent().getParent().add(moreInfoDialog);
     }
 }

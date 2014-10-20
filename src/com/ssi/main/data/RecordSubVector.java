@@ -11,11 +11,11 @@ public class RecordSubVector extends Vector<Object> implements Serializable, ISu
     private static final long serialVersionUID = -8903166408920564591L;
     
     public RecordSubVector(String qrCode, String name, String salutaion, Boolean flag) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, null, flag}));
+        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, new SeeMoreDataVector("See more info"), flag}));
     }
     
     public RecordSubVector(String qrCode, String name, String salutaion) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, null, Boolean.FALSE}));
+        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, new SeeMoreDataVector("See more info"), Boolean.FALSE}));
     }
     
     @Override
@@ -37,9 +37,9 @@ public class RecordSubVector extends Vector<Object> implements Serializable, ISu
     public String getSalutaion(){
     	return (String) this.get(3);
     }
-//    public MoreInfoModel getMoreInfo(){
-//        return (MoreInfoModel) this.get(4);
-//    }
+    public SeeMoreDataVector getMoreInfo(){
+        return (SeeMoreDataVector) this.get(4);
+    }
     public String getChoose(){
     	return (String) this.get(5);
     }

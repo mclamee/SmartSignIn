@@ -15,6 +15,7 @@ import java.awt.event.WindowAdapter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -42,6 +43,8 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton btnHome;
     private JButton btnAdd;
     private JButton btnClear;
+    
+    private JDesktopPane desktopPane;
 	
     // init simple to-do table at first
     private SimpleTodoTable todoTable = new SimpleTodoTable(this.getClass().getSimpleName());
@@ -75,6 +78,10 @@ public class RecordView extends JPanel implements ActionListener {
         JScrollPane panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
+        
+        desktopPane = new JDesktopPane();
+        desktopPane.setBounds(0, 70, frameWidth, frameHeight - 200);
+        this.add(desktopPane);
         
         JLabel labelSearch = getLabelSearch();
         labelSearch.setBounds(0, frameHeight - 120, 170, 30);
