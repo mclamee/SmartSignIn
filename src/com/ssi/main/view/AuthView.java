@@ -22,7 +22,7 @@ public class AuthView extends JFrame{
     public AuthView() {
         setTitle("Authrization");
         
-        ImageIcon background = new ImageIcon("img/auth_bg.png");
+        ImageIcon background = new ImageIcon("res/img/auth_bg.png");
         JLabel label = new JLabel(background);
         label.setBounds(0, 0, background.getIconWidth(), background
                     .getIconHeight());

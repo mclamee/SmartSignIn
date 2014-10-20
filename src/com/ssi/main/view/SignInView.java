@@ -50,9 +50,9 @@ public class SignInView extends JPanel implements ActionListener {
         setOpaque(false);
         setLayout(null);
         
-	    ImageIcon imgHome = new ImageIcon("img/home.png");
+	    ImageIcon imgHome = new ImageIcon("res/img/home.png");
 		jbtHome = DrawableUtils.createImageButton("", imgHome, null);
-		DrawableUtils.setMouseListener(jbtHome, "img/home");
+		DrawableUtils.setMouseListener(jbtHome, "res/img/home");
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
 				imgHome.getIconHeight());
 		add(jbtHome);

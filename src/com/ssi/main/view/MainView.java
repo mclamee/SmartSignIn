@@ -67,7 +67,7 @@ public class MainView extends JFrame implements ActionListener {
 	    log.debug("Current Resoluation: "+DrawableUtils.getScreenWidth()+" x "+DrawableUtils.getScreenHeight());
 	    
 		//设置界面大小，背景图片
-		ImageIcon background = new ImageIcon("img/index_bg.png");
+		ImageIcon background = new ImageIcon("res/img/index_bg.png");
 		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
 			background = ResizeUtil.resizeImageToScreenSize(background);
 		}
@@ -84,25 +84,25 @@ public class MainView extends JFrame implements ActionListener {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
-		ImageIcon imgRecord = new ImageIcon("img/btn_record.png");
+		ImageIcon imgRecord = new ImageIcon("res/img/btn_record.png");
 		jbtRecord = this.createImageButton(imgRecord);
 		jbtRecord.setBounds(60, 150, imgRecord.getIconWidth(), imgRecord.getIconHeight());	
-		DrawableUtils.setMouseListener(jbtRecord, "img/btn_record");
+		DrawableUtils.setMouseListener(jbtRecord, "res/img/btn_record");
 		
-		ImageIcon imgStaff = new ImageIcon("img/btn_staff.png");
+		ImageIcon imgStaff = new ImageIcon("res/img/btn_staff.png");
 		jbtStaff = this.createImageButton(imgStaff);
 		jbtStaff.setBounds(60, 150, imgStaff.getIconWidth(), imgStaff.getIconHeight());	
-		DrawableUtils.setMouseListener(jbtStaff, "img/btn_staff");
+		DrawableUtils.setMouseListener(jbtStaff, "res/img/btn_staff");
 		
-		ImageIcon imgSignIn = new ImageIcon("img/btn_signin.png");
+		ImageIcon imgSignIn = new ImageIcon("res/img/btn_signin.png");
 		jbtSignIn = this.createImageButton(imgSignIn);
 		jbtSignIn.setBounds(240, 150, imgSignIn.getIconWidth(), imgSignIn.getIconHeight());
-		DrawableUtils.setMouseListener(jbtSignIn, "img/btn_signin");
+		DrawableUtils.setMouseListener(jbtSignIn, "res/img/btn_signin");
 		
-		ImageIcon imgSetup = new ImageIcon("img/btn_setup.png");
+		ImageIcon imgSetup = new ImageIcon("res/img/btn_setup.png");
 		jbtSetup = this.createImageButton(imgSetup);
 		jbtSetup.setBounds(420, 150, imgSetup.getIconWidth(), imgSetup.getIconHeight());
-		DrawableUtils.setMouseListener(jbtSetup, "img/btn_setup");
+		DrawableUtils.setMouseListener(jbtSetup, "res/img/btn_setup");
 
 		GridLayout gridlayout = new GridLayout(0, 4); 
 		gridlayout.setHgap(10);   

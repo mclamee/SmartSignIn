@@ -56,11 +56,11 @@ public class StaffView extends JPanel implements ActionListener {
         this.setOpaque(false);
         this.setLayout(null);
         
-        ImageIcon imgHome = new ImageIcon("img/home.png"); //$NON-NLS-1$
+        ImageIcon imgHome = new ImageIcon("res/img/home.png"); //$NON-NLS-1$
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
         btnHome.setBounds(20, 20, imgHome.getIconWidth(),
                 imgHome.getIconHeight());
-        DrawableUtils.setMouseListener(btnHome, "img/home"); //$NON-NLS-1$
+        DrawableUtils.setMouseListener(btnHome, "res/img/home"); //$NON-NLS-1$
         btnHome.addActionListener(this);
         this.add(btnHome);
         
