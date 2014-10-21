@@ -82,8 +82,10 @@ public class RecordView extends JPanel implements ActionListener {
         scrollpane.setBounds(100, 170, frameWidth - 400, frameHeight - 100);
         this.add(scrollpane);
         
-//        jPanel=new JPanel();  
-//        jPanel.setLayout(new java.awt.CardLayout());  
+        
+        
+//        JPanel jPanel=new JPanel();  
+//        jPanel.setLayout(new CardLayout());  
 //        jPanel.add(new subPanel1(),"p1");  
 //        jPanel.add(new subPanel2(),"p2");  
 //        //显示p1  

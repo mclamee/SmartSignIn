@@ -1,5 +1,7 @@
 package com.ssi.main;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
@@ -182,5 +185,27 @@ public class Application {
         UIManager.put("Button.font", font);
         UIManager.put("Label.font", font);
         UIManager.put("List.font", font);
+    }
+
+    public static void switchView(JPanel view) {
+        Container mContentPanel = Application.MAIN_FRAME.getContentPane();
+        mContentPanel.remove(mContentPanel.getComponent(0)); 
+        mContentPanel.add(view, BorderLayout.CENTER); 
+        mContentPanel.revalidate();
+        mContentPanel.repaint();
+    }
+    
+    public static void closeDevice(){
+        //关闭设备
+//      VguangApi.closeDevice();
+    }
+    
+    public static void applySettingsAndOpenDevice(){
+        //应用设置
+//        Application.SETUP_VIEW.applySetting();
+        //初始化数据
+        Application.SIGNIN_VIEW.initDataMap();
+        //打开设备
+//        VguangApi.openDevice();
     }
 }

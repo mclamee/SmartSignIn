@@ -34,7 +34,6 @@ import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.ResizeUtil;
-import com.vguang.VguangApi;
 
 
 
@@ -160,46 +159,20 @@ public class MainView extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == jbtRecord){
-			mContentPanel.remove(mMainJpanel); 
-			mContentPanel.add(Application.RECORD_VIEW); 
-			closeDevice();
-			mContentPanel.revalidate();
-			mContentPanel.repaint(); 
+		    Application.closeDevice();
+			Application.switchView(Application.RECORD_VIEW); 
 		}else if(e.getSource() == jbtStaff){
-			mContentPanel.remove(mMainJpanel); 
-			mContentPanel.add(Application.STAFF_VIEW); 
-			closeDevice();
-			mContentPanel.revalidate();
-			mContentPanel.repaint(); 
+		    Application.closeDevice();
+			Application.switchView(Application.STAFF_VIEW); 
 		}else if(e.getSource() == jbtSetup){
-			mContentPanel.remove(mMainJpanel); 
-			mContentPanel.add(Application.SETUP_VIEW);
-			applySettingsAndOpenDevice();
-			mContentPanel.revalidate();
-			mContentPanel.repaint(); 
+		    Application.applySettingsAndOpenDevice();
+			Application.switchView(Application.SETUP_VIEW);
 		}else if(e.getSource() == jbtSignIn){
-			mContentPanel.remove(mMainJpanel);
-			mContentPanel.add(Application.SIGNIN_VIEW); 
-			applySettingsAndOpenDevice();
-			mContentPanel.revalidate();
-			mContentPanel.repaint();
+		    Application.applySettingsAndOpenDevice();
+			Application.switchView(Application.SIGNIN_VIEW); 
 		}
 	}
-	
-	public void closeDevice(){
-	    //关闭设备
-//	    VguangApi.closeDevice();
-	}
-	
-	public void applySettingsAndOpenDevice(){
-        //应用设置
-		Application.SETUP_VIEW.applySetting();
-        //初始化数据
-	    Application.SIGNIN_VIEW.initDataMap();
-        //打开设备
-//        VguangApi.openDevice();
-	}
-	
+
 	public JPanel getMainJpanel()
 	{
 		return mMainJpanel;
