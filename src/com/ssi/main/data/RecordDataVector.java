@@ -37,10 +37,6 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
         return this.add(new RecordSubVector(qrCode, name, salutaion, flag));
     }
     
-    public synchronized boolean add(String qrCode, String name, String salutaion) {
-        return this.add(new RecordSubVector(qrCode, name, salutaion));
-    }
-    
     public Vector<String> getTitles() {
         return titles;
     }

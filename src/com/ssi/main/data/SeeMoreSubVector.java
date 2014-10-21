@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Vector;
 
 import com.ssi.i18n.Messages;
+import com.ssi.main.DataFactory;
 import com.wicky.tdl.ISubDataVector;
 
 public class SeeMoreSubVector extends Vector<Object> implements Serializable, ISubDataVector{
@@ -14,8 +15,8 @@ public class SeeMoreSubVector extends Vector<Object> implements Serializable, IS
 	public SeeMoreSubVector(Date date) {
         super(Arrays.asList(new Object[]{
                 date, 
-                new SimpleDateFormat("yyyy-MM-dd").format(date), 
-                new SimpleDateFormat("HH:mm:ss").format(date)
+                DataFactory.smfDate.format(date), 
+                DataFactory.smfTime.format(date)
                 }));
     }
     
@@ -36,4 +37,7 @@ public class SeeMoreSubVector extends Vector<Object> implements Serializable, IS
     public String getTimeString(){
     	return (String) this.get(2);
     }
+	@Override
+	public void recordDateTime(Date date) {
+	}
 }

@@ -21,9 +21,12 @@ import javax.swing.SwingConstants;
 
 import com.ssi.main.Application;
 import com.ssi.util.DrawableUtils;
+import com.ssi.util.StringUtil;
 import com.vguang.VguangApi;
+import com.wicky.tdl.IDataVector;
+import com.wicky.tdl.ISubDataVector;
 
-public class SetupView extends JPanel implements ActionListener{
+public class SetupView extends JPanel implements IView, ActionListener{
 
 	private static final long serialVersionUID = 8096656238618262028L;
 	
@@ -43,6 +46,8 @@ public class SetupView extends JPanel implements ActionListener{
 	
 	private int totalPaddingTop;
 	private int totalPaddingLeft;
+
+	private SubDialogPanel subDialogPanel;
 	
 	/**
 	 * Create the application.
@@ -325,4 +330,22 @@ public class SetupView extends JPanel implements ActionListener{
             frame.getContentPane().repaint();
         }
     }
+    
+	private SubDialogPanel getSubDialogPanel() {
+		subDialogPanel = new SubDialogPanel(null);
+        return subDialogPanel;
+	}
+    
+	public void closeSubDialog(){
+		subDialogPanel.close();
+	}
+	
+	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
+		subDialogPanel.open(title, message, data);
+	}
+
+	@Override
+	public String getTemplate() {
+		return null;
+	}
 }

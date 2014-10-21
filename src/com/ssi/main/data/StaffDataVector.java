@@ -37,10 +37,6 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
         return this.add(new StaffSubVector(qrCode, name, title, flag));
     }
     
-    public synchronized boolean add(String qrCode, String name, String title) {
-        return this.add(new StaffSubVector(qrCode, name, title));
-    }
-    
     public Vector<String> getTitles() {
         return titles;
     }

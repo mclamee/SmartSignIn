@@ -2,6 +2,7 @@ package com.ssi.main.data;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 import com.ssi.i18n.Messages;
@@ -11,11 +12,7 @@ public class RecordSubVector extends Vector<Object> implements Serializable, ISu
     private static final long serialVersionUID = -8903166408920564591L;
     
     public RecordSubVector(String qrCode, String name, String salutaion, Boolean flag) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, new SeeMoreDataVector("See more info"), flag}));
-    }
-    
-    public RecordSubVector(String qrCode, String name, String salutaion) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, new SeeMoreDataVector("See more info"), Boolean.FALSE}));
+        super(Arrays.asList(new Object[]{null, qrCode, name, salutaion, new SeeMoreDataVector(qrCode), flag}));
     }
     
     @Override
@@ -43,4 +40,9 @@ public class RecordSubVector extends Vector<Object> implements Serializable, ISu
     public String getChoose(){
     	return (String) this.get(5);
     }
+
+	@Override
+	public void recordDateTime(Date date) {
+		this.getMoreInfo().add(date);
+	}
 }

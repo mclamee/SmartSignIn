@@ -12,10 +12,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,17 +23,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
+import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.JTableHelper;
+import com.ssi.util.StringUtil;
+import com.ssi.util.excel.ExcelHandle;
+import com.wicky.tdl.IDataVector;
+import com.wicky.tdl.ISubDataVector;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 
-public class StaffView extends JPanel implements ActionListener {
+public class StaffView extends JPanel implements IView, ActionListener {
 	
     private static final long serialVersionUID = 4479482587513212049L;
     
@@ -44,9 +51,15 @@ public class StaffView extends JPanel implements ActionListener {
     private JButton btnClear;
 	
     // init simple to-do table at first
-    private SimpleTodoTable todoTable = new SimpleTodoTable(this.getClass().getSimpleName());
+    private SimpleTodoTable todoTable = new SimpleTodoTable(this);
     
     private JTextField tfSearch;
+
+	private SubDialogPanel subDialogPanel;
+
+	private JScrollPane panelTable;
+
+	private JTextField template;
     
     public StaffView() {
         Dimension frameSize = Application.MAIN_FRAME.getSize();
@@ -72,14 +85,45 @@ public class StaffView extends JPanel implements ActionListener {
         btnClear2.setBounds(100, 40, 150, 25);
         this.add(btnClear2);
         
-        JButton btnClear3 = getBtn3();
-        btnClear3.setBounds(260, 40, 150, 25);
-        this.add(btnClear3);
+        JLabel templateLable = new JLabel();
+        templateLable.setText("设置播放模板：");
+        templateLable.setBounds(430, 40, 100, 25);
+        this.add(templateLable);
         
-        JScrollPane panelTable = getPanelTable();
+        template = new JTextField();
+        template.setText(SSIConfig.get("StaffView.template"));
+        template.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				SSIConfig.put("StaffView.template", template.getText());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				SSIConfig.put("StaffView.template", template.getText());
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				SSIConfig.put("StaffView.template", template.getText());
+			}
+		});
+        template.setBounds(520, 40, 500, 25);
+        this.add(template);
+        
+        JButton btnExport = getBtnExport();
+        btnExport.setBounds(260, 40, 150, 25);
+        this.add(btnExport);
+        
+        panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
         
+        SubDialogPanel subDialogPanel2 = getSubDialogPanel();
+		this.add(subDialogPanel2);
+		subDialogPanel2.close();
+
         JLabel labelSearch = getLabelSearch();
         labelSearch.setBounds(0, frameHeight - 120, 170, 30);
         this.add(labelSearch);
@@ -110,34 +154,26 @@ public class StaffView extends JPanel implements ActionListener {
         return btnAdd;
     }
     
-    private JButton getBtn3() {
+    private JButton getBtnExport() {
     	Dimension btnSize = new Dimension(150, 25);
     	
-    	JButton btnClear = new JButton("生成报表"); //$NON-NLS-1$
-    	btnClear.setPreferredSize(btnSize);
-    	btnClear.addActionListener(new ActionListener() {
+    	JButton btnExport = new JButton("生成报表"); //$NON-NLS-1$
+    	btnExport.setPreferredSize(btnSize);
+    	btnExport.addActionListener(new ActionListener() {
     		
     		@Override
     		public void actionPerformed(ActionEvent e) {
     			todoTable.stopCellEditing();
     			tfSearch.setText(null);
-    			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("StaffView.btn_clear_confirm"), 
-    					Messages.getString("StaffView.btn_clear_confirm_title"), 
-    					JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
-    			if(result == JOptionPane.YES_OPTION){
-    				int rowCount = todoTable.dataModel.getRowCount();
-    				for (int rowId = 0;rowId < rowCount;rowId++) {
-    					Boolean value = (Boolean) todoTable.dataModel.getFlag(rowId);
-    					if(value){
-    						todoTable.dataModel.removeRow(rowId);
-    						rowId--;rowCount--;
-    					}
-    				}
-    				todoTable.refreshTable();
-    			}
+    			todoTable.refreshTable();
+    			try {
+					ExcelHandle.getInstance().exportStaffReport();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
     		}
     	});
-    	return btnClear;
+    	return btnExport;
     }
     
     private JButton getBtnClear() {
@@ -225,12 +261,7 @@ public class StaffView extends JPanel implements ActionListener {
             todoTable.stopCellEditing();
             todoTable.refreshTable();
             
-            JFrame frame = Application.MAIN_FRAME;
-            frame.getContentPane().remove(this);
-            JPanel panel = ((MainView) frame).getMainJpanel();
-            frame.getContentPane().add(panel);
-            frame.getContentPane().validate();
-            frame.getContentPane().repaint();
+            Application.switchView(Application.MAIN_FRAME.getMainJpanel());
         }
     }
 
@@ -240,5 +271,23 @@ public class StaffView extends JPanel implements ActionListener {
 	
 	public WindowAdapter getWindowListener(){
 		return todoTable.getWindowListener();
+	}
+	
+	private SubDialogPanel getSubDialogPanel() {
+		subDialogPanel = new SubDialogPanel(panelTable);
+        return subDialogPanel;
+	}
+    
+	public void closeSubDialog(){
+		subDialogPanel.close();
+	}
+	
+	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
+		subDialogPanel.open(title, message, data);
+	}
+
+	@Override
+	public String getTemplate() {
+		return StringUtil.trim(template.getText());
 	}
 }

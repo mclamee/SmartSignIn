@@ -19,5 +19,7 @@ public interface IDataVector<T> extends Iterable<T>{
 	boolean getFlag(int row);
 	
 	String getTitle();
+	
 	String getMessage();
+
 }

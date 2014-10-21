@@ -1,9 +1,11 @@
 package com.wicky.tdl;
 import java.util.Vector;
 
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 import com.ssi.main.DataFactory;
+import com.ssi.main.view.IView;
 
 /**
  * Table Model Class for Simple Table: 
@@ -15,11 +17,11 @@ public class SimpleTableModel extends DefaultTableModel {
     
     private IDataVector<ISubDataVector> data;
     
-    private String viewName;
+    private IView view;
     
-    public SimpleTableModel(String viewName) {
-    	this.viewName = viewName;
-    	IDataVector<ISubDataVector> dataVector = DataFactory.getDataVector(viewName);
+    public SimpleTableModel(IView view) {
+    	this.view = view;
+    	IDataVector<ISubDataVector> dataVector = DataFactory.createDataVector(view);
     	if(dataVector != null){
     	    this.data = (IDataVector<ISubDataVector>) dataVector;
     	    this.setDataVector((Vector<ISubDataVector>) dataVector, dataVector.getTitles());
@@ -47,8 +49,8 @@ public class SimpleTableModel extends DefaultTableModel {
     }
     
     public int addRow() {
-        insertRow(getRowCount(), DataFactory.createSubDataVector(viewName));
-        return this.data.size();
+        insertRow(getRowCount(), DataFactory.createSubDataVector(view));
+        return this.data.size() - 1;
     }
     
     public int getColumnIdx(String colName) {
@@ -84,11 +86,11 @@ public class SimpleTableModel extends DefaultTableModel {
 	}
 
 	public void adjustColumnWidth(SimpleTodoTable simpleTodoTable) {
-		DataFactory.adjustColumnWidth(simpleTodoTable, viewName);
+		DataFactory.adjustColumnWidth(simpleTodoTable, view);
 	}
 
-	public void setupEditorAndRenderer(SimpleTodoTable simpleTodoTable) {
-		DataFactory.setupEditorAndRenderer(simpleTodoTable, viewName);
+	public void setupEditorAndRenderer(SimpleTodoTable simpleTodoTable, IView view) {
+		DataFactory.setupEditorAndRenderer(simpleTodoTable, view);
 	}
 
 }

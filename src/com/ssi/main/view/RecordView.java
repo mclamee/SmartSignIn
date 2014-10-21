@@ -12,11 +12,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -24,18 +23,24 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
-import com.ssi.main.data.StaffDataVector;
+import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.JTableHelper;
+import com.ssi.util.StringUtil;
+import com.ssi.util.excel.ExcelHandle;
+import com.wicky.tdl.IDataVector;
+import com.wicky.tdl.ISubDataVector;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 
-public class RecordView extends JPanel implements ActionListener {
+public class RecordView extends JPanel implements IView, ActionListener {
 	
     private static final long serialVersionUID = 4479482587513212049L;
     
@@ -45,11 +50,17 @@ public class RecordView extends JPanel implements ActionListener {
     private JButton btnAdd;
     private JButton btnClear;
     
+    private JTextField template;
+    
     // init simple to-do table at first
-    private SimpleTodoTable todoTable = new SimpleTodoTable(this.getClass().getSimpleName());
+    private SimpleTodoTable todoTable = new SimpleTodoTable(this);
     
     private JTextField tfSearch;
-    
+
+	private SubDialogPanel subDialogPanel;
+
+	private JScrollPane panelTable;
+
     public RecordView() {
         Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
@@ -74,32 +85,44 @@ public class RecordView extends JPanel implements ActionListener {
         btnClear2.setBounds(100, 40, 150, 25);
         this.add(btnClear2);
         
-        SimpleTodoTable view = new SimpleTodoTable("123");
-        ((SimpleTableModel)view.getModel()).initData(new StaffDataVector());
-		JScrollPane scrollpane = new JScrollPane(view);
-        scrollpane.setOpaque(false);
-        scrollpane.setBackground(Color.BLACK);
-        scrollpane.setBounds(100, 170, frameWidth - 400, frameHeight - 100);
-        this.add(scrollpane);
+        JButton btnExport = getBtnExport();
+        btnExport.setBounds(260, 40, 150, 25);
+        this.add(btnExport);
         
+        JLabel templateLable = new JLabel();
+        templateLable.setText("设置播放模板：");
+        templateLable.setBounds(430, 40, 100, 25);
+        this.add(templateLable);
         
+        template = new JTextField();
+        template.setText(SSIConfig.get("RecordView.template"));
+        template.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				SSIConfig.put("RecordView.template", template.getText());
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				SSIConfig.put("RecordView.template", template.getText());
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				SSIConfig.put("RecordView.template", template.getText());
+			}
+		});
+        template.setBounds(520, 40, 500, 25);
+        this.add(template);
         
-//        JPanel jPanel=new JPanel();  
-//        jPanel.setLayout(new CardLayout());  
-//        jPanel.add(new subPanel1(),"p1");  
-//        jPanel.add(new subPanel2(),"p2");  
-//        //显示p1  
-//        ((CardLayout)this.jPanel.getLayout()).show(jPanel2,"p1");  
-//        //显示下一张panel  
-//        ((CardLayout)this.jPanel.getLayout()).next();  
-//        //同理还有first。。。等等自己看api吧：）  
-//        // 另外，有时还需要加上这句才能马上出效果  
-//        jPanel.validate();  
-        
-        
-        JScrollPane panelTable = getPanelTable();
+        panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
+        
+        SubDialogPanel subDialogPanel2 = getSubDialogPanel();
+		this.add(subDialogPanel2);
+		subDialogPanel2.close();
         
         JLabel labelSearch = getLabelSearch();
         labelSearch.setBounds(0, frameHeight - 120, 170, 30);
@@ -108,6 +131,37 @@ public class RecordView extends JPanel implements ActionListener {
         JTextField tfSearch2 = getTfSearch();
         tfSearch2.setBounds(170, frameHeight - 120, frameWidth - 170 - 10, 30);
         this.add(tfSearch2);
+    }
+
+	private SubDialogPanel getSubDialogPanel() {
+		subDialogPanel = new SubDialogPanel(panelTable);
+        return subDialogPanel;
+	}
+    
+	public void closeSubDialog(){
+		subDialogPanel.close();
+	}
+	
+	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
+		subDialogPanel.open(title, message, data);
+	}
+	
+    private JButton getBtnExport() {
+    	Dimension btnSize = new Dimension(150, 25);
+    	
+    	JButton btnExport = new JButton("生成报表"); //$NON-NLS-1$
+    	btnExport.setPreferredSize(btnSize);
+    	btnExport.addActionListener(new ActionListener() {
+    		
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			todoTable.stopCellEditing();
+    			tfSearch.setText(null);
+    			todoTable.refreshTable();
+    			ExcelHandle.getInstance().exportCustReport();
+    		}
+    	});
+    	return btnExport;
     }
     
     private JButton getBtnAdd() {
@@ -216,12 +270,7 @@ public class RecordView extends JPanel implements ActionListener {
             todoTable.stopCellEditing();
             todoTable.refreshTable();
             
-            JFrame frame = Application.MAIN_FRAME;
-            frame.getContentPane().remove(this);
-            JPanel panel = ((MainView) frame).getMainJpanel();
-            frame.getContentPane().add(panel);
-            frame.getContentPane().validate();
-            frame.getContentPane().repaint();
+            Application.switchView(Application.MAIN_FRAME.getMainJpanel());
         }
     }
 
@@ -231,5 +280,10 @@ public class RecordView extends JPanel implements ActionListener {
 	
 	public WindowAdapter getWindowListener(){
 		return todoTable.getWindowListener();
+	}
+
+	@Override
+	public String getTemplate() {
+		return StringUtil.trim(template.getText());
 	}
 }

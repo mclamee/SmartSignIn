@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -24,8 +25,10 @@ import com.ssi.main.model.SignInModel;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
 import com.ssi.util.Version;
+import com.wicky.tdl.IDataVector;
+import com.wicky.tdl.ISubDataVector;
 
-public class SignInView extends JPanel implements ActionListener {
+public class SignInView extends JPanel implements IView, ActionListener {
 	private static final long serialVersionUID = 4089298273304918969L;
 	
 	private JButton jbtHome;
@@ -56,6 +59,25 @@ public class SignInView extends JPanel implements ActionListener {
 		jbtHome.setBounds(20, 20, imgHome.getIconWidth(),
 				imgHome.getIconHeight());
 		add(jbtHome);
+
+		if(Application.debugMode){
+			final JTextField input = new JTextField();
+	        input.setText("");
+	        input.setBounds(320, 15, 500, 25);
+	        this.add(input);
+			
+	        JButton btnAdd = new JButton("测试输入");
+	        Dimension btnSize = new Dimension(150, 25);
+	        btnAdd.setPreferredSize(btnSize);
+	        btnAdd.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	            	SignInView.this.setResultString(input.getText());
+	            }
+	        });
+	        btnAdd.setBounds(100, 15, 150, 25);
+	        this.add(btnAdd);
+		}
 		
         SimpleAttributeSet bSet = new SimpleAttributeSet();  
         StyleConstants.setAlignment(bSet, StyleConstants.ALIGN_CENTER);
@@ -112,6 +134,9 @@ public class SignInView extends JPanel implements ActionListener {
 
 		@Override
 		public void onEnd(SpeechError error) {
+		  	resultArea.setText("");
+	    	SignInView.this.revalidate();
+	    	SignInView.this.repaint();
 		}
 
 		@Override
@@ -146,8 +171,6 @@ public class SignInView extends JPanel implements ActionListener {
      * @author williamz@synnex.com
      */
     public void setResultString(String callback) {
-    	resultArea.setText("");
-    	
         SynthesizerPlayer synthesizer = SynthesizerPlayer
                 .getSynthesizerPlayer();
         
@@ -177,5 +200,16 @@ public class SignInView extends JPanel implements ActionListener {
 
 	public void initDataMap() {
 		this.model.initDataMap();
+	}
+	
+	public void closeSubDialog(){
+	}
+	
+	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
+	}
+
+	@Override
+	public String getTemplate() {
+		return null;
 	}
 }

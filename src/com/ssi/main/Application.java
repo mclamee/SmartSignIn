@@ -3,6 +3,8 @@ package com.ssi.main;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ import com.ssi.main.view.SetupView;
 import com.ssi.main.view.SignInView;
 import com.ssi.main.view.StaffView;
 import com.ssi.util.StringUtil;
+import com.vguang.VguangApi;
 
 public class Application {
 
@@ -100,7 +103,12 @@ public class Application {
 		// interactions
 		MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
 		MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
-		
+		MAIN_FRAME.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				SSIConfig.save();
+			}
+		});
 		LOG.info("> initializing main frames ... OK!");
 	}
 
@@ -197,15 +205,15 @@ public class Application {
     
     public static void closeDevice(){
         //关闭设备
-//      VguangApi.closeDevice();
+      VguangApi.closeDevice();
     }
     
     public static void applySettingsAndOpenDevice(){
         //应用设置
-//        Application.SETUP_VIEW.applySetting();
+        Application.SETUP_VIEW.applySetting();
         //初始化数据
         Application.SIGNIN_VIEW.initDataMap();
         //打开设备
-//        VguangApi.openDevice();
+        VguangApi.openDevice();
     }
 }

@@ -2,6 +2,7 @@ package com.ssi.main.data;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Vector;
 
 import com.ssi.i18n.Messages;
@@ -11,11 +12,7 @@ public class StaffSubVector extends Vector<Object> implements Serializable, ISub
     private static final long serialVersionUID = -8903166408920564591L;
     
     public StaffSubVector(String qrCode, String name, String title, Boolean flag) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, title, new TimesheetDataVector(), flag}));
-    }
-    
-    public StaffSubVector(String qrCode, String name, String title) {
-        super(Arrays.asList(new Object[]{null, qrCode, name, title, new TimesheetDataVector(), Boolean.FALSE}));
+        super(Arrays.asList(new Object[]{null, qrCode, name, title, new TimesheetDataVector(qrCode), flag}));
     }
     
     @Override
@@ -43,4 +40,9 @@ public class StaffSubVector extends Vector<Object> implements Serializable, ISub
     public String getChoose(){
     	return (String) this.get(5);
     }
+    
+	@Override
+	public void recordDateTime(Date date) {
+		this.getMoreInfo().add(date);
+	}
 }

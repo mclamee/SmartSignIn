@@ -43,7 +43,7 @@ import org.apache.log4j.Logger;
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
-import com.ssi.main.view.MoreInfoDialog;
+import com.ssi.main.view.IView;
 import com.ssi.util.StringUtil;
 
 
@@ -68,10 +68,10 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 
 	private File dataFile;
     
-    public SimpleTodoTable(String viewName){
-    	LOG.info("VIEWNAME: " + viewName);
+    public SimpleTodoTable(IView view){
+		LOG.info("VIEWNAME: " + (view == null?"":view.getClass().getSimpleName()));
         // 1. create data model
-		dataModel = new SimpleTableModel(viewName);
+		dataModel = new SimpleTableModel(view);
         dataModel.addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -80,7 +80,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         });
         
         // 2. load data vector from saved file
-        IDataVector<ISubDataVector> data = loadDataFromFile(viewName);
+        IDataVector<ISubDataVector> data = loadDataFromFile(view);
         
         // 3. assemble data model
         if(data != null){
@@ -91,7 +91,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         this.setModel(dataModel);
         
         // 5. Setup Editor and Renderer
-        dataModel.setupEditorAndRenderer(this);
+        dataModel.setupEditorAndRenderer(this, view);
         
         // 6. adjust column width
         this.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -187,6 +187,9 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 
             }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
         }
+        
+        this.setRowHeight(40);
+        this.getTableHeader().setReorderingAllowed(false);
     }
 
     private void createRowSorter() {
@@ -196,8 +199,9 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         }
     }
 
-	private IDataVector<ISubDataVector> loadDataFromFile(String viewName){
-		String dataFileName = SSIConfig.get(viewName+".dataFileName");
+	private IDataVector<ISubDataVector> loadDataFromFile(IView view){
+		if(view == null) return null;
+		String dataFileName = SSIConfig.get(view.getClass().getSimpleName()+".dataFileName");
 		if(StringUtil.isEmpty(dataFileName))return null;
         dataFile = new File(SSIConfig.get("profileHome"), dataFileName);
         if(dataFile.isDirectory())dataFile.delete();
@@ -372,9 +376,4 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 			}
 		};
 	}
-
-    public void showDialog(String title, String msg, IDataVector<ISubDataVector> data) {
-        MoreInfoDialog moreInfoDialog = new MoreInfoDialog(this.getParent().getParent(), title, msg, data);
-        this.getParent().getParent().add(moreInfoDialog);
-    }
 }

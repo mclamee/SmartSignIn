@@ -16,10 +16,6 @@ public class SeeMoreDataVector extends Vector<ISubDataVector> implements Seriali
 	private String title;
     private String message;
     
-    public SeeMoreDataVector(String title) {
-        this.title = title;
-    }
-    
 	private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
             Messages.getString("RecordView.seemore.table.column_title_id"),
             Messages.getString("RecordView.seemore.table.column_title_date"),
@@ -32,7 +28,11 @@ public class SeeMoreDataVector extends Vector<ISubDataVector> implements Seriali
     		String.class, 
     		});
     
-    public synchronized boolean add(Date date) {
+    public SeeMoreDataVector(String qrCode) {
+    	this.title = qrCode;
+	}
+
+	public synchronized boolean add(Date date) {
         return this.add(new SeeMoreSubVector(date));
     }
     
@@ -69,7 +69,7 @@ public class SeeMoreDataVector extends Vector<ISubDataVector> implements Seriali
     @Override
     public synchronized String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("{\n"); //$NON-NLS-1$
+        sb.append("SeeMore[title: "+title+", message: "+message+"]{\n"); //$NON-NLS-1$
         
         for (int i = 0;i < this.size();i++) {
             ISubDataVector sub = this.get(i);

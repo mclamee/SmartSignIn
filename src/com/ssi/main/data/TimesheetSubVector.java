@@ -3,6 +3,7 @@ package com.ssi.main.data;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import com.ssi.i18n.Messages;
@@ -10,7 +11,7 @@ import com.wicky.tdl.ISubDataVector;
 
 public class TimesheetSubVector extends Vector<Object> implements Serializable, ISubDataVector{
 	private static final long serialVersionUID = -5706860340042149768L;
-	public TimesheetSubVector(Date date, Integer workhrs, Integer counts, Object detail) {
+	public TimesheetSubVector(String date, String workhrs, Integer counts, List<Date> detail) {
         super(Arrays.asList(new Object[]{null, date, workhrs, counts, detail}));
     }
     
@@ -23,16 +24,20 @@ public class TimesheetSubVector extends Vector<Object> implements Serializable, 
                 +"\"}";
     }
     
-    public Date getDate(){
-    	return (Date) this.get(1);
+    public String getDate(){
+    	return (String) this.get(1);
     }
-    public Integer getWorkhrs(){
-    	return (Integer) this.get(2);
+    public String getWorkhrs(){
+    	return (String) this.get(2);
     }
     public Integer getCounts(){
     	return (Integer) this.get(3);
     }
-    public Object getDetail(){
-    	return (Object) this.get(4);
+    public List<Date> getDetail(){
+    	return (List<Date>) this.get(4);
     }
+	@Override
+	public void recordDateTime(Date date) {
+//		this.getMoreInfo().add(date);
+	}
 }

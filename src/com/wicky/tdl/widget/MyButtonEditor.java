@@ -5,10 +5,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
+import com.ssi.main.view.IView;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 import com.wicky.tdl.SimpleTableModel;
@@ -28,14 +31,16 @@ public class MyButtonEditor extends DefaultCellEditor
   
     private JButton button;
 
-    private SimpleTodoTable table;  
+    private SimpleTodoTable table;
+
+	private IView view;  
   
-    public MyButtonEditor(SimpleTodoTable table)  
+    public MyButtonEditor(SimpleTodoTable table, IView view)  
     {  
         // DefautlCellEditor有此构造器，需要传入一个，但这个不会使用到，直接new一个即可。   
         super(new JTextField());  
         this.table = table;
-  
+        this.view = view;
         // 设置点击几次激活编辑。   
         this.setClickCountToStart(1);  
   
@@ -57,14 +62,6 @@ public class MyButtonEditor extends DefaultCellEditor
                 // 触发取消编辑的事件，不会调用tableModel的setValue方法。   
                 MyButtonEditor.this.fireEditingCanceled();  
   
-                // 这里可以做其它操作。   
-                // 可以将table传入，通过getSelectedRow,getSelectColumn方法获取到当前选择的行和列及其它操作等。   
-                SimpleTableModel model = (SimpleTableModel) table.getModel();
-                Object data = model.getData().getValueAt(table.getSelectedRow(), table.getSelectedColumn());
-                if(data instanceof IDataVector){
-                    IDataVector<ISubDataVector> idata = (IDataVector<ISubDataVector>)data;
-                    table.showDialog(idata.getTitle(), idata.getMessage(), idata);
-                }
             }
         });  
   
@@ -74,10 +71,15 @@ public class MyButtonEditor extends DefaultCellEditor
      * 这里重写父类的编辑方法，返回一个JPanel对象即可（也可以直接返回一个Button对象，但是那样会填充满整个单元格） 
      */  
     @Override  
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column)  
+    public Component getTableCellEditorComponent(JTable table, Object data, boolean isSelected, int row, int column)  
     {  
         // 只为按钮赋值即可。也可以作其它操作。   
         this.button.setText("Click To See More");
+        if(data instanceof IDataVector){
+        	final IDataVector<ISubDataVector> idata = (IDataVector<ISubDataVector>)data;
+	        view.closeSubDialog();
+	        view.openSubDialog(idata.getTitle(), idata.getMessage(), idata);
+        }
         return this.button;
     }  
   
