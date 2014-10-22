@@ -113,8 +113,8 @@ public class Application {
 	}
 
 	public static void authorization() throws AuthorizationException {
-		String user = SSIConfig.get("user");
-		String authKey = SSIConfig.get("authKey");
+		String user = SSIConfig.get("auth.user");
+		String authKey = SSIConfig.get("auth.key");
 		BASE64Decoder decoder = new BASE64Decoder();
 		String decoded = null;
 		try {

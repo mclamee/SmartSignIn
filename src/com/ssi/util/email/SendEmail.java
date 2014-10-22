@@ -5,9 +5,9 @@ public class SendEmail {
     /*** 以后需要两个参数：接收方地址 、 内容 ***/
     public static void send(String subject, String toaddress, String content) throws Exception {
 
-        String hostName = SSIConfig.get("emailsmtp");
-        String fromAddress = SSIConfig.get("emailaddress");
-        String fromAPass = SSIConfig.get("emailpass");
+        String hostName = SSIConfig.get("email.smtp");
+        String fromAddress = SSIConfig.get("email.address");
+        String fromAPass = SSIConfig.get("email.password");
 
         EmailHandle emailHandle = new EmailHandle(hostName);
         emailHandle.setFrom(fromAddress);
@@ -23,7 +23,7 @@ public class SendEmail {
 
     public static void main(String[] args) {
         try {
-            SendEmail.send("带附件的邮件测试", SSIConfig.get("recipients"), "测试内容<a href='http://www.crazyiter.com'>疯狂的IT人</a>");
+            SendEmail.send("带附件的邮件测试", SSIConfig.get("email.recipients"), "测试内容<a href='http://www.crazyiter.com'>疯狂的IT人</a>");
         } catch (Exception e) {
             e.printStackTrace();
         }

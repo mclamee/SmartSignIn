@@ -169,8 +169,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         
         if(dataFile != null){
             // setup timer to support automatic save
-            int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute"))) < 60000)?60000:
-                ((int) (1000*60*SSIConfig.getDouble("saveIntervalMinute")));
+            int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute"))) < 60000)?60000:
+                ((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute")));
             this.timer = new Timer();
             this.timer.schedule(new TimerTask() {
                 
@@ -178,7 +178,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                 public void run() {
                     if(dataChanged){
                         runing = true;
-                        LOG.debug("Timmer Start! Save Interval Minites: " + SSIConfig.get("saveIntervalMinute"));
+                        LOG.debug("Timmer Start! Save Interval Minites: " + SSIConfig.get("system.saveIntervalMinute"));
                         saveDataToFile();
                         runing = false;
                     }
@@ -203,7 +203,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 		if(view == null) return null;
 		String dataFileName = SSIConfig.get(view.getClass().getSimpleName()+".dataFileName");
 		if(StringUtil.isEmpty(dataFileName))return null;
-        dataFile = new File(SSIConfig.get("profileHome"), dataFileName);
+        dataFile = new File(SSIConfig.get("system.profileHome"), dataFileName);
         if(dataFile.isDirectory())dataFile.delete();
         if(!dataFile.exists()){
             try {
