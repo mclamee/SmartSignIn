@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +24,7 @@ public class SSIConfig {
     private static final String CONFIG_PATH_USER_HOME = System.getProperty("user.home") + "/.ssi";
     private static final String CONFIG_PATH_APP_DIR = System.getProperty("user.dir") + "/conf";
     
-    private static Properties CONFIG = new Properties();
+    private static SortableProperties CONFIG = new SortableProperties();
     private static Logger LOG;
     
     static {
@@ -51,7 +50,7 @@ public class SSIConfig {
 				inStream = new BufferedInputStream(new FileInputStream(new File(configFile.getAbsolutePath())));
 			}
             CONFIG.load(inStream);
-            CONFIG.setProperty("profileHome", configFile.getParent());
+            CONFIG.setProperty("system.profileHome", configFile.getParent());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -63,7 +62,7 @@ public class SSIConfig {
                 }
             }
         }
-        System.setProperty("PROFILE_HOME", CONFIG.getProperty("profileHome"));
+        System.setProperty("PROFILE_HOME", CONFIG.getProperty("system.profileHome"));
         System.setProperty("PID", ManagementFactory.getRuntimeMXBean().getName());
         LOG = Logger.getLogger(SSIConfig.class);
     }
@@ -83,9 +82,9 @@ public class SSIConfig {
 	
     private static void checkDefaultValues() {
     	
-    	String font = SSIConfig.get("font");
+    	String font = SSIConfig.get("system.font");
     	if(StringUtil.isEmpty(font)){
-    		SSIConfig.put("font", "微软雅黑");
+    		SSIConfig.put("system.font", "微软雅黑");
     	}
     	
     	String debugAuth = SSIConfig.get("debug.authorization");
@@ -98,9 +97,9 @@ public class SSIConfig {
     		SSIConfig.put("debug.fullscreen", "on");
     	}
     	
-    	String saveIntervalMinute = SSIConfig.get("saveIntervalMinute");
+    	String saveIntervalMinute = SSIConfig.get("system.saveIntervalMinute");
     	if(StringUtil.isEmpty(saveIntervalMinute)){
-    		SSIConfig.put("saveIntervalMinute", "1");
+    		SSIConfig.put("system.saveIntervalMinute", "1");
     	}
     	
     	String recordDataFileName = SSIConfig.get("RecordView.dataFileName");
@@ -161,7 +160,7 @@ public class SSIConfig {
     public static void save() {
         OutputStream fos = null;
         try {
-            fos = new FileOutputStream(CONFIG.getProperty("profileHome") + CONFIG_FILENAME);
+            fos = new FileOutputStream(CONFIG.getProperty("system.profileHome") + CONFIG_FILENAME);
             CONFIG.store(fos, "Updated at " + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,4 +178,5 @@ public class SSIConfig {
     public static void put(String key, String value) {
         CONFIG.put(key, value);
     }
+
 }

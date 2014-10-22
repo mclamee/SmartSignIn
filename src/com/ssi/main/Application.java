@@ -3,6 +3,8 @@ package com.ssi.main;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,13 +102,18 @@ public class Application {
 		// interactions
 		MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
 		MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
-		
+		MAIN_FRAME.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		      SSIConfig.save();
+		    }
+        });
 		LOG.info("> initializing main frames ... OK!");
 	}
 
 	public static void authorization() throws AuthorizationException {
-		String user = SSIConfig.get("user");
-		String authKey = SSIConfig.get("authKey");
+		String user = SSIConfig.get("auth.user");
+		String authKey = SSIConfig.get("auth.key");
 		BASE64Decoder decoder = new BASE64Decoder();
 		String decoded = null;
 		try {

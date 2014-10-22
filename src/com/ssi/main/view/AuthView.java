@@ -64,7 +64,7 @@ public class AuthView extends JFrame{
         panel.add(lbUser);
         final JTextField txUser = new JTextField();
         txUser.setBounds(column2, row1, txfWidth, eleHeight);
-        txUser.setText(SSIConfig.get("user"));
+        txUser.setText(SSIConfig.get("auth.user"));
         panel.add(txUser);
         
         JLabel lbAuth = new JLabel("Authorization Key: ");
@@ -72,15 +72,15 @@ public class AuthView extends JFrame{
         panel.add(lbAuth);
         final JTextField txAuth = new JTextField();
         txAuth.setBounds(column2, row2, txfWidth, eleHeight);
-        txAuth.setText(SSIConfig.get("authKey"));
+        txAuth.setText(SSIConfig.get("auth.key"));
         panel.add(txAuth);
         
         JButton btnAuth = new JButton("Authorize");
         btnAuth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SSIConfig.put("user", txUser.getText());
-                SSIConfig.put("authKey", txAuth.getText());
+                SSIConfig.put("auth.user", txUser.getText());
+                SSIConfig.put("auth.key", txAuth.getText());
                 SSIConfig.save();
                 try {
 					Application.authorization();

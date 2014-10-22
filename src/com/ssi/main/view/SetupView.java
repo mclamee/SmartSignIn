@@ -7,9 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,8 +20,11 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 
 import com.ssi.main.Application;
+import com.ssi.main.model.SetupModel;
 import com.ssi.util.DrawableUtils;
 import com.vguang.VguangApi;
 
@@ -245,8 +250,34 @@ public class SetupView extends JPanel implements ActionListener{
 			}
 		});
 		addComponent(btnNewButton, 234, btnLine2YIdx, 93, 23);
+		
+		// more componsents
+		JComboBox<String> combo = new JComboBox<>(model.getVoiceList());
+		combo.getModel().addListDataListener(new ListDataListener() {
+            
+            @Override
+            public void intervalRemoved(ListDataEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void contentsChanged(ListDataEvent e) {
+                // TODO Auto-generated method stub
+                
+            }
+        });
+		combo.getSelectedItem();
 	}
 
+	private SetupModel model = new SetupModel();
+	
 	private void addComponent(JComponent comp, int x, int y, int width, int height){
 		comp.setBounds(this.totalPaddingLeft + x, this.totalPaddingTop + y, width, height);
 		this.add(comp);
