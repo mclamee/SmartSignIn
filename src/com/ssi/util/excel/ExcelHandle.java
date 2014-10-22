@@ -28,6 +28,9 @@ import com.wicky.tdl.ISubDataVector;
 
 
 public class ExcelHandle {
+	private static final String STAFF_REPORT_PATH = "msc/员工报表.xls";
+	private static final String CUST_REPORT_PATH = "msc/客人报表.xls";
+
 	private ExcelHandle() {
 	}
 
@@ -45,7 +48,12 @@ public class ExcelHandle {
 		ExcelHandle.getInstance().exportStaffReport();
 	}
 
-	public void exportCustReport() {
+	public String exportCustReport() {
+		File outFile = new File(STAFF_REPORT_PATH);
+		if(outFile.exists()){
+			outFile.delete();
+		}
+		
 		IDataVector<ISubDataVector> data = Application.RECORD_VIEW.getTableModel().getData();
 		
 		FileInputStream in = null;
@@ -91,7 +99,7 @@ public class ExcelHandle {
 				hrw = hst.createRow(row ++);
 			}
 			
-			out = new FileOutputStream("客人报表.xls");
+			out = new FileOutputStream(CUST_REPORT_PATH);
 			hwb.write(out);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -111,6 +119,7 @@ public class ExcelHandle {
 				}
 			}
 		}
+		return CUST_REPORT_PATH;
 	}
 
 	class StaffReport{
@@ -167,7 +176,13 @@ public class ExcelHandle {
 
 	}
 	
-	public void exportStaffReport() throws IOException {
+	public String exportStaffReport() {
+		
+		File outFile = new File(STAFF_REPORT_PATH);
+		if(outFile.exists()){
+			outFile.delete();
+		}
+		
 		Map<String, List<StaffReport>> dateMap = new HashMap<>();
 		
 		IDataVector<ISubDataVector> data = Application.STAFF_VIEW.getTableModel().getData();
@@ -239,7 +254,8 @@ public class ExcelHandle {
 				}
 				hst.createRow(row ++);
 			}
-			out = new FileOutputStream("客人报表.xls");
+			
+			out = new FileOutputStream(STAFF_REPORT_PATH);
 			hwb.write(out);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -259,5 +275,6 @@ public class ExcelHandle {
 				}
 			}
 		}
+		return STAFF_REPORT_PATH;
 	}
 }

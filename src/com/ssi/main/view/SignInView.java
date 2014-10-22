@@ -21,6 +21,7 @@ import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SynthesizerPlayer;
 import com.iflytek.speech.SynthesizerPlayerListener;
 import com.ssi.main.Application;
+import com.ssi.main.SSIConfig;
 import com.ssi.main.model.SignInModel;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
@@ -183,9 +184,14 @@ public class SignInView extends JPanel implements IView, ActionListener {
             synthesizer.setVolume(100);
             
             synthesizer.setSampleRate(RATE.rate22k);
-            // 设置发音人为小宇
-            synthesizer.setVoiceName("xiaoyan");
-            // 设置朗读速度为50
+            // 设置发音人
+            String synthViceName = SSIConfig.get("synth.voiceName");
+    		if(StringUtil.isEmpty(synthViceName)){
+    			synthViceName = "xiaoyan";
+    			SSIConfig.put("synth.voiceName", synthViceName);
+    		}
+            synthesizer.setVoiceName(synthViceName);
+            // 设置朗读速度
             synthesizer.setSpeed(70);
             // 合成文本为TEXT_CONTENT的句子，设置监听器为mSynListener
             String message = model.lookupMessage(callback);

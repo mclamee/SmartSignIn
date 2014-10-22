@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,10 +31,12 @@ import org.apache.log4j.Logger;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
+import com.ssi.main.DataFactory;
 import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.JTableHelper;
 import com.ssi.util.StringUtil;
+import com.ssi.util.email.SendEmail;
 import com.ssi.util.excel.ExcelHandle;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
@@ -166,11 +169,22 @@ public class StaffView extends JPanel implements IView, ActionListener {
     			todoTable.stopCellEditing();
     			tfSearch.setText(null);
     			todoTable.refreshTable();
-    			try {
-					ExcelHandle.getInstance().exportStaffReport();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+    			
+				String reportPath = ExcelHandle.getInstance().exportStaffReport();
+    			
+    			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), 
+    					"请问是否发送员工报表到：<"+SSIConfig.get("email.recipients") + ">?", 
+                		"确认发送邮件", 
+                		JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION){
+                	try {
+						SendEmail.send("员工报表_" + DataFactory.smfDateTime.format(new Date()), 
+								SSIConfig.get("email.recipients"), "请查看附件", reportPath);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "完成", "发送报表", JOptionPane.INFORMATION_MESSAGE);
+                }
     		}
     	});
     	return btnExport;

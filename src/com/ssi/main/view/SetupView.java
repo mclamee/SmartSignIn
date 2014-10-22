@@ -24,6 +24,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import com.ssi.main.Application;
+import com.ssi.main.SSIConfig;
 import com.ssi.main.model.SetupModel;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
@@ -257,28 +258,35 @@ public class SetupView extends JPanel implements IView, ActionListener{
 		addComponent(btnNewButton, 234, btnLine2YIdx, 93, 23);
 		
 		// more componsents
-		JComboBox<String> combo = new JComboBox<>(model.getVoiceList());
+		String[] voiceList = model.getVoiceList();
+		JComboBox<String> combo = new JComboBox<>(voiceList);
 		combo.getModel().addListDataListener(new ListDataListener() {
-            
             @Override
             public void intervalRemoved(ListDataEvent e) {
-                // TODO Auto-generated method stub
-                
             }
             
             @Override
             public void intervalAdded(ListDataEvent e) {
-                // TODO Auto-generated method stub
-                
             }
-            
             @Override
             public void contentsChanged(ListDataEvent e) {
-                // TODO Auto-generated method stub
-                
+            	String selectedItem = (String) ((DefaultComboBoxModel)e.getSource()).getSelectedItem();
+				System.out.println("Conent Changed: " + selectedItem);
+            	SSIConfig.put("synth.voiceName", selectedItem.split("-")[1]);
             }
         });
-		combo.getSelectedItem();
+		addComponent(combo, 980, 100, 250, 23);
+		
+		String synthViceName = SSIConfig.get("synth.voiceName");
+		if(!StringUtil.isEmpty(synthViceName))
+		for (int i = 0; i < voiceList.length; i++) {
+			String voice = voiceList[i];
+			if(voice.indexOf(synthViceName) != -1){
+				combo.setSelectedIndex(i);
+				break;
+			}
+		}
+		
 	}
 
 	private SetupModel model = new SetupModel();
