@@ -34,6 +34,7 @@ import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.ResizeUtil;
+import com.ssi.util.StringUtil;
 
 
 
@@ -67,6 +68,9 @@ public class MainView extends JFrame implements ActionListener {
 	    
 		//设置界面大小，背景图片
 		ImageIcon background = new ImageIcon("res/img/index_bg.png");
+		if(Application.debugMode && !StringUtil.isEmpty(SSIConfig.get("debug.background"))){
+		    background = new ImageIcon(SSIConfig.get("debug.background"));
+		}
 		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
 			background = ResizeUtil.resizeImageToScreenSize(background);
 		}

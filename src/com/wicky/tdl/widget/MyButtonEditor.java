@@ -11,7 +11,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.table.TableModel;
 
+import com.ssi.i18n.Messages;
 import com.ssi.main.view.IView;
+import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 import com.wicky.tdl.SimpleTableModel;
@@ -74,7 +76,7 @@ public class MyButtonEditor extends DefaultCellEditor
     public Component getTableCellEditorComponent(JTable table, Object data, boolean isSelected, int row, int column)  
     {  
         // 只为按钮赋值即可。也可以作其它操作。   
-        this.button.setText("Click To See More");
+        this.button.setText(Messages.getString("table.cell.editor.btn_more"));
         if(data instanceof IDataVector){
         	final IDataVector<ISubDataVector> idata = (IDataVector<ISubDataVector>)data;
 	        view.closeSubDialog();

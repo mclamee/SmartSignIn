@@ -86,7 +86,22 @@ public class SSIConfig {
     	if(StringUtil.isEmpty(font)){
     		SSIConfig.put("system.font", "微软雅黑");
     	}
-    	
+        
+        String language = SSIConfig.get("system.locale.language");
+        if(StringUtil.isEmpty(language)){
+            SSIConfig.put("system.locale.language", "zh");
+        }
+        
+        String country = SSIConfig.get("system.locale.country");
+        if(StringUtil.isEmpty(country)){
+            SSIConfig.put("system.locale.country", "CN");
+        }
+        
+        String saveIntervalMinute = SSIConfig.get("system.saveIntervalMinute");
+        if(StringUtil.isEmpty(saveIntervalMinute)){
+            SSIConfig.put("system.saveIntervalMinute", "1");
+        }
+        
     	String debugAuth = SSIConfig.get("debug.authorization");
     	if(StringUtil.isEmpty(debugAuth)){
     		SSIConfig.put("debug.authorization", "off");
@@ -97,11 +112,11 @@ public class SSIConfig {
     		SSIConfig.put("debug.fullscreen", "on");
     	}
     	
-    	String saveIntervalMinute = SSIConfig.get("system.saveIntervalMinute");
-    	if(StringUtil.isEmpty(saveIntervalMinute)){
-    		SSIConfig.put("system.saveIntervalMinute", "1");
+    	String debugScanner = SSIConfig.get("debug.scanner");
+    	if(StringUtil.isEmpty(debugScanner)){
+    	    SSIConfig.put("debug.scanner", "off");
     	}
-    	
+
     	String recordDataFileName = SSIConfig.get("RecordView.dataFileName");
     	if(StringUtil.isEmpty(recordDataFileName)){
     		SSIConfig.put("RecordView.dataFileName", "/rv_tbl.db");
@@ -147,14 +162,14 @@ public class SSIConfig {
     
 	public static Boolean getBoolean(String key) {
         String property = CONFIG.getProperty(key);
-        if (property == null) return null;
+        if (property == null) return false;
         if(property.equalsIgnoreCase("on") || property.equalsIgnoreCase("yes") || property.equalsIgnoreCase("true")){
         	return true;
         }
         if(property.equalsIgnoreCase("off") || property.equalsIgnoreCase("no") || property.equalsIgnoreCase("false")){
         	return false;
         }
-		return null;
+		return false;
 	}
 	
     public static void save() {

@@ -20,6 +20,7 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
             Messages.getString("RecordView.table.column_title_qrcode"),
             Messages.getString("RecordView.table.column_title_name"),
             Messages.getString("RecordView.table.column_title_salutaion"),
+            Messages.getString("RecordView.table.column_title_customize"),
             Messages.getString("RecordView.table.column_title_more"),
             Messages.getString("RecordView.table.column_title_choose")
             }));
@@ -29,12 +30,13 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
     		String.class, 
     		String.class, 
     		String.class, 
+    		String.class, 
     		IDataVector.class,
     		Boolean.class
     		});
     
-    public synchronized boolean add(String qrCode, String name, String salutaion, Boolean flag) {
-        return this.add(new RecordSubVector(qrCode, name, salutaion, flag));
+    public synchronized boolean add(String qrCode, String name, String salutaion, String customize, Boolean flag) {
+        return this.add(new RecordSubVector(qrCode, name, salutaion, customize, flag));
     }
     
     public Vector<String> getTitles() {

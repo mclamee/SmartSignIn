@@ -4,16 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.Vector;
-import java.util.regex.Pattern;
 
 import com.ssi.main.Application;
-import com.ssi.main.SSIConfig;
 import com.ssi.main.data.RecordSubVector;
-import com.ssi.main.data.StaffDataVector;
 import com.ssi.main.data.StaffSubVector;
-import com.ssi.main.view.IView;
 import com.ssi.util.StringUtil;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
@@ -48,13 +43,13 @@ public class SignInModel {
 		return msg.getMessage();
 	}
 	
-	public static void main(String[] args) {
-		StaffDataVector vc = new StaffDataVector();
-		StaffSubVector vector = new StaffSubVector("NO1123", "", "", false);
-		
-		SignInModel signInModel = new SignInModel();
-		signInModel.generateMessage(vector, SSIConfig.get("StaffView.template"), vc.getTitles());
-	}
+//	public static void main(String[] args) {
+//		StaffDataVector vc = new StaffDataVector();
+//		StaffSubVector vector = new StaffSubVector("NO1123", null, null, null, false);
+//		
+//		SignInModel signInModel = new SignInModel();
+//		signInModel.generateMessage(vector, SSIConfig.get("StaffView.template"), vc.getTitles());
+//	}
 	
 	private String generateMessage(ISubDataVector subVector, String template, Vector<String> titles) {
 		if(template.contains("${time}")){
@@ -112,8 +107,9 @@ public class SignInModel {
 		String recordTemplate = Application.RECORD_VIEW.getTemplate();
 		for (ISubDataVector iSubVector : custData) {
 			RecordSubVector custSubVector = (RecordSubVector)iSubVector;
+			String custStr = custSubVector.getCustomize();
 			MessageBody msg = new MessageBody();
-			msg.setMessage(generateMessage(custSubVector, recordTemplate, custData.getTitles()));
+			msg.setMessage(generateMessage(custSubVector, StringUtil.isEmpty(custStr)?recordTemplate:custStr, custData.getTitles()));
 			msg.setVector(custSubVector);
 			
 			dataMap.put(StringUtil.trimAndUpper(custSubVector.getQrCode()), msg);
@@ -123,9 +119,9 @@ public class SignInModel {
 		IDataVector<ISubDataVector> staffData = Application.STAFF_VIEW.getTableModel().getData();
 		for (ISubDataVector iSubVector : staffData) {
 			StaffSubVector staffSubVector = (StaffSubVector)iSubVector;
-			
+			String custStr = staffSubVector.getCustomize();
 			MessageBody msg = new MessageBody();
-			msg.setMessage(generateMessage(staffSubVector, staffTemplate, staffData.getTitles()));
+			msg.setMessage(generateMessage(staffSubVector, StringUtil.isEmpty(custStr)?staffTemplate:custStr, staffData.getTitles()));
 			msg.setVector(staffSubVector);
 			
 			dataMap.put(StringUtil.trimAndUpper(staffSubVector.getQrCode()), msg);

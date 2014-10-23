@@ -48,12 +48,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
 	private JCheckBox chckbxBeep;
 	private JCheckBox chckbxAi;
 
-	public static Locale currentLocale = new Locale("zh", "CN");
-	
 	private int totalPaddingTop;
 	private int totalPaddingLeft;
-
-	private SubDialogPanel subDialogPanel;
 	
 	/**
 	 * Create the application.
@@ -370,21 +366,20 @@ public class SetupView extends JPanel implements IView, ActionListener{
         }
     }
     
-	private SubDialogPanel getSubDialogPanel() {
-		subDialogPanel = new SubDialogPanel(null);
-        return subDialogPanel;
+    @Override
+	public void closeSubDialog(){
 	}
     
-	public void closeSubDialog(){
-		subDialogPanel.close();
-	}
-	
+	@Override
 	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
-		subDialogPanel.open(title, message, data);
 	}
 
 	@Override
 	public String getTemplate() {
 		return null;
 	}
+
+    public void setMessageString(String message) {
+        
+    }
 }

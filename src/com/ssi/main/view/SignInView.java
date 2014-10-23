@@ -198,6 +198,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
             if(!StringUtil.isEmpty(message)){
             	synthesizer.playText(message, null, mSynListener);
             	resultArea.setText(message);
+            	Application.SETUP_VIEW.setMessageString(message);
             }
             
             lastCallBack = callback;

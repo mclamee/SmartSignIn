@@ -10,9 +10,11 @@
 package com.ssi.i18n;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import com.ssi.main.SSIConfig;
 import com.ssi.main.view.SetupView;
 
 /**
@@ -28,7 +30,7 @@ public class Messages {
     
     private static final String BUNDLE_NAME = "com.ssi.i18n.messages"; //$NON-NLS-1$
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, SetupView.currentLocale);
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, new Locale(SSIConfig.get("system.locale.language"), SSIConfig.get("system.locale.country")));
 
     private Messages() {
     }

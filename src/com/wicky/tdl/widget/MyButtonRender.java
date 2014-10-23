@@ -6,6 +6,8 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import com.ssi.i18n.Messages;
+
 public class MyButtonRender implements TableCellRenderer
 {
     private JButton button;
@@ -27,7 +29,7 @@ public class MyButtonRender implements TableCellRenderer
             int column)
     {
         // 只为按钮赋值即可。也可以作其它操作，如绘背景等。
-        this.button.setText("Click To See More");
+        this.button.setText(Messages.getString("table.cell.editor.btn_more"));
 
         return this.button;
     }

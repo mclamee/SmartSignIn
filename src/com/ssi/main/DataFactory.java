@@ -33,14 +33,14 @@ public class DataFactory {
 	public static IDataVector<ISubDataVector> createDataVector(IView view) {
 		if(view instanceof RecordView){
 			RecordDataVector data = new RecordDataVector();
-	        data.add("NO1026","张曜嵩", "先生", Boolean.FALSE);
-	        data.add("NO1027","王宁", "先生", Boolean.FALSE);
-	        data.add("NO1028","杨洁", "女士", Boolean.FALSE);
+	        data.add("NO1026","张曜嵩", "先生", null, Boolean.FALSE);
+	        data.add("NO1027","王宁", "先生", null, Boolean.FALSE);
+	        data.add("NO1028","杨洁", "女士", null, Boolean.FALSE);
 			return data;
 		}else if(view instanceof StaffView){
 			StaffDataVector data = new StaffDataVector();
-	        data.add("NO1024","薛鹏飞", "经理", Boolean.FALSE);
-	        data.add("NO1025","吕静泽", "经理", Boolean.FALSE);
+	        data.add("NO1024","薛鹏飞", "经理", null, Boolean.FALSE);
+	        data.add("NO1025","吕静泽", "经理", null, Boolean.FALSE);
 			return data;
 		}
 		return null;
@@ -48,7 +48,7 @@ public class DataFactory {
 
 	public static Vector<Object> createSubDataVector(IView view) {
 		if(view instanceof RecordView){
-			RecordSubVector data = new RecordSubVector(null, null, null, Boolean.FALSE);
+			RecordSubVector data = new RecordSubVector(null, null, null, null, Boolean.FALSE);
 			return data;
 		}else if(view instanceof StaffView){
 			TimesheetSubVector data = new TimesheetSubVector(null, null, null, null);
@@ -61,13 +61,13 @@ public class DataFactory {
 		TableColumnModel columnModel = simpleTodoTable.getColumnModel();
 		if(view instanceof RecordView){
             columnModel.getColumn(0).setPreferredWidth(1);
-		    columnModel.getColumn(1).setPreferredWidth(320);
-		    columnModel.getColumn(2).setPreferredWidth(200);
-		    columnModel.getColumn(3).setPreferredWidth(30);
-		    columnModel.getColumn(4).setPreferredWidth(10);
-		    columnModel.getColumn(5).setPreferredWidth(30);
+//		    columnModel.getColumn(1).setPreferredWidth(320);
+//		    columnModel.getColumn(2).setPreferredWidth(200);
+//		    columnModel.getColumn(3).setPreferredWidth(30);
+//		    columnModel.getColumn(4).setPreferredWidth(10);
+//		    columnModel.getColumn(5).setPreferredWidth(30);
 		}else if(view instanceof StaffView){
-			
+		    columnModel.getColumn(0).setPreferredWidth(1);
 		}
 	}
 
@@ -75,8 +75,8 @@ public class DataFactory {
 		TableColumnModel columnModel = simpleTodoTable.getColumnModel();
 		
 		if(view instanceof RecordView){
-			columnModel.getColumn(4).setCellEditor(new MyButtonEditor(simpleTodoTable, view));
-	        columnModel.getColumn(4).setCellRenderer(new MyButtonRender());
+			columnModel.getColumn(5).setCellEditor(new MyButtonEditor(simpleTodoTable, view));
+	        columnModel.getColumn(5).setCellRenderer(new MyButtonRender());
 	        
 	        simpleTodoTable.getModel().addTableModelListener(new TableModelListener() {
 				@Override
@@ -87,8 +87,8 @@ public class DataFactory {
 				}
 			});
 		}else if(view instanceof StaffView){
-			columnModel.getColumn(4).setCellEditor(new MyButtonEditor(simpleTodoTable, view));
-			columnModel.getColumn(4).setCellRenderer(new MyButtonRender());
+			columnModel.getColumn(5).setCellEditor(new MyButtonEditor(simpleTodoTable, view));
+			columnModel.getColumn(5).setCellRenderer(new MyButtonRender());
 			
 	        simpleTodoTable.getModel().addTableModelListener(new TableModelListener() {
 				@Override
