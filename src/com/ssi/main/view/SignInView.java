@@ -181,9 +181,34 @@ public class SignInView extends JPanel implements IView, ActionListener {
             if("PLAYING".equals(synthesizer.getState().toString())) {
                 synthesizer.cancel();
             }
-            synthesizer.setVolume(100);
+            // 设置音量
+            String synthVolume = SSIConfig.get("synth.volume");
+    		if(StringUtil.isEmpty(synthVolume)){
+    			synthVolume = "50";
+    			SSIConfig.put("synth.volume", synthVolume);
+    		}
+            synthesizer.setVolume(StringUtil.stringToInt(synthVolume, 50));
             
-            synthesizer.setSampleRate(RATE.rate22k);
+            // 设置采样率
+            String synthRate = SSIConfig.get("synth.sampleRate");
+    		if(StringUtil.isEmpty(synthRate)){
+    			synthRate = "80";
+    			SSIConfig.put("synth.sampleRate", synthRate);
+    		}
+    		RATE sample = RATE.rate16k;
+    		if(synthRate.equals("0")){
+    			sample = RATE.rate8k;
+    		}
+			if(synthRate.equals("40")){
+				sample = RATE.rate11k;
+			}
+			if(synthRate.equals("80")){
+				sample = RATE.rate16k;
+			}
+			if(synthRate.equals("120")){
+				sample = RATE.rate22k;
+			}    
+            synthesizer.setSampleRate(sample);
             // 设置发音人
             String synthViceName = SSIConfig.get("synth.voiceName");
     		if(StringUtil.isEmpty(synthViceName)){
@@ -192,7 +217,12 @@ public class SignInView extends JPanel implements IView, ActionListener {
     		}
             synthesizer.setVoiceName(synthViceName);
             // 设置朗读速度
-            synthesizer.setSpeed(70);
+            String synthSpeed = SSIConfig.get("synth.speed");
+    		if(StringUtil.isEmpty(synthSpeed)){
+    			synthSpeed = "70";
+    			SSIConfig.put("synth.speed", synthSpeed);
+    		}
+            synthesizer.setSpeed(StringUtil.stringToInt(synthSpeed, 70));
             // 合成文本为TEXT_CONTENT的句子，设置监听器为mSynListener
             String message = model.lookupMessage(callback);
             if(!StringUtil.isEmpty(message)){
@@ -200,6 +230,8 @@ public class SignInView extends JPanel implements IView, ActionListener {
             	resultArea.setText(message);
             	Application.SETUP_VIEW.setMessageString(message);
             }
+            
+            Application.SETUP_VIEW.setResultString(callback);
             
             lastCallBack = callback;
         }

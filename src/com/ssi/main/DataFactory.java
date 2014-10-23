@@ -51,7 +51,7 @@ public class DataFactory {
 			RecordSubVector data = new RecordSubVector(null, null, null, null, Boolean.FALSE);
 			return data;
 		}else if(view instanceof StaffView){
-			TimesheetSubVector data = new TimesheetSubVector(null, null, null, null);
+			StaffSubVector data = new StaffSubVector(null, null, null, null, Boolean.FALSE);
 			return data;
 		}
 		return null;

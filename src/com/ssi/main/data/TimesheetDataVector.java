@@ -55,7 +55,7 @@ public class TimesheetDataVector extends Vector<ISubDataVector> implements
 			long s = (l / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
 			System.out.println("" + day + "天" + hour + "小时" + min + "分" + s + "秒");
 
-			String workhrs = hour + ":" + (min>10?("0"+min):min) + ":" + (s>10?("0"+s):s);
+			String workhrs = hour + ":" + (min<10?("0"+min):min) + ":" + (s<10?("0"+s):s);
 			int counts = detail.size();
 			sub.set(2, workhrs);
 			sub.set(3, counts);

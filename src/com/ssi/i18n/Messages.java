@@ -30,7 +30,7 @@ public class Messages {
     
     private static final String BUNDLE_NAME = "com.ssi.i18n.messages"; //$NON-NLS-1$
 
-    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, new Locale(SSIConfig.get("system.locale.language"), SSIConfig.get("system.locale.country")));
+    private static ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, new Locale(SSIConfig.get("system.locale.language"), SSIConfig.get("system.locale.country")));
 
     private Messages() {
     }
@@ -42,4 +42,9 @@ public class Messages {
             return '!' + key + '!';
         }
     }
+    
+    public static void refresh() {
+    	RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, new Locale(SSIConfig.get("system.locale.language"), SSIConfig.get("system.locale.country")));
+    }
+    
 }

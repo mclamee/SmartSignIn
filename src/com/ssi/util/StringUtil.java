@@ -43,4 +43,15 @@ public class StringUtil {
 		}
 		return returnStr.toString();
 	}
+
+	public static int stringToInt(String str, int defautValue){
+        if(str != null){
+            try{
+                return Integer.parseInt(str);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+        return defautValue;
+    }
 }

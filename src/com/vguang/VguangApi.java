@@ -66,7 +66,6 @@ public class VguangApi {
 	 */
 	public static void decodeCallBack(byte[] decodeStrBytes) {
 		String str = new String(decodeStrBytes);
-		Application.SETUP_VIEW.setResultString(str);
 		Application.SIGNIN_VIEW.setResultString(str);
         LOG.debug("decodeCallBack, str: " + str);
 		return;

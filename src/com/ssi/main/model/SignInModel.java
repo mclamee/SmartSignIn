@@ -1,10 +1,17 @@
 package com.ssi.main.model;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+
+import org.json.JSONException;
+
+import bizfuse.restful.svc.srpm.dataCollection.Weather;
 
 import com.ssi.main.Application;
 import com.ssi.main.data.RecordSubVector;
@@ -23,7 +30,9 @@ public class SignInModel {
 			return null;
 		}
 		callback = StringUtil.trimAndUpper(callback);
-		callback = callback.substring(callback.indexOf("NO"));
+		if(callback.contains("NO")){
+			callback = callback.substring(callback.indexOf("NO"));
+		}
 		
 		MessageBody msg = dataMap.get(callback);
 		if(msg == null){
@@ -40,7 +49,34 @@ public class SignInModel {
 		}
 		// record sign-in details to subVector
 		msg.getVector().recordDateTime(new Date());
-		return msg.getMessage();
+		String message = msg.getMessage();
+		
+		if(message.contains("##{time}")){
+			Date today = new Date();
+			SimpleDateFormat smf = new SimpleDateFormat("H点m分 E");
+			String dateStr = smf.format(today);
+			message = message.replaceAll("##\\{time\\}", dateStr);
+		}
+		
+		if(message.contains("##{weather}")){
+			String weather = "";
+			try {
+				weather = new Weather("101270101 ").getWeather();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			message = message.replaceAll("##\\{weather\\}", weather);
+		}
+		
+		return message;
 	}
 	
 //	public static void main(String[] args) {
@@ -52,12 +88,9 @@ public class SignInModel {
 //	}
 	
 	private String generateMessage(ISubDataVector subVector, String template, Vector<String> titles) {
-		if(template.contains("${time}")){
-			Date today = new Date();
-			SimpleDateFormat smf = new SimpleDateFormat("H点m分 E");
-			String dateStr = smf.format(today);
-			template = template.replaceAll("\\$\\{time\\}", dateStr);
-		}
+		
+		template = template.replaceAll("\\$\\{time\\}", "##{time}");
+		template = template.replaceAll("\\$\\{weather\\}", "##{weather}");
 		
 		while(template.indexOf("${") != -1){
 			int count = 0;

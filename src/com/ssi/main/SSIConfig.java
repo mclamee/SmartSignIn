@@ -127,6 +127,16 @@ public class SSIConfig {
     		SSIConfig.put("StaffView.dataFileName", "/sv_tbl.db");
     	}
     	
+    	String startupView = SSIConfig.get("system.startup.view");
+    	if(StringUtil.isEmpty(startupView)){
+    		SSIConfig.put("system.startup.view", "MainView");
+    	}
+//    	
+//    	String staffDataFileName = SSIConfig.get("StaffView.dataFileName");
+//    	if(StringUtil.isEmpty(staffDataFileName)){
+//    		SSIConfig.put("StaffView.dataFileName", "/sv_tbl.db");
+//    	}
+    	
     	SSIConfig.save();
 	}
     
