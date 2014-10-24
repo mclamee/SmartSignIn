@@ -20,6 +20,8 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
+import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
 import sun.misc.BASE64Decoder;
 
@@ -100,7 +102,7 @@ public class Application {
         RECORD_VIEW = new RecordView();
         STAFF_VIEW = new StaffView();
         SIGNIN_VIEW = new SignInView();
-        
+
         // setup window close hook method
         MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
         MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
@@ -110,12 +112,12 @@ public class Application {
                 SSIConfig.save();
             }
         });
-        
+
         LOG.info("> initializing main frames ... OK!");
-        
+
         // init starting page
         String startupView = SSIConfig.get("system.startup.view");
-        if(!StringUtil.isEmpty(startupView)){
+        if (!StringUtil.isEmpty(startupView)) {
             switchView(getViewByName(startupView));
         }
     }
@@ -196,13 +198,13 @@ public class Application {
     }
 
     private static void setupApplicationStyle() {
-        // try {
-        // BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.translucencyAppleLike;
-        // BeautyEyeLNFHelper.translucencyAtFrameInactive = false;
-        // UIManager.put("RootPane.setupButtonVisible", false);
-        // BeautyEyeLNFHelper.launchBeautyEyeLNF();
-        // } catch (final Exception r) {
-        // }
+        try {
+            BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.translucencyAppleLike;
+            BeautyEyeLNFHelper.translucencyAtFrameInactive = false;
+            UIManager.put("RootPane.setupButtonVisible", false);
+            BeautyEyeLNFHelper.launchBeautyEyeLNF();
+        } catch (final Exception r) {
+        }
 
         final Font font = new Font(SSIConfig.get("font"), Font.PLAIN, 12);
         UIManager.put("Frame.titleFont", font);
@@ -228,7 +230,7 @@ public class Application {
     }
 
     public static void closeDevice() {
-        if(!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))){
+        if (!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))) {
             // 关闭设备
             VguangApi.closeDevice();
         }
@@ -237,8 +239,8 @@ public class Application {
     public static void applySettingsAndOpenDevice() {
         // 初始化数据
         Application.SIGNIN_VIEW.initDataMap();
-        
-        if(!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))){
+
+        if (!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))) {
             // 应用设置
             Application.SETUP_VIEW.applySetting();
             // 打开设备
