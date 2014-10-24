@@ -285,7 +285,7 @@ public class RecordView extends JPanel implements IView, ActionListener {
             todoTable.stopCellEditing();
             todoTable.refreshTable();
             
-            Application.switchView(Application.MAIN_FRAME.getMainJpanel());
+            Application.switchView(Application.MAIN_VIEW);
         }
     }
 

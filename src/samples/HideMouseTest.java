@@ -1,7 +1,8 @@
+package samples;
 import java.awt.*;
 import java.awt.image.*;
 
-public class Test extends java.applet.Applet {
+public class HideMouseTest extends java.applet.Applet {
 
   public void init()
   {

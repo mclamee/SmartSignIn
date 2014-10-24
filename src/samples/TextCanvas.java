@@ -1,4 +1,4 @@
-package org.test;
+package samples;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;

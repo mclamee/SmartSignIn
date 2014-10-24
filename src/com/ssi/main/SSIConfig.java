@@ -82,6 +82,11 @@ public class SSIConfig {
 	
     private static void checkDefaultValues() {
     	
+        String weatherCity = SSIConfig.get("weather.city");
+        if(StringUtil.isEmpty(weatherCity)){
+            SSIConfig.put("weather.city", "101270101");
+        }
+        
     	String font = SSIConfig.get("system.font");
     	if(StringUtil.isEmpty(font)){
     		SSIConfig.put("system.font", "微软雅黑");
@@ -131,7 +136,12 @@ public class SSIConfig {
     	if(StringUtil.isEmpty(startupView)){
     		SSIConfig.put("system.startup.view", "MainView");
     	}
-//    	
+    	
+        String bgImage = SSIConfig.get("system.startup.background");
+        if(StringUtil.isEmpty(bgImage)){
+            SSIConfig.put("system.startup.background", "res/img/index_bg.png");
+        }
+        
 //    	String staffDataFileName = SSIConfig.get("StaffView.dataFileName");
 //    	if(StringUtil.isEmpty(staffDataFileName)){
 //    		SSIConfig.put("StaffView.dataFileName", "/sv_tbl.db");
@@ -172,14 +182,18 @@ public class SSIConfig {
     
 	public static Boolean getBoolean(String key) {
         String property = CONFIG.getProperty(key);
-        if (property == null) return false;
+        if (property == null) return null;
         if(property.equalsIgnoreCase("on") || property.equalsIgnoreCase("yes") || property.equalsIgnoreCase("true")){
-        	return true;
+        	return Boolean.TRUE;
         }
         if(property.equalsIgnoreCase("off") || property.equalsIgnoreCase("no") || property.equalsIgnoreCase("false")){
-        	return false;
+        	return Boolean.FALSE;
         }
-		return false;
+		return null;
+	}
+	
+	public static boolean isBooleanValue(String key){
+	    return getBoolean(key) != null;
 	}
 	
     public static void save() {

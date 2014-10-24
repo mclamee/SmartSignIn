@@ -1,4 +1,4 @@
-package bizfuse.restful.svc.srpm.dataCollection;
+package com.ssi.util.weather;
  
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
  * @author Chewl
  *
  */
-public class Weather { 
+public class WeatherHandle { 
     String Ctiyid; 
     URLConnection connectionData; 
     StringBuilder sb; 
@@ -32,7 +32,7 @@ public class Weather {
     JSONObject jsonData; 
     JSONObject info; 
       
-    public Weather(String Cityid) throws IOException ,NullPointerException, JSONException{ 
+    public WeatherHandle(String Cityid) throws IOException ,NullPointerException, JSONException{ 
         // 解析本机ip地址 
         this.Ctiyid = Cityid; 
   
@@ -58,7 +58,12 @@ public class Weather {
         } 
             String datas = sb.toString();   
              
-           jsonData = new JSONObject(datas); 
+           try {
+            jsonData = new JSONObject(datas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        } 
           //  System.out.println(jsonData.toString());  
            info = jsonData.getJSONObject("weatherinfo"); 
          
@@ -119,7 +124,7 @@ public class Weather {
     }
     public static void main(String[] args) { 
         try { 
-            String weather = new Weather("101270101 ").getWeather(); // 101010100(北京)就是你的城市代码
+            String weather = new WeatherHandle("101270101 ").getWeather(); // 101010100(北京)就是你的城市代码
             System.out.println(weather);
         } catch (Exception e) { 
             e.printStackTrace(); 

@@ -56,6 +56,8 @@ public class MainView extends JFrame implements ActionListener {
 	private JButton jbtRecord;
 	private JButton jbtStaff;
 	private JButton jbtSetup;
+
+    private JLabel label;
 	
 	/**
 	 * 界面初始化.
@@ -63,20 +65,30 @@ public class MainView extends JFrame implements ActionListener {
 	 */
 	public MainView()
 	{
-//		Setting.saveLogFile(LOG_LEVEL.all, "./msc.log");
+
 	    log.debug("Current Resoluation: "+DrawableUtils.getScreenWidth()+" x "+DrawableUtils.getScreenHeight());
 	    
 		//设置界面大小，背景图片
-		ImageIcon background = new ImageIcon("res/img/index_bg.png");
-		if(Application.debugMode && !StringUtil.isEmpty(SSIConfig.get("debug.background"))){
-		    background = new ImageIcon(SSIConfig.get("debug.background"));
+	    String bgImage = SSIConfig.get("system.startup.background");
+		ImageIcon background = new ImageIcon(bgImage);
+		if(Application.debugMode){
+            if(SSIConfig.isBooleanValue("debug.background") 
+                    && Boolean.FALSE.equals(SSIConfig.getBoolean("debug.background"))) {
+                int dotPosition = bgImage.lastIndexOf(".");
+                if(dotPosition != -1) {
+                    String prefix = bgImage.substring(0, dotPosition);
+                    String suffix = bgImage.substring(dotPosition);
+                    background = new ImageIcon(prefix + "_d" + suffix);
+                }
+            }else if(!StringUtil.isEmpty(SSIConfig.get("debug.background"))){
+                background = new ImageIcon(SSIConfig.get("debug.background"));
+            }
 		}
-		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+		if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
 			background = ResizeUtil.resizeImageToScreenSize(background);
 		}
-		JLabel label = new JLabel(background);
-		label.setBounds(0, 0, background.getIconWidth(), background
-	                .getIconHeight());
+		label = new JLabel(background);
+		label.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		getLayeredPane().add(label, new Integer(Integer.MIN_VALUE));
 		
 		int frameWidth = background.getIconWidth();
@@ -129,7 +141,7 @@ public class MainView extends JFrame implements ActionListener {
 		setLocationRelativeTo(null); 
 		setContentPane(mContentPanel);
 		
-		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+		if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
 	        /** 
 	         * true无边框 全屏显示 
 	         * false有边框 全屏显示 
@@ -138,7 +150,7 @@ public class MainView extends JFrame implements ActionListener {
         }  
 		setVisible(true);
 		
-		if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+		if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
 		    // 全屏设置  
 	        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	        GraphicsDevice gd = ge.getDefaultScreenDevice();

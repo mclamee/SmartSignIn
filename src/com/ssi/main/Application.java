@@ -45,6 +45,7 @@ public class Application {
     public static MainView MAIN_FRAME;
     public static AuthView AUTH_FRAME;
 
+    public static JPanel MAIN_VIEW;
     public static RecordView RECORD_VIEW;
     public static StaffView STAFF_VIEW;
     public static SetupView SETUP_VIEW;
@@ -71,7 +72,7 @@ public class Application {
         setupApplicationStyle();
 
         // check application authorizations
-        if (!debugMode || SSIConfig.getBoolean("debug.authorization") == true) {
+        if (!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.authorization"))) {
             try {
                 Application.authorization();
                 Application.initMainFrame();
@@ -94,13 +95,13 @@ public class Application {
     public static void initMainFrame() {
         LOG.info("> initializing main frames ...");
         MAIN_FRAME = new MainView();
-        // setup window close hook method
+        MAIN_VIEW = MAIN_FRAME.getMainJpanel();
+        SETUP_VIEW = new SetupView();
         RECORD_VIEW = new RecordView();
         STAFF_VIEW = new StaffView();
-        SETUP_VIEW = new SetupView();
         SIGNIN_VIEW = new SignInView();
-
-        // interactions
+        
+        // setup window close hook method
         MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
         MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
         MAIN_FRAME.addWindowListener(new WindowAdapter() {
@@ -109,7 +110,32 @@ public class Application {
                 SSIConfig.save();
             }
         });
+        
         LOG.info("> initializing main frames ... OK!");
+        
+        // init starting page
+        String startupView = SSIConfig.get("system.startup.view");
+        if(!StringUtil.isEmpty(startupView)){
+            switchView(getViewByName(startupView));
+        }
+    }
+
+    /**
+     * @author williamz@synnex.com
+     */
+    public static JPanel getViewByName(String startupView) {
+        switch (startupView) {
+        case "SignInView":
+            return Application.SIGNIN_VIEW;
+        case "RecordView":
+            return Application.RECORD_VIEW;
+        case "StaffView":
+            return Application.STAFF_VIEW;
+        case "SetupView":
+            return Application.SETUP_VIEW;
+        default:
+            return Application.MAIN_VIEW;
+        }
     }
 
     public static void authorization() throws AuthorizationException {
@@ -193,6 +219,7 @@ public class Application {
     }
 
     public static void switchView(JPanel view) {
+        LOG.info("> Switched To View: " + view.getClass().getSimpleName());
         Container mContentPanel = Application.MAIN_FRAME.getContentPane();
         mContentPanel.remove(mContentPanel.getComponent(0));
         mContentPanel.add(view, BorderLayout.CENTER);
@@ -201,7 +228,7 @@ public class Application {
     }
 
     public static void closeDevice() {
-        if(!debugMode || SSIConfig.getBoolean("debug.scanner") == true){
+        if(!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))){
             // 关闭设备
             VguangApi.closeDevice();
         }
@@ -211,7 +238,7 @@ public class Application {
         // 初始化数据
         Application.SIGNIN_VIEW.initDataMap();
         
-        if(!debugMode || SSIConfig.getBoolean("debug.scanner") == true){
+        if(!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.scanner"))){
             // 应用设置
             Application.SETUP_VIEW.applySetting();
             // 打开设备

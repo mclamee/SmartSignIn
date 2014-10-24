@@ -107,7 +107,7 @@ public class PlayImageView extends JPanel implements ActionListener {
         for (int i = 0;i < files.length;i++) {
             ImageIcon ic = new ImageIcon(files[i].getAbsolutePath());
             
-            if(!Application.debugMode || SSIConfig.getBoolean("debug.fullscreen") == true){
+            if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
                 ic = ResizeUtil.resizeImageToScreenSize(ic);
             }
             JLabel label = new JLabel(ic);

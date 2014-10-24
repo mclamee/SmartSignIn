@@ -122,12 +122,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 	    if (e.getSource() == jbtHome) {
-			JFrame frame = Application.MAIN_FRAME;
-			frame.getContentPane().remove(this);
-			JPanel panel = ((MainView) frame).getMainJpanel();
-			frame.getContentPane().add(panel);
-			frame.getContentPane().validate();
-			frame.getContentPane().repaint();
+	        Application.switchView(Application.MAIN_VIEW);
 		}
 	}
 
@@ -223,9 +218,9 @@ public class SignInView extends JPanel implements IView, ActionListener {
     			SSIConfig.put("synth.speed", synthSpeed);
     		}
             synthesizer.setSpeed(StringUtil.stringToInt(synthSpeed, 70));
-            // 合成文本为TEXT_CONTENT的句子，设置监听器为mSynListener
             String message = model.lookupMessage(callback);
             if(!StringUtil.isEmpty(message)){
+                // 合成文本为message的句子，设置监听器为mSynListener
             	synthesizer.playText(message, null, mSynListener);
             	resultArea.setText(message);
             	Application.SETUP_VIEW.setMessageString(message);

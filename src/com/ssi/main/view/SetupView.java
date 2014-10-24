@@ -11,6 +11,7 @@ package com.ssi.main.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -42,6 +43,9 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileFilter;
@@ -94,11 +98,21 @@ public class SetupView extends JPanel implements IView, ActionListener{
 	private JPasswordField pfEmailSenderPwd;
 	private JTextField tfEmailSmtpServer;
 	private JTextField tfEmailRecipientAddress;
+    private int frameWidth;
+    private int frameHeight;
+    private JFileChooser jfcBgImg;
     
     public SetupView() {
-        
-        int screenWidth = 1366;
-        int screenHeight = 768;
+        frameWidth = 1366;
+        frameHeight = 768;
+//        try {
+//            Dimension frameSize = Application.MAIN_FRAME.getSize();
+//            frameWidth = (int)frameSize.getWidth();
+//            frameHeight = (int)frameSize.getHeight();
+//        } catch (Exception e) {
+//        }
+//        
+        this.setSize(frameWidth, frameHeight);
         
         ImageIcon imgHome = new ImageIcon("res/img/home.png");
         btnHome = DrawableUtils.createImageButton("", imgHome, null);
@@ -116,24 +130,36 @@ public class SetupView extends JPanel implements IView, ActionListener{
         fileChooseiFrame = new JInternalFrame(Messages.getString("NewSetupView.fileChooseiFrame.title"));
         fileChooseiFrame.setBounds(300, 145, 573, 430);
         fileChooseiFrame.setClosable(true);
-        fileChooseiFrame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        fileChooseiFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+        fileChooseiFrame.addInternalFrameListener(new InternalFrameAdapter() {
+            @Override
+            public void internalFrameActivated(InternalFrameEvent e) {
+                fileChooseiFrame.setBounds(300, 145, 573, 430);
+            }
+        });
         fileChooseiFrame.getContentPane().setLayout(new CardLayout(0, 0));
         
-        JFileChooser jfcBgImg = new JFileChooser(new File("res/img"));
-        jfcBgImg.setAcceptAllFileFilterUsed(false);
+        jfcBgImg = new JFileChooser();
+        jfcBgImg.setAcceptAllFileFilterUsed(true);
+        jfcBgImg.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)){
+                    tfBgImg.setText(jfcBgImg.getSelectedFile().getPath());
+                    fileChooseiFrame.doDefaultCloseAction();
+                }else if(e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)){
+                    fileChooseiFrame.doDefaultCloseAction();
+                }
+            }
+        });
         addFileChooserFilters(jfcBgImg);
         fileChooseiFrame.getContentPane().add(jfcBgImg, "name_267237042361245");
         desktopPane.add(fileChooseiFrame);
         fileChooseiFrame.pack();
         fileChooseiFrame.setVisible(true);
-        try {
-            fileChooseiFrame.setClosed(true);
-        } catch (PropertyVetoException e1) {
-            e1.printStackTrace();
-        }
         
         JPanel mainPanel = new JPanel();
-        mainPanel.setBounds(0, 0, screenWidth, screenHeight);
+        mainPanel.setBounds(0, 0, frameWidth, frameHeight);
         desktopPane.add(mainPanel);
         mainPanel.setLayout(null);
         
@@ -192,12 +218,23 @@ public class SetupView extends JPanel implements IView, ActionListener{
         tfBgImg.getDocument().addDocumentListener(new JValueChangedListener() {
 			@Override
 			void actionHandler() {
-				SSIConfig.put("system.background.image", tfBgImg.getText());
+				SSIConfig.put("system.startup.background", tfBgImg.getText());
 			}
 		});
+        tfBgImg.setEditable(false);
         tfBgImg.setBounds(190, 105, 120, 25);
         panelUI.add(tfBgImg);
         tfBgImg.setColumns(10);
+        
+        JButton btnChoose = new JButton(Messages.getString("SetupView.btnChoose.text")); //$NON-NLS-1$
+        btnChoose.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jfcBgImg.setSelectedFile(new File(tfBgImg.getText()));
+                fileChooseiFrame.setVisible(true);
+            }
+        });
+        btnChoose.setBounds(320, 105, 70, 25);
+        panelUI.add(btnChoose);
         
         JLabel lbVerifySignInView = new JLabel(Messages.getString("SetupView.lbVerifySignInView.text")); //$NON-NLS-1$
         lbVerifySignInView.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -230,17 +267,6 @@ public class SetupView extends JPanel implements IView, ActionListener{
         pwfVerifySignInView = new JPasswordField();
         pwfVerifySignInView.setBounds(280, 140, 110, 25);
         panelUI.add(pwfVerifySignInView);
-        
-        JButton btnChoose = new JButton(Messages.getString("SetupView.btnChoose.text")); //$NON-NLS-1$
-        btnChoose.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                desktopPane.add(fileChooseiFrame);
-                fileChooseiFrame.pack();
-                fileChooseiFrame.setVisible(true);
-            }
-        });
-        btnChoose.setBounds(320, 105, 70, 25);
-        panelUI.add(btnChoose);
         
         JPanel panelSynth = new JPanel();
         panelSynth.setLayout(null);
@@ -667,6 +693,19 @@ public class SetupView extends JPanel implements IView, ActionListener{
     }
     
     private void setDefaultValues(){
+        String bgImage = SSIConfig.get("system.startup.background");
+        if(!StringUtil.isEmpty(bgImage)){
+            File imgFile = new File(bgImage);
+            tfBgImg.setText(imgFile.getAbsolutePath());
+            jfcBgImg.setSelectedFile(imgFile);
+            fileChooseiFrame.doDefaultCloseAction();
+        }
+        
+        String startView = SSIConfig.get("system.startup.view");
+        if(!StringUtil.isEmpty(startView)){
+            cbStartingView.setSelectedItem(startView);
+        }
+        
         cbCodeQr.setSelected(true);
         cbCodeDm.setSelected(true);
         cbCodeBar.setSelected(true);
@@ -749,7 +788,7 @@ public class SetupView extends JPanel implements IView, ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnHome) {
-            Application.switchView(Application.MAIN_FRAME.getMainJpanel());
+            Application.switchView(Application.MAIN_VIEW);
             SSIConfig.save();
         }
     }

@@ -1,3 +1,4 @@
+package samples;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.ExecutorService;
@@ -7,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.*;
 
-public class MainFrame extends JFrame implements Runnable {
+public class ClockMainFrame extends JFrame implements Runnable {
 
 	private int width = 500;
 	private int height = 500;
@@ -21,7 +22,7 @@ public class MainFrame extends JFrame implements Runnable {
 	private Map<Integer, Double> xMap = new HashMap<Integer, Double>();
 	private Map<Integer, Double> yMap = new HashMap<Integer, Double>();
 
-	public MainFrame() {
+	public ClockMainFrame() {
 
 		this.setTitle("我的小钟");
 		this.setSize(new Dimension(width, height));
@@ -125,6 +126,6 @@ public class MainFrame extends JFrame implements Runnable {
 
 	public static void main(String[] args) {
 
-		MainFrame mainf = new MainFrame();
+		ClockMainFrame mainf = new ClockMainFrame();
 	}
 }

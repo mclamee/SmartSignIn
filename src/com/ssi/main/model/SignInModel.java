@@ -11,12 +11,12 @@ import java.util.Vector;
 
 import org.json.JSONException;
 
-import bizfuse.restful.svc.srpm.dataCollection.Weather;
-
 import com.ssi.main.Application;
+import com.ssi.main.SSIConfig;
 import com.ssi.main.data.RecordSubVector;
 import com.ssi.main.data.StaffSubVector;
 import com.ssi.util.StringUtil;
+import com.ssi.util.weather.WeatherHandle;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 
@@ -61,7 +61,8 @@ public class SignInModel {
 		if(message.contains("##{weather}")){
 			String weather = "";
 			try {
-				weather = new Weather("101270101 ").getWeather();
+			    // 101270101 = 成都
+				weather = new WeatherHandle(SSIConfig.get("weather.city")).getWeather();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (UnsupportedEncodingException e) {

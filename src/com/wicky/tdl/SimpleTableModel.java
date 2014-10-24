@@ -93,4 +93,8 @@ public class SimpleTableModel extends DefaultTableModel {
 		DataFactory.setupEditorAndRenderer(simpleTodoTable, view);
 	}
 
+    public String getViewName() {
+        return this.view == null?"null":view.getClass().getSimpleName();
+    }
+
 }

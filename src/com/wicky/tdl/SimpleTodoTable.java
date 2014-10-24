@@ -69,7 +69,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
 	private File dataFile;
     
     public SimpleTodoTable(IView view){
-		LOG.info("VIEWNAME: " + (view == null?"":view.getClass().getSimpleName()));
+		String viewName = view == null?"null":view.getClass().getSimpleName();
+        LOG.info("> initializing table for " + viewName + " ...");
         // 1. create data model
 		dataModel = new SimpleTableModel(view);
         dataModel.addTableModelListener(new TableModelListener() {
@@ -190,6 +191,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         
         this.setRowHeight(40);
         this.getTableHeader().setReorderingAllowed(false);
+        
+        LOG.info("> initializing table for " + viewName + " ... OK!");
     }
 
     private void createRowSorter() {
@@ -339,7 +342,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
     public void saveDataToFile() {
         if(dataFile == null) return;
         try {
-            LOG.debug("Saving data ... ");
+            LOG.debug("Saving data for "+dataModel.getViewName()+" ...");
             out = new ObjectOutputStream(new FileOutputStream(dataFile));
             out.flush();
             out.writeObject(dataModel.exportData());
