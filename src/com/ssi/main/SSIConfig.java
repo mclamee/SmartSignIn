@@ -64,6 +64,7 @@ public class SSIConfig {
         }
         System.setProperty("PROFILE_HOME", CONFIG.getProperty("system.profileHome"));
         System.setProperty("PID", ManagementFactory.getRuntimeMXBean().getName());
+        System.setProperty("java.awt.im.style","on-the-spot");
         LOG = Logger.getLogger(SSIConfig.class);
     }
 
