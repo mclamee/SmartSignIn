@@ -3,6 +3,7 @@ package com.wicky.tdl;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicTableUI;
@@ -14,11 +15,13 @@ public class DragDropRowTableUI extends BasicTableUI {
     private int startDragPoint;
     private int dyOffset;
 
-    protected MouseInputListener createMouseInputListener() {
+    @Override
+	protected MouseInputListener createMouseInputListener() {
         return new DragDropRowMouseInputHandler();
     }
 
-    public void paint(Graphics g, JComponent c) {
+    @Override
+	public void paint(Graphics g, JComponent c) {
         super.paint(g, c);
 
         if (draggingRow) {
@@ -36,12 +39,14 @@ public class DragDropRowTableUI extends BasicTableUI {
 
     class DragDropRowMouseInputHandler extends MouseInputHandler {
 
-        public void mousePressed(MouseEvent e) {
+        @Override
+		public void mousePressed(MouseEvent e) {
             super.mousePressed(e);
             startDragPoint = (int) e.getPoint().getY();
         }
 
-        public void mouseDragged(MouseEvent e) {
+        @Override
+		public void mouseDragged(MouseEvent e) {
             int fromRow = table.getSelectedRow();
 
             if (fromRow >= 0) {
@@ -78,7 +83,8 @@ public class DragDropRowTableUI extends BasicTableUI {
             }
         }
 
-        public void mouseReleased(MouseEvent e) {
+        @Override
+		public void mouseReleased(MouseEvent e) {
             super.mouseReleased(e);
             draggingRow = false;
             table.repaint();

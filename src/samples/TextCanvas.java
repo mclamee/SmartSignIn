@@ -107,6 +107,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 重载Component的输入法调用接口，因为此类为InputMethodRequests的实现，所以返回this即可。
 	 */
+	@Override
 	public InputMethodRequests getInputMethodRequests() {
 		return this;
 	}
@@ -152,6 +153,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 触发输入法变更事件
 	 */
+	@Override
 	public void inputMethodTextChanged(InputMethodEvent e) {
 		int committedCharacterCount = e.getCommittedCharacterCount();
 		AttributedCharacterIterator text = e.getText();
@@ -183,6 +185,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 修改插入符所在位置
 	 */
+	@Override
 	public void caretPositionChanged(InputMethodEvent event) {
 		caret = event.getCaret();
 		event.consume();
@@ -191,6 +194,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 获得指定定位符对应的文本显示位置
 	 */
+	@Override
 	public Rectangle getTextLocation(TextHitInfo offset) {
 		Rectangle rectangle;
 		if (offset == null) {
@@ -207,6 +211,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 获得偏移指定坐标的插入符信息
 	 */
+	@Override
 	public TextHitInfo getLocationOffset(int x, int y) {
 		Point location = getLocationOnScreen();
 		Point textOrigin = getTextOrigin();
@@ -220,30 +225,36 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 			return null;
 		}
 	}
+	@Override
 	public int getInsertPositionOffset() {
 		return getCommittedTextLength();
 	}
 	/**
 	 * 返回指定范围内的字符信息迭代器
 	 */
+	@Override
 	public AttributedCharacterIterator getCommittedText(int beginIndex,
 			int endIndex, Attribute[] attributes) {
 		return getMessageText(beginIndex, endIndex);
 	}
+	@Override
 	public AttributedCharacterIterator cancelLatestCommittedText(
 			Attribute[] attributes) {
 		
 		return null;
 	}
+	@Override
 	public AttributedCharacterIterator getSelectedText(Attribute[] attributes) {
 		return EMPTY_TEXT;
 	}
+	@Override
 	public synchronized void update(Graphics g) {
 		paint(g);
 	}
 	/**
 	 * 绘制目标界面
 	 */
+	@Override
 	public synchronized void paint(Graphics g) {
 		g.setColor(getBackground());
 		Dimension size = getSize();
@@ -280,6 +291,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 返回已输入的字符串信息长度
 	 */
+	@Override
 	public int getCommittedTextLength() {
 		return messageText.length();
 	}
@@ -366,6 +378,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 	/**
 	 * 用户输入
 	 */
+	@Override
 	public void keyTyped(KeyEvent event) {
 		char keyChar = event.getKeyChar();
 		// 处理文字删除
@@ -381,14 +394,18 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 		event.consume();
 		repaint();
 	}
+	@Override
 	public void keyPressed(KeyEvent event) {
 	}
+	@Override
 	public void keyReleased(KeyEvent event) {
 	}
+	@Override
 	public void focusGained(FocusEvent event) {
 		haveFocus = true;
 		repaint();
 	}
+	@Override
 	public void focusLost(FocusEvent event) {
 		haveFocus = false;
 		repaint();
@@ -398,6 +415,7 @@ public class TextCanvas extends Canvas implements KeyListener, FocusListener,
 		TextCanvas text = new TextCanvas();
 		frame.add(text);
 		frame.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}

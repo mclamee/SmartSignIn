@@ -2,6 +2,7 @@ package com.ssi.main.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -38,8 +39,8 @@ public class SubDialogPanel extends JPanel {
 		this.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		subDialogTile = new JLabel("");
-		subDialogTile.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		subDialogTile.setAlignmentY(JLabel.CENTER_ALIGNMENT);
+		subDialogTile.setAlignmentX(Component.CENTER_ALIGNMENT);
+		subDialogTile.setAlignmentY(Component.CENTER_ALIGNMENT);
 		subDialogTile.setFont(new Font("黑体", Font.PLAIN, 35));
 		this.add(subDialogTile, BorderLayout.NORTH);
 		JButton btnClose = new JButton("关闭");

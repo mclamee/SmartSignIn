@@ -135,10 +135,12 @@ public class UploadView extends JPanel implements ActionListener {
 
 	SpeechListener uploadListener = new SpeechListener() {
 
+		@Override
 		public void onData(byte[] buffer) {
 
 		}
 
+		@Override
 		public void onEnd(SpeechError error) {
 			if (error == null)
 				resultArea.setText("上传成功");

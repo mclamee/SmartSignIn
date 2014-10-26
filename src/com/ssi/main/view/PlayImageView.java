@@ -59,7 +59,7 @@ public class PlayImageView extends JPanel implements ActionListener {
     private JButton jbbf;
     private JPanel jp1 = new JPanel();
     private JPanel jp2;
-    private JComboBox<Integer> seconds;
+    private JComboBox seconds;
     private Timer timer;
 
     private Timer timerHide = new Timer(3000, new ActionListener() {
@@ -69,9 +69,13 @@ public class PlayImageView extends JPanel implements ActionListener {
             Cursor cursor = null;
             try {
                 cursor = createEmptyCursor();
-            } catch (HeadlessException | IndexOutOfBoundsException | IOException e1) {
+            } catch (HeadlessException e1) {
                 e1.printStackTrace();
-            }
+            } catch (IndexOutOfBoundsException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
             PlayImageView.this.setCursor(cursor);
         }
     });
@@ -128,7 +132,7 @@ public class PlayImageView extends JPanel implements ActionListener {
         JLabel lb = new JLabel("自动播放间隔:");
         jp2.add(lb);
         Integer str[] = {1,2,3,4,5,6,7,8,9,10};
-        seconds = new JComboBox<Integer>(str);
+        seconds = new JComboBox(str);
         seconds.setSelectedIndex(4);
         seconds.addActionListener(new ActionListener() {
             
@@ -172,7 +176,8 @@ public class PlayImageView extends JPanel implements ActionListener {
         }
     }
 
-    public void actionPerformed(ActionEvent e) {
+    @Override
+	public void actionPerformed(ActionEvent e) {
         String s = e.getActionCommand();
         if ("上一张".equals(s)) {
             stopTimer();
@@ -200,7 +205,7 @@ public class PlayImageView extends JPanel implements ActionListener {
     }
 
     private void startTimer() {
-        timer = new Timer((int) (seconds.getSelectedItem()) * 1000, this);
+        timer = new Timer((Integer) (seconds.getSelectedItem()) * 1000, this);
         timer.start();
         jbbf.setText(Pause);
     }

@@ -1,10 +1,13 @@
 package samples;
-import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.Timer;
-import java.awt.geom.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Date;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 class ClockDemo extends JFrame {
 	public ClockDemo() {
@@ -14,7 +17,7 @@ class ClockDemo extends JFrame {
 
 		setTitle("时钟演示");
 		setVisible(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	public static void main(String args[]) {
@@ -34,6 +37,7 @@ class Clock extends JPanel implements Runnable {
 		super();
 		this.setOpaque(false); // 设置透明
 		ActionListener taskPerformer = new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent evt) {
 				// repaint();
 
@@ -45,6 +49,7 @@ class Clock extends JPanel implements Runnable {
 
 	}
 
+	@Override
 	public void run() {
 		while (true) {
 			// System.out.println("HELLO");
@@ -57,6 +62,7 @@ class Clock extends JPanel implements Runnable {
 		}
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		int h, m, s, q, x1, y1, x2, y2;
 		int x0 = this.getWidth() / 2, y0 = this.getHeight() / 2;
@@ -70,8 +76,8 @@ class Clock extends JPanel implements Runnable {
 		g.setColor(Color.white);
 		g.drawOval(x0 - R + 3, y0 - R + 3, 2 * R - 7, 2 * R - 7); // 画刻度
 		for (int i = 0; i < 12; i++) {
-			y1 = (int) (y0 - Math.cos(i * 30 * RAD) * R * (float) 4 / 5);
-			x1 = (int) (x0 + Math.sin(i * 30 * RAD) * R * (float) 4 / 5);
+			y1 = (int) (y0 - Math.cos(i * 30 * RAD) * R * 4 / 5);
+			x1 = (int) (x0 + Math.sin(i * 30 * RAD) * R * 4 / 5);
 			y2 = (int) (y0 - Math.cos(i * 30 * RAD) * (R - 3));
 			x2 = (int) (x0 + Math.sin(i * 30 * RAD) * (R - 3));
 			g.drawLine(x1, y1, x2, y2);

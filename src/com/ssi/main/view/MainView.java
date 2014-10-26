@@ -16,11 +16,13 @@ package com.ssi.main.view;
 
 
 import java.awt.BorderLayout;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -78,7 +80,10 @@ public class MainView extends JFrame implements ActionListener {
                 if(dotPosition != -1) {
                     String prefix = bgImage.substring(0, dotPosition);
                     String suffix = bgImage.substring(dotPosition);
-                    background = new ImageIcon(prefix + "_d" + suffix);
+                    File image = new File(prefix + "_d" + suffix);
+                    if(image.exists()){
+                    	background = new ImageIcon(prefix + "_d" + suffix);
+                    }
                 }
             }else if(!StringUtil.isEmpty(SSIConfig.get("debug.background"))){
                 background = new ImageIcon(SSIConfig.get("debug.background"));
@@ -152,9 +157,12 @@ public class MainView extends JFrame implements ActionListener {
 		
 		if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
 		    // 全屏设置  
-	        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	        GraphicsDevice gd = ge.getDefaultScreenDevice();
-	        gd.setFullScreenWindow(this);
+//	        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//	        GraphicsDevice gd = ge.getDefaultScreenDevice();
+//	        gd.setFullScreenWindow(this);
+			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			Rectangle bounds = new Rectangle( screenSize );
+			this.setBounds(bounds);
 		}
 	}
 

@@ -97,12 +97,13 @@ public class Application {
     public static void initMainFrame() {
         LOG.info("> initializing main frames ...");
         MAIN_FRAME = new MainView();
+        MAIN_FRAME.setEnabled(false);
         MAIN_VIEW = MAIN_FRAME.getMainJpanel();
         SETUP_VIEW = new SetupView();
         RECORD_VIEW = new RecordView();
         STAFF_VIEW = new StaffView();
         SIGNIN_VIEW = new SignInView();
-
+        
         // setup window close hook method
         MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
         MAIN_FRAME.addWindowListener(STAFF_VIEW.getWindowListener());
@@ -120,24 +121,23 @@ public class Application {
         if (!StringUtil.isEmpty(startupView)) {
             switchView(getViewByName(startupView));
         }
+        MAIN_FRAME.setEnabled(true);
     }
 
     /**
      * @author williamz@synnex.com
      */
     public static JPanel getViewByName(String startupView) {
-        switch (startupView) {
-        case "SignInView":
+        if(startupView.equals("SignInView"))
             return Application.SIGNIN_VIEW;
-        case "RecordView":
+        else if(startupView.equals("RecordView"))
             return Application.RECORD_VIEW;
-        case "StaffView":
+        else if(startupView.equals("StaffView"))
             return Application.STAFF_VIEW;
-        case "SetupView":
+        else if(startupView.equals("SetupView"))
             return Application.SETUP_VIEW;
-        default:
+        else
             return Application.MAIN_VIEW;
-        }
     }
 
     public static void authorization() throws AuthorizationException {
@@ -199,14 +199,15 @@ public class Application {
 
     private static void setupApplicationStyle() {
         try {
-            BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.translucencyAppleLike;
+        	BeautyEyeLNFHelper.frameBorderStyle = FrameBorderStyle.osLookAndFeelDecorated;
             BeautyEyeLNFHelper.translucencyAtFrameInactive = false;
             UIManager.put("RootPane.setupButtonVisible", false);
             BeautyEyeLNFHelper.launchBeautyEyeLNF();
         } catch (final Exception r) {
+        	r.printStackTrace();
         }
 
-        final Font font = new Font(SSIConfig.get("font"), Font.PLAIN, 12);
+        final Font font = new Font(SSIConfig.get("system.font"), Font.PLAIN, 12);
         UIManager.put("Frame.titleFont", font);
         UIManager.put("Menu.font", font);
         UIManager.put("MenuItem.font", font);
@@ -225,7 +226,7 @@ public class Application {
         Container mContentPanel = Application.MAIN_FRAME.getContentPane();
         mContentPanel.remove(mContentPanel.getComponent(0));
         mContentPanel.add(view, BorderLayout.CENTER);
-        mContentPanel.revalidate();
+        mContentPanel.validate();
         mContentPanel.repaint();
     }
 

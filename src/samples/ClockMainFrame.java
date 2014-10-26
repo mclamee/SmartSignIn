@@ -1,12 +1,14 @@
 package samples;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.*;
+
+import javax.swing.JFrame;
 
 public class ClockMainFrame extends JFrame implements Runnable {
 
@@ -57,6 +59,7 @@ public class ClockMainFrame extends JFrame implements Runnable {
 		return (int) y;
 	}
 
+	@Override
 	public void paint(Graphics g) {
 
 		Graphics2D g2 = (Graphics2D) g;
@@ -108,11 +111,13 @@ public class ClockMainFrame extends JFrame implements Runnable {
 		g2.dispose();
 	}
 
+	@Override
 	public void run() {
 
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
+			@Override
 			public void run() {
 
 				hour = new java.util.Date().getHours();

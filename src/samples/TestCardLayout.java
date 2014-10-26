@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -41,6 +42,7 @@ public class TestCardLayout implements ActionListener{
 			jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 			}
 		
+		@Override
 		public void actionPerformed(ActionEvent e) {
 				String string=e.getActionCommand();
 				if("上一句".equals(string))

@@ -12,7 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
-import java.io.IOException;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -43,7 +42,7 @@ import com.wicky.tdl.ISubDataVector;
 import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
 
-public class StaffView extends JPanel implements IView, ActionListener {
+public class StaffView extends VirtualKeyboardView implements IView, ActionListener {
 	
     private static final long serialVersionUID = 4479482587513212049L;
     
@@ -71,6 +70,8 @@ public class StaffView extends JPanel implements IView, ActionListener {
         
         this.setOpaque(false);
         this.setLayout(null);
+        
+        this.createVirtualKeyboard(this, "StaffView");
         
         ImageIcon imgHome = new ImageIcon("res/img/home.png"); //$NON-NLS-1$
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
@@ -134,6 +135,8 @@ public class StaffView extends JPanel implements IView, ActionListener {
         JTextField tfSearch2 = getTfSearch();
         tfSearch2.setBounds(170, frameHeight - 120, frameWidth - 170 - 10, 30);
         this.add(tfSearch2);
+        
+        this.applyVirtualKeyboard(this, "StaffView");
     }
     
     private JButton getBtnAdd() {
@@ -203,11 +206,11 @@ public class StaffView extends JPanel implements IView, ActionListener {
                 tfSearch.setText(null);
                 int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("StaffView.btn_clear_confirm"), 
                 		Messages.getString("StaffView.btn_clear_confirm_title"), 
-                		JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                		JOptionPane.YES_NO_OPTION); 
                 if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
                     for (int rowId = 0;rowId < rowCount;rowId++) {
-                        Boolean value = (Boolean) todoTable.dataModel.getFlag(rowId);
+                        Boolean value = todoTable.dataModel.getFlag(rowId);
                         if(value){
                             todoTable.dataModel.removeRow(rowId);
                             rowId--;rowCount--;
@@ -292,10 +295,12 @@ public class StaffView extends JPanel implements IView, ActionListener {
         return subDialogPanel;
 	}
     
+	@Override
 	public void closeSubDialog(){
 		subDialogPanel.close();
 	}
 	
+	@Override
 	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
 		subDialogPanel.open(title, message, data);
 	}

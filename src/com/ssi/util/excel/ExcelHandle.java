@@ -183,7 +183,7 @@ public class ExcelHandle {
 			outFile.delete();
 		}
 		
-		Map<String, List<StaffReport>> dateMap = new HashMap<>();
+		Map<String, List<StaffReport>> dateMap = new HashMap<String, List<StaffReport>>();
 		
 		IDataVector<ISubDataVector> data = Application.STAFF_VIEW.getTableModel().getData();
 		for (ISubDataVector sub : data) {

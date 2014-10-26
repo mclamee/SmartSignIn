@@ -1,10 +1,17 @@
 package samples;
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 
 public class HideMouseTest extends java.applet.Applet {
 
-  public void init()
+  @Override
+public void init()
   {
   	Image image = getImage(getCodeBase(), "Cursor/zoomin.gif");  	
   	MediaTracker mt = new MediaTracker(this);

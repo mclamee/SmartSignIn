@@ -54,11 +54,13 @@ public class DrawableUtils {
 		final ImageIcon image= new ImageIcon(iconPath + ".png");
 		
 		button.addMouseListener(new MouseAdapter() {   
-            public void mousePressed(MouseEvent e) {   
+            @Override
+			public void mousePressed(MouseEvent e) {   
             	button.setIcon(imagePressed);
             }   
   
-            public void mouseReleased(MouseEvent e) {   
+            @Override
+			public void mouseReleased(MouseEvent e) {   
                 button.setIcon(image);
             }   
         });  	

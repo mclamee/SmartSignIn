@@ -18,6 +18,7 @@ along with JNesBR.  If not, see <http://www.gnu.org/licenses/>.
 //package jnesbr.util;
 
 import java.awt.Rectangle;
+
 import javax.swing.JTable;
 import javax.swing.JViewport;
 

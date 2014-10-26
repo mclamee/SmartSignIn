@@ -1,5 +1,6 @@
 package com.wicky.tdl;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -28,12 +29,14 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.BadLocationException;
@@ -124,8 +127,13 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                     delItm.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            dataModel.removeRow(SimpleTodoTable.this.getSelectedRow());
-                            refreshTable();
+                        	SwingUtilities.invokeLater(new Runnable() {
+								@Override
+								public void run() {
+		                            dataModel.removeRow(SimpleTodoTable.this.getSelectedRow());
+		                            refreshTable();
+								}
+							});
                         }
                     });
                     popup.add(delItm);
@@ -143,19 +151,23 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_DELETE){
-                    int selectedRow = SimpleTodoTable.this.getSelectedRow();
+                    final int selectedRow = SimpleTodoTable.this.getSelectedRow();
                     if(selectedRow != -1){
                         stopCellEditing();
                         int rowCount = dataModel.getRowCount();
                         if(rowCount != 0){
                             int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
                             if(result == JOptionPane.YES_OPTION){
-                                dataModel.removeRow(selectedRow);
-                                if(selectedRow < dataModel.getRowCount()){
-                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
-                                }
-                                stopCellEditing();
-                                refreshTable();
+                            	SwingUtilities.invokeLater(new Runnable() {
+									public void run() {
+		                                dataModel.removeRow(selectedRow);
+		                                if(selectedRow < dataModel.getRowCount()){
+		                                    SimpleTodoTable.this.setRowSelectionInterval(selectedRow, selectedRow);
+		                                }
+		                                stopCellEditing();
+		                                refreshTable();
+									}
+								});
                             }
                         }
                     }
@@ -277,17 +289,16 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         return null;
 	}
     
-//    @Override
-//    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-//        Component com = super.prepareRenderer(renderer, row, column);
-//        
-//        if(getValueAt(row, 3).equals(true)){
-//            com.setForeground(Color.GRAY);
-//        }else{
-//            com.setForeground(Color.BLACK);
-//        }
-//        return com;
-//    }
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        Component com = super.prepareRenderer(renderer, row, column);
+        if(dataModel.getData().getFlag(row)){
+            com.setForeground(Color.GREEN);
+        }else{
+            com.setForeground(Color.BLACK);
+        }
+        return com;
+    }
     
     public void refreshTable() {
         this.setModel(this.getModel());

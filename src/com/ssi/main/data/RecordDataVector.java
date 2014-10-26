@@ -39,7 +39,8 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
         return this.add(new RecordSubVector(qrCode, name, salutaion, customize, flag));
     }
     
-    public Vector<String> getTitles() {
+    @Override
+	public Vector<String> getTitles() {
         return titles;
     }
 
@@ -47,11 +48,13 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
         this.titles = titles;
     }
 
-    public Class<?> getColumnClass(int col) {
+    @Override
+	public Class<?> getColumnClass(int col) {
         return this.columnTypes.get(col);
     }
     
-    public int getColumnIdx(String colName) {
+    @Override
+	public int getColumnIdx(String colName) {
         if(colName != null && colName.length() > 0)
         for(int i=0; i<this.titles.size(); i++){
             if(colName.equals(this.titles.get(i))){
@@ -61,7 +64,8 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
         return -1;
     }
 
-    public Object getValueAt(int row, int column) {
+    @Override
+	public Object getValueAt(int row, int column) {
         if (column == 0) {
             return row + 1;
         }
@@ -84,13 +88,14 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
 
 	@Override
 	public boolean getFlag(int row) {
-		return (boolean)this.getValueAt(row, columnTypes.size() - 1);
+		return (Boolean)this.getValueAt(row, columnTypes.size() - 1);
 	}
 
     /**
      * @return the title
      */
-    public String getTitle() {
+    @Override
+	public String getTitle() {
         return title;
     }
 
@@ -104,7 +109,8 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
     /**
      * @return the message
      */
-    public String getMessage() {
+    @Override
+	public String getMessage() {
         return message;
     }
 

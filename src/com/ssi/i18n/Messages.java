@@ -15,7 +15,6 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import com.ssi.main.SSIConfig;
-import com.ssi.main.view.SetupView;
 
 /**
  * <b>Description</b>: 
@@ -38,9 +37,11 @@ public class Messages {
     public static String getString(String key) {
         try {
             return new String(RESOURCE_BUNDLE.getString(key).getBytes("ISO-8859-1"), "UTF-8");
-        } catch (MissingResourceException | UnsupportedEncodingException e) {
+        } catch (MissingResourceException e) {
             return '!' + key + '!';
-        }
+        } catch (UnsupportedEncodingException e) {
+        	return '!' + key + '!';
+		}
     }
     
     public static void refresh() {

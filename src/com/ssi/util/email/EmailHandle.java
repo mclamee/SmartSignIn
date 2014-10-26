@@ -142,7 +142,7 @@ public class EmailHandle {
         try {
             FileDataSource fileds = null;
             for (Iterator<FileDataSource> it = files.iterator();it.hasNext();) {
-                fileds = (FileDataSource) it.next();
+                fileds = it.next();
                 if (fileds != null && fileds.getFile() != null) {
                     fileds.getFile().delete();
                 }

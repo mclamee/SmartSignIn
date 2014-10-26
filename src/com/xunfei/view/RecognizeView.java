@@ -113,6 +113,7 @@ public class RecognizeView extends JPanel implements ActionListener {
 	 * 监听器实现.
 	 * 按钮按下动作实现
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		SpeechRecognizer recognizer = SpeechRecognizer.getRecognizer();		
 		if(e.getSource() == jbtEntire){

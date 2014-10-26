@@ -5,18 +5,13 @@ import java.awt.event.ActionListener;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableModel;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.view.IView;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
-import com.wicky.tdl.SimpleTableModel;
 import com.wicky.tdl.SimpleTodoTable;
   
 /** 
@@ -59,7 +54,8 @@ public class MyButtonEditor extends DefaultCellEditor
         // 为按钮添加事件。这里只能添加ActionListner事件，Mouse事件无效。   
         this.button.addActionListener(new ActionListener()  
         {  
-            public void actionPerformed(ActionEvent e)  
+            @Override
+			public void actionPerformed(ActionEvent e)  
             {  
                 // 触发取消编辑的事件，不会调用tableModel的setValue方法。   
                 MyButtonEditor.this.fireEditingCanceled();  

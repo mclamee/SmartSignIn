@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -49,7 +48,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
         int frameHeight = (int)frameSize.getHeight();
         
         totalPaddingTop = (int) (3.5 * frameHeight / 12);
-        totalPaddingLeft = (int) (1 * frameWidth / 12);
+        totalPaddingLeft = 1 * frameWidth / 12;
         
         setOpaque(false);
         setLayout(null);
@@ -91,10 +90,12 @@ public class SignInView extends JPanel implements IView, ActionListener {
         resultArea = new JTextPane(){
 			private static final long serialVersionUID = 2734359566090502835L;
 
+			@Override
 			public boolean getScrollableTracksViewportWidth() {  
         	    return false;  
         	}  
         };
+        resultArea.setEditable(false);
         resultArea.setText("");  
         StyledDocument doc = resultArea.getStyledDocument();  
         doc.setParagraphAttributes(0, 0, bSet, false);  
@@ -236,9 +237,11 @@ public class SignInView extends JPanel implements IView, ActionListener {
 		this.model.initDataMap();
 	}
 	
+	@Override
 	public void closeSubDialog(){
 	}
 	
+	@Override
 	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
 	}
 

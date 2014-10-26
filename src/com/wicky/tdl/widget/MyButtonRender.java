@@ -25,7 +25,8 @@ public class MyButtonRender implements TableCellRenderer
 //        this.button.setBounds(0, 0, 50, 15);
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+    @Override
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
             int column)
     {
         // 只为按钮赋值即可。也可以作其它操作，如绘背景等。

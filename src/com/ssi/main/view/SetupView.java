@@ -11,14 +11,10 @@ package com.ssi.main.view;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
 import java.io.File;
 
 import javax.swing.ButtonGroup;
@@ -40,20 +36,20 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.text.BadLocationException;
 
 import org.apache.log4j.Logger;
 
-import com.iflytek.speech.SpeechConfig.RATE;
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
@@ -63,12 +59,10 @@ import com.ssi.util.StringUtil;
 import com.vguang.VguangApi;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
-
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-public class SetupView extends JPanel implements IView, ActionListener{
+public class SetupView extends VirtualKeyboardView implements IView, ActionListener{
     private static final long serialVersionUID = 522247831168522239L;
     private static final Logger LOG = Logger.getLogger(SetupView.class);
+    
     private SetupModel model = new SetupModel();
     
     private JButton btnHome;
@@ -81,8 +75,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
     private JTextPane tpScanResult;
     private JLabel lbDeviceState;
 
-	private JComboBox<String> cbSysLang;
-	private JComboBox<String> cbStartingView;
+	private JComboBox cbSysLang;
+	private JComboBox cbStartingView;
 	private JTextField tfBgImg;
 	private JCheckBox cbCodeQr;
 	private JCheckBox cbCodeDm;
@@ -90,7 +84,7 @@ public class SetupView extends JPanel implements IView, ActionListener{
 	private JTextField tfInterval;
 	private JRadioButton rdbtnYes_Ai;
 	private JRadioButton rdbtnYes_Beep;
-	private JComboBox<String> cbSynthVoice;
+	private JComboBox cbSynthVoice;
 	private JSlider sdSynthSpeed;
 	private JSlider sdSynthRate;
 	private JSlider sdSynthVolume;
@@ -127,10 +121,10 @@ public class SetupView extends JPanel implements IView, ActionListener{
         desktopPane.setBackground(SystemColor.window);
         add(desktopPane);
         
-        fileChooseiFrame = new JInternalFrame(Messages.getString("NewSetupView.fileChooseiFrame.title"));
+        fileChooseiFrame = new JInternalFrame(Messages.getString("SetupView.fileChooseiFrame.title"));
         fileChooseiFrame.setBounds(300, 145, 573, 430);
         fileChooseiFrame.setClosable(true);
-        fileChooseiFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+        fileChooseiFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         fileChooseiFrame.addInternalFrameListener(new InternalFrameAdapter() {
             @Override
             public void internalFrameActivated(InternalFrameEvent e) {
@@ -163,6 +157,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         desktopPane.add(mainPanel);
         mainPanel.setLayout(null);
         
+        createVirtualKeyboard(mainPanel, "SetupView");
+        
         JPanel panelUI = new JPanel();
         panelUI.setBorder(new TitledBorder(null, Messages.getString("SetupView.panelUI.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
         panelUI.setBounds(100, 100, 420, 185);
@@ -174,8 +170,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         lbSysLang.setBounds(0, 35, 180, 25);
         panelUI.add(lbSysLang);
         
-        cbSysLang = new JComboBox<String>();
-        cbSysLang.setModel(new DefaultComboBoxModel<String>(new String[] {"中文", "English"}));
+        cbSysLang = new JComboBox();
+        cbSysLang.setModel(new DefaultComboBoxModel(new String[] {"中文", "English"}));
         cbSysLang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -199,10 +195,11 @@ public class SetupView extends JPanel implements IView, ActionListener{
         lbStartingView.setBounds(0, 70, 180, 25);
         panelUI.add(lbStartingView);
         
-        cbStartingView = new JComboBox<String>();
-        cbStartingView.setModel(new DefaultComboBoxModel<String>(new String[] {"MainView", "SignInView", "SetupView", "RecordView", "StaffView"}));
+        cbStartingView = new JComboBox();
+        cbStartingView.setModel(new DefaultComboBoxModel(new String[] {"MainView", "SignInView", "SetupView", "RecordView", "StaffView"}));
         cbStartingView.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		SSIConfig.put("system.startup.view", (String) cbStartingView.getSelectedItem());
         	}
         });
@@ -228,7 +225,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JButton btnChoose = new JButton(Messages.getString("SetupView.btnChoose.text")); //$NON-NLS-1$
         btnChoose.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 jfcBgImg.setSelectedFile(new File(tfBgImg.getText()));
                 fileChooseiFrame.setVisible(true);
             }
@@ -243,7 +241,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnYes_VerifySignInView = new JRadioButton(Messages.getString("SetupView.rdbtnYes_VerifySignInView.text")); //$NON-NLS-1$
         rdbtnYes_VerifySignInView.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 pwfVerifySignInView.setEnabled(true);
             }
         });
@@ -253,7 +252,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnNo_VerifySignInView = new JRadioButton(Messages.getString("SetupView.rdbtnNo_VerifySignInView.text")); //$NON-NLS-1$
         rdbtnNo_VerifySignInView.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 pwfVerifySignInView.setEnabled(false);
             }
         });
@@ -279,9 +279,9 @@ public class SetupView extends JPanel implements IView, ActionListener{
         lbSynthVoice.setBounds(0, 35, 180, 25);
         panelSynth.add(lbSynthVoice);
         
-        cbSynthVoice = new JComboBox<String>();
+        cbSynthVoice = new JComboBox();
         String[] voiceList = model.getVoiceList();
-        cbSynthVoice.setModel(new DefaultComboBoxModel<>(voiceList));
+        cbSynthVoice.setModel(new DefaultComboBoxModel(voiceList));
         cbSynthVoice.getModel().addListDataListener(new ListDataListener() {
             @Override
             public void intervalRemoved(ListDataEvent e) {
@@ -307,7 +307,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         sdSynthSpeed = new JSlider();
         sdSynthSpeed.addChangeListener(new ChangeListener() {
-        	public void stateChanged(ChangeEvent e) {
+        	@Override
+			public void stateChanged(ChangeEvent e) {
         		SSIConfig.put("synth.speed", sdSynthSpeed.getValue() + "");
         	}
         });
@@ -325,7 +326,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         sdSynthRate = new JSlider();
         sdSynthRate.addChangeListener(new ChangeListener() {
-        	public void stateChanged(ChangeEvent e) {
+        	@Override
+			public void stateChanged(ChangeEvent e) {
 				SSIConfig.put("synth.sampleRate", sdSynthRate.getValue() + "");
         	}
         });
@@ -344,7 +346,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         sdSynthVolume = new JSlider();
         sdSynthVolume.addChangeListener(new ChangeListener() {
-        	public void stateChanged(ChangeEvent e) {
+        	@Override
+			public void stateChanged(ChangeEvent e) {
         		SSIConfig.put("synth.volume", sdSynthVolume.getValue() + "");
         	}
         });
@@ -400,7 +403,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         rdbtnYes_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Ai.text"));
         rdbtnYes_Ai.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 tfAiTime.setEnabled(true);
             }
         });
@@ -410,7 +414,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnNo_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Ai.text")); //$NON-NLS-1$
         rdbtnNo_Ai.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 tfAiTime.setEnabled(false);
             }
         });
@@ -441,7 +446,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         rdbtnYes_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Beep.text"));
         rdbtnYes_Beep.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 tfBeepTimes.setEnabled(true);
             }
         });
@@ -450,7 +456,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnNo_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Beep.text")); //$NON-NLS-1$
         rdbtnNo_Beep.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            @Override
+			public void actionPerformed(ActionEvent e) {
                 tfBeepTimes.setEnabled(false);
             }
         });
@@ -463,7 +470,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         tfBeepTimes = new JComboBox();
         tfBeepTimes.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		System.out.println("BEEP!");
         	}
         });
@@ -482,7 +490,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnYes_Light = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Light.text")); //$NON-NLS-1$
         rdbtnYes_Light.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		System.out.println("开灯！");
         		VguangApi.lightOn();
         	}
@@ -493,7 +502,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JRadioButton rdbtnNo_Light = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Light.text")); //$NON-NLS-1$
         rdbtnNo_Light.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		System.out.println("关灯！");
         		VguangApi.lightOff();
         	}
@@ -507,7 +517,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JButton btnOpen = new JButton(Messages.getString("SetupView.btnOpen.text")); //$NON-NLS-1$
         btnOpen.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		VguangApi.openDevice();
         	}
         });
@@ -516,7 +527,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JButton btnClose = new JButton(Messages.getString("SetupView.btnClose.text")); //$NON-NLS-1$
         btnClose.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		VguangApi.closeDevice();
                 lbDeviceState.setText(Messages.getString("SetupView.lbDeviceState.inactive.text"));
                 lbDeviceState.setEnabled(false);
@@ -527,7 +539,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JButton btnApply = new JButton(Messages.getString("SetupView.btnApply.text")); //$NON-NLS-1$
         btnApply.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
         		applySetting();
         	}
         });
@@ -569,7 +582,7 @@ public class SetupView extends JPanel implements IView, ActionListener{
         
         JPanel panelReport = new JPanel();
         panelReport.setLayout(null);
-        panelReport.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Report Export Setup", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        panelReport.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Messages.getString("SetupView.panelReport.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
         panelReport.setBounds(100, 510, 420, 180);
         mainPanel.add(panelReport);
         
@@ -647,6 +660,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
         mainPanel.add(btnAboutThisVersion);
         
         setDefaultValues();
+        
+        applyVirtualKeyboard(mainPanel, "SetupView");
     }
 
     private void addFileChooserFilters(JFileChooser jfcBgImg) {
@@ -806,7 +821,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
     public void setDeviceStatus(final int istatus){
         //在主线程中更新UI
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 if(istatus == VguangApi.DEVICE_VALID){
                     lbDeviceState.setText(Messages.getString("SetupView.lbDeviceState.active.text"));
                     lbDeviceState.setEnabled(true);
@@ -821,7 +837,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
     public void setResultString(final String str){
         //在主线程中更新UI
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 tpScanResult.setText(str);
             }
         });
@@ -829,7 +846,8 @@ public class SetupView extends JPanel implements IView, ActionListener{
     
     public void setMessageString(final String message) {
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 tpDecodeResult.setText(message);
             }
         });
@@ -846,14 +864,17 @@ public class SetupView extends JPanel implements IView, ActionListener{
 	abstract class JValueChangedListener implements DocumentListener { // 我想值在改变时做同一件事,所以写
 		abstract void actionHandler(); // 个虚类,并实现接口方法都调用同一个
 
+		@Override
 		public void changedUpdate(DocumentEvent e) { // 待实现的方法actionHandler()
 			actionHandler();
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e) {
 			actionHandler();
 		}
 
+		@Override
 		public void insertUpdate(DocumentEvent e) {
 			actionHandler();
 		}

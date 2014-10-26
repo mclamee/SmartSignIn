@@ -23,7 +23,7 @@ import com.wicky.tdl.ISubDataVector;
 
 public class SignInModel {
 	
-	private Map<String, MessageBody> dataMap = new HashMap<>();
+	private Map<String, MessageBody> dataMap = new HashMap<String, MessageBody>();
 	
 	public String lookupMessage(String callback){
 		if(StringUtil.isEmpty(callback)){

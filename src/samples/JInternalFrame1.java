@@ -1,7 +1,16 @@
 package samples;
-import javax.swing.*;
-import java.awt.event.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JButton;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JTextArea;
 
 public class JInternalFrame1 extends JFrame implements ActionListener {
 
@@ -26,6 +35,7 @@ public class JInternalFrame1 extends JFrame implements ActionListener {
 		show();
 
 		addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
@@ -35,6 +45,7 @@ public class JInternalFrame1 extends JFrame implements ActionListener {
 	/*
 	 * 产生一个可关闭、可改变大小、具有标题、可最大化与最小化的Internal Frame.
 	 */
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		JInternalFrame internalFrame = new JInternalFrame("Internal Frame "
 				+ (count++), true, true, true, true);

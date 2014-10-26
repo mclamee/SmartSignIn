@@ -1,5 +1,6 @@
 package com.ssi.main;
 
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +10,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +24,6 @@ import com.ssi.util.StringUtil;
 public class SSIConfig {
 	
     private static final String CONFIG_FILENAME = "/application.properties";
-    private static final String CONFIG_PATH_USER_HOME = System.getProperty("user.home") + "/.ssi";
     private static final String CONFIG_PATH_APP_DIR = System.getProperty("user.dir") + "/conf";
     
     private static SortableProperties CONFIG = new SortableProperties();
@@ -30,18 +32,7 @@ public class SSIConfig {
     static {
         BufferedInputStream inStream = null;
         try {
-        	
-            File configFile = new File(CONFIG_PATH_USER_HOME + CONFIG_FILENAME);
-            if (!configFile.exists() || !configFile.isFile()) {
-                configFile = new File(CONFIG_PATH_APP_DIR + CONFIG_FILENAME);
-                if (!configFile.exists() || !configFile.isFile()) {
-                	// create folder
-                	new File(CONFIG_PATH_USER_HOME).mkdirs();
-                	// create file
-                	configFile = new File(CONFIG_PATH_USER_HOME + CONFIG_FILENAME);
-                	configFile.createNewFile();
-                }
-            }
+            File configFile = new File(CONFIG_PATH_APP_DIR + CONFIG_FILENAME);
             try {
             	inStream = new BufferedInputStream(new FileInputStream(configFile));
 			} catch (FileNotFoundException e) {
@@ -90,7 +81,17 @@ public class SSIConfig {
         
     	String font = SSIConfig.get("system.font");
     	if(StringUtil.isEmpty(font)){
-    		SSIConfig.put("system.font", "微软雅黑");
+            //获取系统中可用的字体的名字
+            GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            String[] fontName = e.getAvailableFontFamilyNames();
+            List<String> asList = Arrays.asList(fontName);
+            if(asList.contains("微软雅黑")){
+            	SSIConfig.put("system.font", "微软雅黑");
+            }else if(asList.contains("黑体")){
+            	SSIConfig.put("system.font", "黑体");
+            }else{
+            	SSIConfig.put("system.font", "宋体");
+            }
     	}
         
         String language = SSIConfig.get("system.locale.language");

@@ -67,7 +67,8 @@ import java.util.Properties;
          * @exception  NullPointerException  if <code>out</code> is null.
          * @since 1.2
          */
-        public void store(OutputStream out, String comments)
+        @Override
+		public void store(OutputStream out, String comments)
                 throws IOException
             {
                 store0(new BufferedWriter(new OutputStreamWriter(out, "8859_1")),

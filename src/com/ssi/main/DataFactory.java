@@ -3,11 +3,8 @@ package com.ssi.main;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
 
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TableColumnModelEvent;
-import javax.swing.event.TableColumnModelListener;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
@@ -18,7 +15,6 @@ import com.ssi.main.data.SeeMoreDataVector;
 import com.ssi.main.data.StaffDataVector;
 import com.ssi.main.data.StaffSubVector;
 import com.ssi.main.data.TimesheetDataVector;
-import com.ssi.main.data.TimesheetSubVector;
 import com.ssi.main.view.IView;
 import com.ssi.main.view.RecordView;
 import com.ssi.main.view.StaffView;
@@ -77,16 +73,23 @@ public class DataFactory {
 	}
 
 	public static void setupEditorAndRenderer(SimpleTodoTable simpleTodoTable, IView view) {
+		JTextField field = new JTextField();
+		simpleTodoTable.setCellEditor(new DefaultCellEditor(field));
+		
 		TableColumnModel columnModel = simpleTodoTable.getColumnModel();
 		
 		if(view instanceof RecordView){
 			columnModel.getColumn(5).setCellEditor(new MyButtonEditor(simpleTodoTable, view));
 	        columnModel.getColumn(5).setCellRenderer(new MyButtonRender());
-	        
 	        simpleTodoTable.getModel().addTableModelListener(new TableModelListener() {
 				@Override
 				public void tableChanged(TableModelEvent e) {
-					RecordSubVector sub = (RecordSubVector)((RecordDataVector)((SimpleTableModel)e.getSource()).getData()).get(e.getFirstRow());
+					RecordDataVector recordDataVector = (RecordDataVector)((SimpleTableModel)e.getSource()).getData();
+					int firstRow = e.getFirstRow();
+					if(firstRow == recordDataVector.size()){
+						return;
+					}
+					RecordSubVector sub = (RecordSubVector)recordDataVector.get(firstRow);
 					SeeMoreDataVector moreInfo = sub.getMoreInfo();
 					moreInfo.setTitle(sub.getQrCode());
 				}
@@ -98,7 +101,12 @@ public class DataFactory {
 	        simpleTodoTable.getModel().addTableModelListener(new TableModelListener() {
 				@Override
 				public void tableChanged(TableModelEvent e) {
-					StaffSubVector sub = (StaffSubVector)((StaffDataVector)((SimpleTableModel)e.getSource()).getData()).get(e.getFirstRow());
+					StaffDataVector staffDataVector = (StaffDataVector)((SimpleTableModel)e.getSource()).getData();
+					int firstRow = e.getFirstRow();
+					if(firstRow == staffDataVector.size()){
+						return;
+					}
+					StaffSubVector sub = (StaffSubVector)staffDataVector.get(firstRow);
 					TimesheetDataVector moreInfo = sub.getMoreInfo();
 					moreInfo.setTitle(sub.getQrCode());
 				}

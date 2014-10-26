@@ -1,7 +1,6 @@
 package com.wicky.tdl;
 import java.util.Vector;
 
-import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 import com.ssi.main.DataFactory;
@@ -23,7 +22,7 @@ public class SimpleTableModel extends DefaultTableModel {
     	this.view = view;
     	IDataVector<ISubDataVector> dataVector = DataFactory.createDataVector(view);
     	if(dataVector != null){
-    	    this.data = (IDataVector<ISubDataVector>) dataVector;
+    	    this.data = dataVector;
     	    this.setDataVector((Vector<ISubDataVector>) dataVector, dataVector.getTitles());
     	}
     }
@@ -33,7 +32,8 @@ public class SimpleTableModel extends DefaultTableModel {
         return data.getValueAt(row, column);
     }
     
-    public Class<?> getColumnClass(int col) {
+    @Override
+	public Class<?> getColumnClass(int col) {
         return data.getColumnClass(col);
     }
 

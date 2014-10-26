@@ -3,7 +3,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -56,7 +55,8 @@ public class JInternalFrameTest extends JFrame{
             this.inFrame = inFrame;
             this.title = title;
         }
-        public void actionPerformed(ActionEvent e){
+        @Override
+		public void actionPerformed(ActionEvent e){
             if(inFrame ==null || inFrame.isClosed()){
                 JInternalFrame[] allFrames = desktopPane.getAllFrames();
                 int titleBarHight = 30*allFrames.length;

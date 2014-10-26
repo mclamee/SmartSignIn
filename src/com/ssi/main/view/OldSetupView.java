@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -76,6 +75,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonBegin = new JButton("打开设备");
 		buttonBegin.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				VguangApi.openDevice();
 			}
@@ -91,6 +91,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonEnd = new JButton("关闭设备");
 		buttonEnd.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.closeDevice();
 				lblDeviceStatus.setText("设备无效");
@@ -177,6 +178,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonBeep1 = new JButton("响一声");
 		buttonBeep1.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.beep(1);
 			}
@@ -185,6 +187,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonBeep2 = new JButton("响二声");
 		buttonBeep2.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.beep(2);
 			}
@@ -193,6 +196,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonBeep3 = new JButton("响三声");
 		buttonBeep3.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.beep(3);
 			}
@@ -210,6 +214,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonLightOn = new JButton("开灯");
 		buttonLightOn.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.lightOn();
 			}
@@ -218,6 +223,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton buttonLightOff = new JButton("关灯");
 		buttonLightOff.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				VguangApi.lightOff();
 			}
@@ -247,6 +253,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		JButton btnNewButton = new JButton("更新设置");
 		btnNewButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				applySetting();
 			}
@@ -255,7 +262,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 		
 		// more componsents
 		String[] voiceList = model.getVoiceList();
-		JComboBox<String> combo = new JComboBox<>(voiceList);
+		JComboBox combo = new JComboBox(voiceList);
 		combo.getModel().addListDataListener(new ListDataListener() {
             @Override
             public void intervalRemoved(ListDataEvent e) {
@@ -322,6 +329,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 	public void setResultString(final String str){
 		//在主线程中更新UI
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				decodeTextArea.setText(str);
 			}
@@ -331,6 +339,7 @@ public class OldSetupView extends JPanel implements IView, ActionListener{
 	public void setDeviceStatus(final int istatus){
 		//在主线程中更新UI
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				if(istatus == VguangApi.DEVICE_VALID){
 					lblDeviceStatus.setText("设备有效");
