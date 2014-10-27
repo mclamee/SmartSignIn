@@ -12,39 +12,27 @@ import java.awt.Robot;
 import java.awt.SystemColor;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.beans.PropertyVetoException;
 import java.lang.reflect.Field;
-import java.util.Scanner;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
-import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import javax.swing.text.Keymap;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper;
-import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
-
-import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
 
@@ -157,10 +145,26 @@ public class TestBeautyEyeLnf extends JPanel {
         desktopPane.setBackground(SystemColor.window);
         add(desktopPane);
         
-        fileChooseiFrame = new JInternalFrame("TITLE");
+        JInternalFrame fileChooseiFrame2 = new JInternalFrame("TITLE2");
+        fileChooseiFrame2.setBounds(200, 145, 650, 270);
+        fileChooseiFrame2.setLayer(1);
+        fileChooseiFrame2.setVisible(true);
+        desktopPane.add(fileChooseiFrame2);
+        
+        fileChooseiFrame = new JInternalFrame("TITLE"){
+            public void setMaximum(boolean b) throws PropertyVetoException {
+                super.setMaximum(b);
+                 if(b){         
+                    ((BasicInternalFrameUI)this.getUI()).setNorthPane(null);
+                    super.setBorder(BorderFactory.createEmptyBorder());          
+                      }
+            }
+        };
         fileChooseiFrame.setBounds(200, 145, 650, 270);
         fileChooseiFrame.setClosable(true);
+        fileChooseiFrame.setLayer(0);
         fileChooseiFrame.setResizable(true);
+        fileChooseiFrame.setMaximizable(true);
         fileChooseiFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         fileChooseiFrame.addInternalFrameListener(new InternalFrameAdapter() {
             @Override
@@ -172,9 +176,15 @@ public class TestBeautyEyeLnf extends JPanel {
         desktopPane.add(fileChooseiFrame);
         fileChooseiFrame.setVisible(true);
         
+        try {
+            fileChooseiFrame.setMaximum(true);
+        } catch (PropertyVetoException e1) {
+            e1.printStackTrace();
+        }
+        
         mainPanel = new JPanel();
         mainPanel.setBounds(0, 0, frameWidth, frameHeight);
-        desktopPane.add(mainPanel);
+
         mainPanel.setLayout(null);
         mainPanel.setOpaque(false);
         
@@ -210,7 +220,7 @@ public class TestBeautyEyeLnf extends JPanel {
 		
 		mainPanel.add(panelInput);
 		
-
+        desktopPane.add(mainPanel);
 		
 //		JPanel createKeyBordPanel = createKeyBordPanel(field);
 //		createKeyBordPanel.add(field);

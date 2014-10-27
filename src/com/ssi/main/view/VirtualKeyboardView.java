@@ -28,6 +28,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellEditor;
+import javax.swing.text.JTextComponent;
 
 import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
@@ -64,13 +65,11 @@ public class VirtualKeyboardView extends JPanel {
 		
 		@Override
 		public void mouseDragged(MouseEvent e) {
+			System.out.println("DRAGED!");
 		}
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			Object source = e.getSource();
-				responseAction(source);
-			
 		}
 
 		private void responseAction(Object source) {
@@ -90,6 +89,7 @@ public class VirtualKeyboardView extends JPanel {
 			if (source instanceof JLabel) {
 				((JLabel) source).setBackground(Color.YELLOW);
 			}
+			responseAction(source);
 		}
 
 		@Override
@@ -250,6 +250,10 @@ public class VirtualKeyboardView extends JPanel {
 
 		@Override
 		public void focusGained(FocusEvent e) {
+			if(e.getComponent() instanceof JTextComponent && !((JTextComponent)e.getComponent()).isEditable()){
+				return;
+			}
+			
 			virtualKeyBoard.revalidate();
 			
 			System.out.println(virtualKeyBoard.getSize());

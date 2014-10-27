@@ -70,28 +70,7 @@ public class MainView extends JFrame implements ActionListener {
 
 	    log.debug("Current Resoluation: "+DrawableUtils.getScreenWidth()+" x "+DrawableUtils.getScreenHeight());
 	    
-		//设置界面大小，背景图片
-	    String bgImage = SSIConfig.get("system.startup.background");
-		ImageIcon background = new ImageIcon(bgImage);
-		if(Application.debugMode){
-            if(SSIConfig.isBooleanValue("debug.background") 
-                    && Boolean.FALSE.equals(SSIConfig.getBoolean("debug.background"))) {
-                int dotPosition = bgImage.lastIndexOf(".");
-                if(dotPosition != -1) {
-                    String prefix = bgImage.substring(0, dotPosition);
-                    String suffix = bgImage.substring(dotPosition);
-                    File image = new File(prefix + "_d" + suffix);
-                    if(image.exists()){
-                    	background = new ImageIcon(prefix + "_d" + suffix);
-                    }
-                }
-            }else if(!StringUtil.isEmpty(SSIConfig.get("debug.background"))){
-                background = new ImageIcon(SSIConfig.get("debug.background"));
-            }
-		}
-		if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
-			background = ResizeUtil.resizeImageToScreenSize(background);
-		}
+		ImageIcon background = getBackgroundImage();
 		label = new JLabel(background);
 		label.setBounds(0, 0, background.getIconWidth(), background.getIconHeight());
 		getLayeredPane().add(label, new Integer(Integer.MIN_VALUE));
@@ -165,6 +144,44 @@ public class MainView extends JFrame implements ActionListener {
 			this.setBounds(bounds);
 		}
 	}
+
+    private ImageIcon getBackgroundImage() {
+        try {
+            //设置界面大小，背景图片
+            String bgImage = SSIConfig.get("system.startup.background");
+            ImageIcon background = new ImageIcon(bgImage);
+            if(Application.debugMode){
+                if(SSIConfig.isBooleanValue("debug.background") 
+                        && Boolean.FALSE.equals(SSIConfig.getBoolean("debug.background"))) {
+                    int dotPosition = bgImage.lastIndexOf(".");
+                    if(dotPosition != -1) {
+                        String prefix = bgImage.substring(0, dotPosition);
+                        String suffix = bgImage.substring(dotPosition);
+                        File image = new File(prefix + "_d" + suffix);
+                        if(image.exists()){
+                            background = new ImageIcon(prefix + "_d" + suffix);
+                        }
+                    }
+                }else if(!StringUtil.isEmpty(SSIConfig.get("debug.background"))){
+                    background = new ImageIcon(SSIConfig.get("debug.background"));
+                }
+            }
+            if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
+                background = ResizeUtil.resizeImageToScreenSize(background);
+            }
+            return background;
+        } catch (Exception e) {
+            log.error("Loading Background Image issued. Restored default background!", e);
+            String bgImage = "res/img/index_bg.png";
+            SSIConfig.put("system.startup.background", bgImage);
+            ImageIcon background = new ImageIcon(bgImage);
+            
+            if(!Application.debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.fullscreen"))){
+                background = ResizeUtil.resizeImageToScreenSize(background);
+            }
+            return background;
+        }
+    }
 
 	public JButton createImageButton(ImageIcon img)
 	{

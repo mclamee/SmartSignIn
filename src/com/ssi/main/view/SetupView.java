@@ -15,7 +15,12 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -28,6 +33,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
@@ -49,6 +55,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.util.IOUtils;
 
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
@@ -66,7 +73,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
     private SetupModel model = new SetupModel();
     
     private JButton btnHome;
-    private JPasswordField pwfVerifySignInView;
+    private JPasswordField pwfVerifyViews;
     private JTextField tfAiTime;
     private JComboBox tfBeepTimes;
     private JInternalFrame fileChooseiFrame;
@@ -95,6 +102,10 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
     private int frameWidth;
     private int frameHeight;
     private JFileChooser jfcBgImg;
+	private JRadioButton rdbtnYes_VerifyViews;
+	private JRadioButton rdbtnNo_VerifyViews;
+	private JRadioButton rdbtnNo_Beep;
+	private JRadioButton rdbtnNo_Ai;
     
     public SetupView() {
         frameWidth = 1366;
@@ -123,6 +134,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         
         fileChooseiFrame = new JInternalFrame(Messages.getString("SetupView.fileChooseiFrame.title"));
         fileChooseiFrame.setBounds(300, 145, 573, 430);
+        desktopPane.add(fileChooseiFrame);
         fileChooseiFrame.setClosable(true);
         fileChooseiFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         fileChooseiFrame.addInternalFrameListener(new InternalFrameAdapter() {
@@ -148,7 +160,6 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         });
         addFileChooserFilters(jfcBgImg);
         fileChooseiFrame.getContentPane().add(jfcBgImg, "name_267237042361245");
-        desktopPane.add(fileChooseiFrame);
         fileChooseiFrame.pack();
         fileChooseiFrame.setVisible(true);
         
@@ -234,39 +245,66 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         btnChoose.setBounds(320, 105, 70, 25);
         panelUI.add(btnChoose);
         
-        JLabel lbVerifySignInView = new JLabel(Messages.getString("SetupView.lbVerifySignInView.text")); //$NON-NLS-1$
-        lbVerifySignInView.setHorizontalAlignment(SwingConstants.RIGHT);
-        lbVerifySignInView.setBounds(0, 140, 180, 25);
-        panelUI.add(lbVerifySignInView);
+        JLabel lbVerifyViews = new JLabel(Messages.getString("SetupView.lbVerifyViews.text")); //$NON-NLS-1$
+        lbVerifyViews.setHorizontalAlignment(SwingConstants.RIGHT);
+        lbVerifyViews.setBounds(0, 140, 180, 25);
+        panelUI.add(lbVerifyViews);
         
-        JRadioButton rdbtnYes_VerifySignInView = new JRadioButton(Messages.getString("SetupView.rdbtnYes_VerifySignInView.text")); //$NON-NLS-1$
-        rdbtnYes_VerifySignInView.addActionListener(new ActionListener() {
+        rdbtnYes_VerifyViews = new JRadioButton(Messages.getString("SetupView.rdbtnYes_VerifyViews.text"));
+        rdbtnYes_VerifyViews.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
-                pwfVerifySignInView.setEnabled(true);
+                pwfVerifyViews.setEnabled(true);
+                SSIConfig.put("system.verifyviews", "yes");
+                
+                char[] password = pwfVerifyViews.getPassword();
+                if(password == null || password.length == 0){
+                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "请设置密码", "提示", JOptionPane.INFORMATION_MESSAGE);
+                	pwfVerifyViews.requestFocusInWindow();
+                }else{
+                	SSIConfig.put("system.password", new String(password));
+                }
             }
         });
-        rdbtnYes_VerifySignInView.setSelected(true);
-        rdbtnYes_VerifySignInView.setBounds(190, 140, 45, 25);
-        panelUI.add(rdbtnYes_VerifySignInView);
+        rdbtnYes_VerifyViews.setSelected(true);
+        rdbtnYes_VerifyViews.setBounds(190, 140, 50, 25);
+        panelUI.add(rdbtnYes_VerifyViews);
         
-        JRadioButton rdbtnNo_VerifySignInView = new JRadioButton(Messages.getString("SetupView.rdbtnNo_VerifySignInView.text")); //$NON-NLS-1$
-        rdbtnNo_VerifySignInView.addActionListener(new ActionListener() {
+        rdbtnNo_VerifyViews = new JRadioButton(Messages.getString("SetupView.rdbtnNo_VerifyViews.text"));
+        rdbtnNo_VerifyViews.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
-                pwfVerifySignInView.setEnabled(false);
+                pwfVerifyViews.setEnabled(false);
+                SSIConfig.put("system.verifyviews", "no");
             }
         });
-        rdbtnNo_VerifySignInView.setBounds(235, 140, 40, 25);
-        panelUI.add(rdbtnNo_VerifySignInView);
+        rdbtnNo_VerifyViews.setBounds(235, 140, 50, 25);
+        panelUI.add(rdbtnNo_VerifyViews);
         
-        ButtonGroup btg_VerifySignInView = new ButtonGroup();
-        btg_VerifySignInView.add(rdbtnYes_VerifySignInView);
-        btg_VerifySignInView.add(rdbtnNo_VerifySignInView);
+        ButtonGroup btg_VerifyViews = new ButtonGroup();
+        btg_VerifyViews.add(rdbtnYes_VerifyViews);
+        btg_VerifyViews.add(rdbtnNo_VerifyViews);
         
-        pwfVerifySignInView = new JPasswordField();
-        pwfVerifySignInView.setBounds(280, 140, 110, 25);
-        panelUI.add(pwfVerifySignInView);
+        pwfVerifyViews = new JPasswordField();
+        pwfVerifyViews.getDocument().addDocumentListener(new JValueChangedListener() {
+			@Override
+			void actionHandler() {
+				SSIConfig.put("system.password", new String(pwfVerifyViews.getPassword()));
+			}
+		});
+        pwfVerifyViews.addFocusListener(new FocusAdapter() {
+        	@Override
+        	public void focusLost(FocusEvent e) {
+        		char[] password = pwfVerifyViews.getPassword();
+        		if(password == null || password.length == 0){
+        			rdbtnNo_VerifyViews.doClick();
+        		}else{
+        			JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "密码已设置", "消息", JOptionPane.INFORMATION_MESSAGE);
+        		}
+        	}
+		});
+        pwfVerifyViews.setBounds(290, 140, 100, 25);
+        panelUI.add(pwfVerifyViews);
         
         JPanel panelSynth = new JPanel();
         panelSynth.setLayout(null);
@@ -371,15 +409,45 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelScanner.add(lbCode);
         
         cbCodeQr = new JCheckBox(Messages.getString("SetupView.cbCodeQr.text"));
-        cbCodeQr.setBounds(190, 36, 45, 25);
+        cbCodeQr.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cbCodeQr.isSelected()){
+					SSIConfig.put("SetupView.scanner.code.QR", "on");
+				}else{
+					SSIConfig.put("SetupView.scanner.code.QR", "off");
+				}
+			}
+		});
+        cbCodeQr.setBounds(190, 36, 50, 25);
         panelScanner.add(cbCodeQr);
         
         cbCodeDm = new JCheckBox(Messages.getString("SetupView.cbCodeDm.text"));
-        cbCodeDm.setBounds(235, 35, 45, 25);
+        cbCodeDm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cbCodeDm.isSelected()){
+					SSIConfig.put("SetupView.scanner.code.DM", "on");
+				}else{
+					SSIConfig.put("SetupView.scanner.code.DM", "off");
+				}
+			}
+		});
+        cbCodeDm.setBounds(235, 35, 50, 25);
         panelScanner.add(cbCodeDm);
         
         cbCodeBar = new JCheckBox(Messages.getString("SetupView.cbCodeBar.text"));
-        cbCodeBar.setBounds(280, 35, 45, 25);
+        cbCodeBar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cbCodeBar.isSelected()){
+					SSIConfig.put("SetupView.scanner.code.Bar", "on");
+				}else{
+					SSIConfig.put("SetupView.scanner.code.Bar", "off");
+				}
+			}
+		});
+        cbCodeBar.setBounds(280, 35, 55, 25);
         panelScanner.add(cbCodeBar);
         
         JLabel lbInterval = new JLabel(Messages.getString("SetupView.lbInterval.text")); //$NON-NLS-1$
@@ -388,6 +456,12 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelScanner.add(lbInterval);
         
         tfInterval = new JTextField();
+        tfInterval.getDocument().addDocumentListener(new JValueChangedListener() {
+			@Override
+			void actionHandler() {
+				SSIConfig.put("SetupView.scanner.interval", tfInterval.getText());
+			}
+		});
         tfInterval.setBounds(190, 70, 120, 25);
         panelScanner.add(tfInterval);
         tfInterval.setColumns(10);
@@ -406,31 +480,38 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             @Override
 			public void actionPerformed(ActionEvent e) {
                 tfAiTime.setEnabled(true);
+                SSIConfig.put("SetupView.scanner.ai", "yes");
             }
         });
-        rdbtnYes_Ai.setSelected(true);
-        rdbtnYes_Ai.setBounds(190, 105, 45, 25);
+        rdbtnYes_Ai.setBounds(190, 105, 50, 25);
         panelScanner.add(rdbtnYes_Ai);
         
-        JRadioButton rdbtnNo_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Ai.text")); //$NON-NLS-1$
+        rdbtnNo_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Ai.text"));
         rdbtnNo_Ai.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 tfAiTime.setEnabled(false);
+                SSIConfig.put("SetupView.scanner.ai", "no");
             }
         });
-        rdbtnNo_Ai.setBounds(235, 105, 40, 25);
+        
+        JLabel lbAiTimePrefix = new JLabel(Messages.getString("SetupView.lbAiTimePrefix.text")); //$NON-NLS-1$
+        lbAiTimePrefix.setBounds(285, 105, 25, 25);
+        panelScanner.add(lbAiTimePrefix);
+        rdbtnNo_Ai.setBounds(235, 105, 50, 25);
         panelScanner.add(rdbtnNo_Ai);
         
         ButtonGroup btg_Ai = new ButtonGroup();
         btg_Ai.add(rdbtnYes_Ai);
         btg_Ai.add(rdbtnNo_Ai);
         
-        JLabel lbAiTimePrefix = new JLabel(Messages.getString("SetupView.lbAiTimePrefix.text")); //$NON-NLS-1$
-        lbAiTimePrefix.setBounds(280, 105, 25, 25);
-        panelScanner.add(lbAiTimePrefix);
-        
         tfAiTime = new JTextField();
+        tfAiTime.getDocument().addDocumentListener(new JValueChangedListener() {
+			@Override
+			void actionHandler() {
+				SSIConfig.put("SetupView.scanner.aitime", tfAiTime.getText());
+			}
+		});
         tfAiTime.setBounds(300, 105, 50, 25);
         panelScanner.add(tfAiTime);
         tfAiTime.setColumns(10);
@@ -449,19 +530,21 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             @Override
 			public void actionPerformed(ActionEvent e) {
                 tfBeepTimes.setEnabled(true);
+                SSIConfig.put("SetupView.scanner.beep", "yes");
             }
         });
-        rdbtnYes_Beep.setBounds(190, 140, 45, 25);
+        rdbtnYes_Beep.setBounds(190, 140, 50, 25);
         panelScanner.add(rdbtnYes_Beep);
         
-        JRadioButton rdbtnNo_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Beep.text")); //$NON-NLS-1$
+        rdbtnNo_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Beep.text"));
         rdbtnNo_Beep.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
                 tfBeepTimes.setEnabled(false);
+                SSIConfig.put("SetupView.scanner.beep", "no");
             }
         });
-        rdbtnNo_Beep.setBounds(235, 140, 40, 25);
+        rdbtnNo_Beep.setBounds(235, 140, 50, 25);
         panelScanner.add(rdbtnNo_Beep);
         
         ButtonGroup btg_Beep = new ButtonGroup();
@@ -472,7 +555,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tfBeepTimes.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
-        		System.out.println("BEEP!");
+        		SSIConfig.put("SetupView.scanner.beep.times", (String) tfBeepTimes.getSelectedItem());
         	}
         });
         tfBeepTimes.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3"}));
@@ -492,23 +575,23 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         rdbtnYes_Light.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
-        		System.out.println("开灯！");
+        		LOG.debug("开灯！");
         		VguangApi.lightOn();
         	}
         });
-        rdbtnYes_Light.setSelected(true);
-        rdbtnYes_Light.setBounds(190, 170, 45, 25);
+//        rdbtnYes_Light.setSelected(true);
+        rdbtnYes_Light.setBounds(190, 170, 50, 25);
         panelScanner.add(rdbtnYes_Light);
         
         JRadioButton rdbtnNo_Light = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Light.text")); //$NON-NLS-1$
         rdbtnNo_Light.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
-        		System.out.println("关灯！");
+        		LOG.debug("关灯！");
         		VguangApi.lightOff();
         	}
         });
-        rdbtnNo_Light.setBounds(235, 170, 40, 25);
+        rdbtnNo_Light.setBounds(235, 170, 50, 25);
         panelScanner.add(rdbtnNo_Light);
         
         ButtonGroup btng_Light = new ButtonGroup();
@@ -586,7 +669,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelReport.setBounds(100, 510, 420, 180);
         mainPanel.add(panelReport);
         
-        JLabel lbEmailSenderAddress = new JLabel(Messages.getString("SetupView.lbAddress.text")); //$NON-NLS-1$
+        JLabel lbEmailSenderAddress = new JLabel(Messages.getString("SetupView.lbEmailSenderAddress.text")); //$NON-NLS-1$
         lbEmailSenderAddress.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSenderAddress.setBounds(0, 35, 180, 25);
         panelReport.add(lbEmailSenderAddress);
@@ -602,7 +685,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelReport.add(tfEmailSenderAddress);
         tfEmailSenderAddress.setColumns(10);
         
-        JLabel lbEmailSenderPwd = new JLabel(Messages.getString("SetupView.lbPassword.text")); //$NON-NLS-1$
+        JLabel lbEmailSenderPwd = new JLabel(Messages.getString("SetupView.lbEmailMailBoxPwd.text")); //$NON-NLS-1$
         lbEmailSenderPwd.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSenderPwd.setBounds(0, 70, 180, 25);
         panelReport.add(lbEmailSenderPwd);
@@ -618,7 +701,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         pfEmailSenderPwd.setBounds(190, 70, 200, 25);
         panelReport.add(pfEmailSenderPwd);
         
-        JLabel lbEmailSmtpServer = new JLabel(Messages.getString("SetupView.lbEmailRecipient.text")); //$NON-NLS-1$
+        JLabel lbEmailSmtpServer = new JLabel(Messages.getString("SetupView.lbEmailSmtpServer.text")); //$NON-NLS-1$
         lbEmailSmtpServer.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSmtpServer.setBounds(0, 105, 180, 25);
         panelReport.add(lbEmailSmtpServer);
@@ -634,7 +717,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tfEmailSmtpServer.setBounds(190, 105, 200, 25);
         panelReport.add(tfEmailSmtpServer);
         
-        JLabel lbEmailRecipientAddress = new JLabel(Messages.getString("SetupView.lbSmtp.text")); //$NON-NLS-1$
+        JLabel lbEmailRecipientAddress = new JLabel(Messages.getString("SetupView.lbEmailRecipientAddress.text")); //$NON-NLS-1$
         lbEmailRecipientAddress.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailRecipientAddress.setBounds(0, 140, 180, 25);
         panelReport.add(lbEmailRecipientAddress);
@@ -652,16 +735,89 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelReport.add(tfEmailRecipientAddress);
         
         JButton btnAboutSoftware = new JButton(Messages.getString("SetupView.btnAboutSoftware.text")); //$NON-NLS-1$
-        btnAboutSoftware.setBounds(100, 65, 120, 25);
+        btnAboutSoftware.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String message = "";
+				FileInputStream fileInputStream = null;
+				try{
+				String sysDir = System.getProperty("user.dir");
+				File readMe = new File(sysDir + "/README.txt");
+				fileInputStream = new FileInputStream(readMe);
+				byte[] data = new byte[fileInputStream.available()];
+				IOUtils.readFully(fileInputStream, data);
+				message = new String(data);
+				}catch(IOException ex){
+					ex.printStackTrace();
+				}finally{
+					if(fileInputStream != null){
+						try {
+							fileInputStream.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, Messages.getString("SetupView.btnAboutSoftware.text"), JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+        btnAboutSoftware.setBounds(230, 65, 120, 25);
         mainPanel.add(btnAboutSoftware);
         
         JButton btnAboutThisVersion = new JButton(Messages.getString("SetupView.btnAboutThisVersion.text")); //$NON-NLS-1$
-        btnAboutThisVersion.setBounds(230, 65, 120, 25);
+        btnAboutThisVersion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String message = "";
+				FileInputStream fileInputStream = null;
+				try{
+				String sysDir = System.getProperty("user.dir");
+				File readMe = new File(sysDir + "/AboutThisVersion.txt");
+				fileInputStream = new FileInputStream(readMe);
+				byte[] data = new byte[fileInputStream.available()];
+				IOUtils.readFully(fileInputStream, data);
+				message = new String(data);
+				}catch(IOException ex){
+					ex.printStackTrace();
+				}finally{
+					if(fileInputStream != null){
+						try {
+							fileInputStream.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, Messages.getString("SetupView.btnAboutThisVersion.text"), JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+        btnAboutThisVersion.setBounds(360, 65, 120, 25);
         mainPanel.add(btnAboutThisVersion);
+        
+        JButton btnRestart = new JButton(Messages.getString("SetupView.btnRestart.text"));
+        btnRestart.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SSIConfig.save();
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    public void run() {
+                        try {
+                            Runtime.getRuntime().exec("java -jar ssi.jar " + (Application.debugMode?"-debug":""));
+                        } catch (IOException e) {
+                            LOG.error("ERROR!",e);
+                        }
+                    }    
+                });
+                System.exit(0);
+            }
+        });
+        btnRestart.setBounds(100, 65, 120, 25);
+        mainPanel.add(btnRestart);
         
         setDefaultValues();
         
         applyVirtualKeyboard(mainPanel, "SetupView");
+
     }
 
     private void addFileChooserFilters(JFileChooser jfcBgImg) {
@@ -708,6 +864,27 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
     }
     
     private void setDefaultValues(){
+        String pwd = SSIConfig.get("system.password");
+        if(!StringUtil.isEmpty(pwd)){
+        	pwfVerifyViews.setText(pwd);
+        }
+        char[] password = pwfVerifyViews.getPassword();
+        if(password == null || password.length == 0){
+        	SSIConfig.put("system.verifyviews", "no");
+        }
+        
+    	Boolean verifyViews = SSIConfig.getBoolean("system.verifyviews");
+    	if(verifyViews != null){
+    		if(verifyViews){
+        		rdbtnYes_VerifyViews.setSelected(true);
+        		rdbtnNo_VerifyViews.setSelected(false);
+    		}else{
+        		rdbtnYes_VerifyViews.setSelected(false);
+        		rdbtnNo_VerifyViews.setSelected(true);
+        		pwfVerifyViews.setEnabled(false);
+    		}
+    	}
+    	
         String bgImage = SSIConfig.get("system.startup.background");
         if(!StringUtil.isEmpty(bgImage)){
             File imgFile = new File(bgImage);
@@ -721,12 +898,65 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             cbStartingView.setSelectedItem(startView);
         }
         
-        cbCodeQr.setSelected(true);
-        cbCodeDm.setSelected(true);
-        cbCodeBar.setSelected(true);
-        tfInterval.setText("1000");
-        tfAiTime.setText("20");
-        rdbtnYes_Beep.setSelected(true);
+        Boolean enableQr = SSIConfig.getBoolean("SetupView.scanner.code.QR");
+        if(enableQr != null){
+        	if(enableQr){
+        		cbCodeQr.setSelected(true);
+        	}
+        }
+        
+        Boolean enableDm = SSIConfig.getBoolean("SetupView.scanner.code.DM");
+        if(enableDm != null){
+        	if(enableDm){
+        		cbCodeDm.setSelected(true);
+        	}
+        }
+        
+        Boolean enableBar = SSIConfig.getBoolean("SetupView.scanner.code.Bar");
+        if(enableBar != null){
+        	if(enableBar){
+        		cbCodeBar.setSelected(true);
+        	}
+        }
+        
+        Integer interval = SSIConfig.getInt("SetupView.scanner.interval");
+        if(interval != 0){
+        	tfInterval.setText(interval + "");
+        }
+        
+        Integer aitime = SSIConfig.getInt("SetupView.scanner.aitime");
+        if(aitime != 0){
+        	tfAiTime.setText(aitime + "");
+        }
+        
+    	Boolean ai = SSIConfig.getBoolean("SetupView.scanner.ai");
+    	if(ai != null){
+    		if(ai){
+        		rdbtnYes_Ai.setSelected(true);
+        		rdbtnNo_Ai.setSelected(false);
+    		}else{
+        		rdbtnYes_Ai.setSelected(false);
+        		rdbtnNo_Ai.setSelected(true);
+        		tfAiTime.setEnabled(false);
+    		}
+    	}
+   		
+    	Integer beepTimes = SSIConfig.getInt("SetupView.scanner.beep.times");
+        if(aitime != 0){
+        	tfBeepTimes.setSelectedItem(beepTimes + "");
+        }
+    	
+    	Boolean beep = SSIConfig.getBoolean("SetupView.scanner.beep");
+    	if(beep != null){
+    		if(beep){
+        		rdbtnYes_Beep.setSelected(true);
+        		rdbtnNo_Beep.setSelected(false);
+    		}else{
+        		rdbtnYes_Beep.setSelected(false);
+        		rdbtnNo_Beep.setSelected(true);
+        		tfBeepTimes.setEnabled(false);
+    		}
+    	}
         
 		String synthViceName = SSIConfig.get("synth.voiceName");
 		if(!StringUtil.isEmpty(synthViceName)){
@@ -745,7 +975,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 		}
 		String synthRate = SSIConfig.get("synth.sampleRate");
 		if(!StringUtil.isEmpty(synthRate)){
-			sdSynthRate.setValue(StringUtil.stringToInt(synthRate, 70));
+			sdSynthRate.setValue(StringUtil.stringToInt(synthRate, 80));
 		}
 		String synthVolume = SSIConfig.get("synth.volume");
 		if(!StringUtil.isEmpty(synthVolume)){
@@ -769,8 +999,6 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 			tfEmailSmtpServer.setText(emailSmtp);
 		}
         
-        
-        
     }
     
     //应用设置
@@ -781,7 +1009,6 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         VguangApi.setDMable(cbCodeDm.isSelected());
         //设置Bar状态
         VguangApi.setBarcode(cbCodeBar.isSelected());
-        
         // 设置解码间隔时间，单位毫秒
         VguangApi.setDeodeIntervalTime(StringUtil.stringToInt(tfInterval.getText(), 300));
         
@@ -790,12 +1017,12 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         int aiLimit = StringUtil.stringToInt(tfAiTime.getText(), 20);
         if(aiLimit < 1 || aiLimit > 64){
             aiLimit = 20;
+            SSIConfig.put("SetupView.scanner.aitime", aiLimit + "");
         }
         // 设置自动休眠灵敏度
         VguangApi.setAISensitivity(aiLimit);
         // 设置自动休眠响应时间，单位秒
         VguangApi.setAIResponseTime(300);
-
         //设置扬声器状态
         VguangApi.setBeepable(rdbtnYes_Beep.isSelected());
     }

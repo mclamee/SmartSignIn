@@ -144,11 +144,86 @@ public class SSIConfig {
             SSIConfig.put("system.startup.background", "res/img/index_bg.png");
         }
         
-//    	String staffDataFileName = SSIConfig.get("StaffView.dataFileName");
-//    	if(StringUtil.isEmpty(staffDataFileName)){
-//    		SSIConfig.put("StaffView.dataFileName", "/sv_tbl.db");
-//    	}
+    	String verifyviews = SSIConfig.get("system.verifyviews");
+    	if(StringUtil.isEmpty(verifyviews)){
+    		SSIConfig.put("system.verifyviews", "no");
+    	}
     	
+    	String enableQr = SSIConfig.get("SetupView.scanner.code.QR");
+    	if(StringUtil.isEmpty(enableQr)){
+    		SSIConfig.put("SetupView.scanner.code.QR", "on");
+    	}
+    	String enableDm = SSIConfig.get("SetupView.scanner.code.DM");
+    	if(StringUtil.isEmpty(enableDm)){
+    		SSIConfig.put("SetupView.scanner.code.DM", "on");
+    	}
+    	String enableBar = SSIConfig.get("SetupView.scanner.code.Bar");
+    	if(StringUtil.isEmpty(enableBar)){
+    		SSIConfig.put("SetupView.scanner.code.Bar", "on");
+    	}
+    	String interval = SSIConfig.get("SetupView.scanner.interval");
+    	if(StringUtil.isEmpty(interval)){
+    		SSIConfig.put("SetupView.scanner.interval", "1000");
+    	}
+    	String ai = SSIConfig.get("SetupView.scanner.ai");
+    	if(StringUtil.isEmpty(ai)){
+    		SSIConfig.put("SetupView.scanner.ai", "yes");
+    	}
+    	String aitime = SSIConfig.get("SetupView.scanner.aitime");
+    	if(StringUtil.isEmpty(aitime)){
+    		SSIConfig.put("SetupView.scanner.aitime", "20");
+    	}
+    	String beep = SSIConfig.get("SetupView.scanner.beep");
+    	if(StringUtil.isEmpty(beep)){
+    		SSIConfig.put("SetupView.scanner.beep", "yes");
+    	}
+    	String beepTimes = SSIConfig.get("SetupView.scanner.beep.times");
+    	if(StringUtil.isEmpty(beepTimes)){
+    		SSIConfig.put("SetupView.scanner.beep.times", "1");
+    	}
+    	
+		String emailAddress = SSIConfig.get("email.address");
+		if(StringUtil.isEmpty(emailAddress)){
+			SSIConfig.put("email.address", "47640225@qq.com");
+		}
+		String emailPwd = SSIConfig.get("email.password");
+		if(StringUtil.isEmpty(emailPwd)){
+			SSIConfig.put("email.password", "3yj(\")SSfr21");
+		}
+		String emailRecip = SSIConfig.get("email.recipients");
+		if(StringUtil.isEmpty(emailRecip)){
+			SSIConfig.put("email.recipients", "quiet_dog@163.com");
+		}
+		String emailSmtp = SSIConfig.get("email.smtp");
+		if(StringUtil.isEmpty(emailSmtp)){
+			SSIConfig.put("email.smtp", "smtp.qq.com");
+		}
+		String synthViceName = SSIConfig.get("synth.voiceName");
+		if(StringUtil.isEmpty(synthViceName)){
+			SSIConfig.put("synth.voiceName", "xiaoyan");
+		}
+		String synthSpeed = SSIConfig.get("synth.speed");
+		if(StringUtil.isEmpty(synthSpeed)){
+			SSIConfig.put("synth.speed", "70");
+		}
+		String synthRate = SSIConfig.get("synth.sampleRate");
+		if(StringUtil.isEmpty(synthRate)){
+			SSIConfig.put("synth.sampleRate", "80");
+		}
+		String synthVolume = SSIConfig.get("synth.volume");
+		if(StringUtil.isEmpty(synthVolume)){
+			SSIConfig.put("synth.volume", "50");
+		}
+		
+		String recordTemplate = SSIConfig.get("RecordView.template");
+		if(StringUtil.isEmpty(recordTemplate)){
+		    SSIConfig.put("RecordView.template", "${姓名-1}${称呼}，您好，欢迎光临拓德公司！！");
+		}
+		
+		String staffTemplate = SSIConfig.get("StaffView.template");
+		if(StringUtil.isEmpty(staffTemplate)){
+		    SSIConfig.put("StaffView.template", "${姓名-1}${职位}，欢迎您！现在时刻：${time}，${weather}");
+		}
     	SSIConfig.save();
 	}
     
