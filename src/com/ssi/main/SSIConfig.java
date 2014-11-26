@@ -59,13 +59,7 @@ public class SSIConfig {
         LOG = Logger.getLogger(SSIConfig.class);
     }
 
-    // public static void main(String[] args) {
-    // System.out.println(System.getProperty("user.home"));
-    // System.out.println(System.getProperty("user.name"));
-    // }
-
-    private SSIConfig() {
-    }
+    private SSIConfig() {}
 
 	public static void init(){
 		checkDefaultValues();
@@ -76,7 +70,7 @@ public class SSIConfig {
     	
         String weatherCity = SSIConfig.get("weather.city");
         if(StringUtil.isEmpty(weatherCity)){
-            SSIConfig.put("weather.city", "101270101");
+            SSIConfig.put("weather.city", "101270101");//101270101 = 成都
         }
         
     	String font = SSIConfig.get("system.font");

@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 import com.ssi.i18n.Messages;
 import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
+import com.ssi.main.model.TableDataChangeListener;
 import com.ssi.main.view.IView;
 import com.ssi.util.StringUtil;
 
@@ -62,34 +63,15 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
     public SimpleTableModel dataModel;
     public TableRowSorter<TableModel> rowSorter;
     
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    
-	private Timer timer;
-    protected boolean dataChanged;
-    protected boolean runing;
-
-	private File dataFile;
+    public SimpleTodoTable() {
+    	this(null);
+    }
     
     public SimpleTodoTable(IView view){
 		String viewName = view == null?"null":view.getClass().getSimpleName();
         LOG.info("> initializing table for " + viewName + " ...");
         // 1. create data model
 		dataModel = new SimpleTableModel(view);
-        dataModel.addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                dataChanged = true;
-            }
-        });
-        
-        // 2. load data vector from saved file
-        IDataVector<ISubDataVector> data = loadDataFromFile(view);
-        
-        // 3. assemble data model
-        if(data != null){
-            dataModel.initData(data);
-        }
         
         // 4. setup data model
         this.setModel(dataModel);
@@ -180,27 +162,6 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         createRowSorter();
         this.setRowSorter(rowSorter);
         
-        if(dataFile != null){
-            // setup timer to support automatic save
-            int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute"))) < 60000)?60000:
-                ((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute")));
-            this.timer = new Timer();
-            this.timer.schedule(new TimerTask() {
-                
-                @Override
-                public void run() {
-                    if(dataChanged){
-                        runing = true;
-                        LOG.debug("Timmer Start! Save Interval Minites: " + SSIConfig.get("system.saveIntervalMinute"));
-                        saveDataToFile();
-                        runing = false;
-                    }
-                    dataChanged = false;
-                }
-
-            }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
-        }
-        
         this.setRowHeight(40);
         this.getTableHeader().setReorderingAllowed(false);
         
@@ -214,81 +175,6 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         }
     }
 
-	private IDataVector<ISubDataVector> loadDataFromFile(IView view){
-		if(view == null) return null;
-		String dataFileName = SSIConfig.get(view.getClass().getSimpleName()+".dataFileName");
-		if(StringUtil.isEmpty(dataFileName))return null;
-        dataFile = new File(SSIConfig.get("system.profileHome"), dataFileName);
-        if(dataFile.isDirectory())dataFile.delete();
-        if(!dataFile.exists()){
-            try {
-				dataFile.createNewFile();
-			} catch (IOException e1) {
-				dataFile.delete();
-				try {
-					dataFile.createNewFile();
-				} catch (IOException e2) {
-					LOG.error("try to recreate data file: ", e2);
-					return null;
-				}
-			}
-            LOG.debug("No data file exists, creating new file: ["+dataFile.getAbsolutePath()+"]");
-        }
-        IDataVector<ISubDataVector> data = null;
-        try {
-            LOG.debug("Reading data file ... ");
-			in = new ObjectInputStream(new FileInputStream(dataFile));
-            if(in != null){
-                Object object = in.readObject();
-                if(object instanceof IDataVector){
-                    data = (IDataVector<ISubDataVector>) object;
-                    LOG.debug(">> Success!");
-                }else{
-                    LOG.debug(">> Canceled!");
-                    LOG.error("Invalid Data Type.");
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        LOG.error("Try to close input stream: ", e);
-                        // ignore;
-                    }
-                    try {
-                        dataFile.delete();
-                        dataFile.createNewFile();
-                    } catch (IOException e) {
-                        LOG.error("try to recreate data file: ", e);
-                        return null;
-                    }
-                }
-            }
-            return data;
-        } catch (EOFException e) {
-            LOG.debug(">> Canceled.");
-            LOG.error("File is empty: ", e);
-        } catch (ClassNotFoundException e) {
-            LOG.debug(">> Canceled.");
-            LOG.error("File format issue: ", e);
-        } catch (NotSerializableException e){
-            LOG.debug(">> Canceled.");
-            LOG.error("Cannot load data: ", e);
-        } catch (WriteAbortedException e){
-            LOG.debug(">> Canceled.");
-            LOG.error("Cannot load data: ", e);
-        } catch (IOException e) {
-        	 LOG.debug(">> Canceled.");
-             LOG.error("Cannot load data: ", e);
-		}finally{
-            if(in != null){
-                try {
-					in.close();
-				} catch (IOException e) {
-					// ignore;
-				}
-            }
-        }
-        return null;
-	}
-    
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
         Component com = super.prepareRenderer(renderer, row, column);
@@ -350,43 +236,12 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void saveDataToFile() {
-        if(dataFile == null) return;
-        try {
-            LOG.debug("Saving data for "+dataModel.getViewName()+" ...");
-            out = new ObjectOutputStream(new FileOutputStream(dataFile));
-            out.flush();
-            out.writeObject(dataModel.exportData());
-            LOG.debug(">> Saved.");
-        } catch (FileNotFoundException e1) {
-            LOG.debug(">> Canceled.");
-            LOG.error("File cannot open: ", e1);
-        } catch (IOException e1) {
-            LOG.debug(">> Canceled.");
-            LOG.error("IOException: ", e1);
-        }finally{
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e1) {
-                LOG.error("IOException: ", e1);
-            }
-        }
-    }
-
 	public WindowAdapter getWindowListener(){
 		return new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-		        TableCellEditor ce = SimpleTodoTable.this.getCellEditor();
-		        if(ce != null){
-		            ce.stopCellEditing();
-		        }
-		        timer.cancel();
-		        if(!runing){
-		            LOG.debug("Window Closing!");
-		            SimpleTodoTable.this.saveDataToFile();
-		        }
+				stopCellEditing();
+		        dataModel.cancelTimerAndSaveDataToFile();
 			}
 		};
 	}

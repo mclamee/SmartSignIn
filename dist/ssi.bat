@@ -1,1 +1,1 @@
-java -jar ssi.jar
+javaw -jar ssi.jar

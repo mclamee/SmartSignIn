@@ -746,7 +746,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 				fileInputStream = new FileInputStream(readMe);
 				byte[] data = new byte[fileInputStream.available()];
 				IOUtils.readFully(fileInputStream, data);
-				message = new String(data);
+				message = new String(data, "UTF-8");
 				}catch(IOException ex){
 					ex.printStackTrace();
 				}finally{
@@ -776,7 +776,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 				fileInputStream = new FileInputStream(readMe);
 				byte[] data = new byte[fileInputStream.available()];
 				IOUtils.readFully(fileInputStream, data);
-				message = new String(data);
+				message = new String(data, "UTF-8");
 				}catch(IOException ex){
 					ex.printStackTrace();
 				}finally{

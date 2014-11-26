@@ -219,7 +219,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
     			SSIConfig.put("synth.speed", synthSpeed);
     		}
             synthesizer.setSpeed(StringUtil.stringToInt(synthSpeed, 70));
-            String message = model.lookupMessage(callback);
+            String message = getModel().lookupMessage(callback);
             if(!StringUtil.isEmpty(message)){
                 // 合成文本为message的句子，设置监听器为mSynListener
             	synthesizer.playText(message, null, mSynListener);
@@ -234,7 +234,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
     }
 
 	public void initDataMap() {
-		this.model.initDataMap();
+		this.getModel().initDataMap();
 	}
 	
 	@Override
@@ -248,5 +248,13 @@ public class SignInView extends JPanel implements IView, ActionListener {
 	@Override
 	public String getTemplate() {
 		return null;
+	}
+
+	public SignInModel getModel() {
+		return model;
+	}
+
+	public void setModel(SignInModel model) {
+		this.model = model;
 	}
 }

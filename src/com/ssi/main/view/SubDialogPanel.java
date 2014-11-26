@@ -29,7 +29,7 @@ public class SubDialogPanel extends JPanel {
 
 	public SubDialogPanel(JScrollPane panelTable) {
 		this.mainTablePane = panelTable;
-		subDialogTable = new SimpleTodoTable(null);
+		subDialogTable = new SimpleTodoTable();
 		
 		JScrollPane scrollpane = new JScrollPane(subDialogTable);
 		scrollpane.setOpaque(false);

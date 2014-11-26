@@ -33,6 +33,7 @@ import com.ssi.main.view.SetupView;
 import com.ssi.main.view.SignInView;
 import com.ssi.main.view.StaffView;
 import com.ssi.util.StringUtil;
+import com.ssi.util.weather.WeatherHandle;
 import com.vguang.VguangApi;
 
 public class Application {
@@ -103,6 +104,10 @@ public class Application {
         RECORD_VIEW = new RecordView();
         STAFF_VIEW = new StaffView();
         SIGNIN_VIEW = new SignInView();
+
+        // setup table data change listeners
+        SIGNIN_VIEW.getModel().addTableDataChangeListener(RECORD_VIEW.getTableModel());
+        SIGNIN_VIEW.getModel().addTableDataChangeListener(STAFF_VIEW.getTableModel());
         
         // setup window close hook method
         MAIN_FRAME.addWindowListener(RECORD_VIEW.getWindowListener());
@@ -122,6 +127,14 @@ public class Application {
             switchView(getViewByName(startupView));
         }
         MAIN_FRAME.setEnabled(true);
+        
+        new Thread(new Runnable() {
+			@Override
+			public void run() {
+				WeatherHandle instance = WeatherHandle.getInstance();
+				LOG.debug("Init weather instance: " + instance.getWeather());
+			}
+		}).start();
     }
 
     /**
@@ -222,6 +235,12 @@ public class Application {
     }
 
     public static void switchView(JPanel view) {
+    	if(view instanceof RecordView || view instanceof StaffView){
+		    Application.closeDevice();
+    	}else if(view instanceof SignInView || view instanceof SetupView){
+    		Application.applySettingsAndOpenDevice();
+    	}
+    	
         LOG.info("> Switched To View: " + view.getClass().getSimpleName());
         Container mContentPanel = Application.MAIN_FRAME.getContentPane();
         mContentPanel.remove(mContentPanel.getComponent(0));

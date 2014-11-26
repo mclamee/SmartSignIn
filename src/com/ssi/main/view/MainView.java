@@ -80,7 +80,7 @@ public class MainView extends JFrame implements ActionListener {
 		
 		setSize(frameWidth, frameHeight);
 		setResizable(false);
-		
+		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 		
 		ImageIcon imgRecord = new ImageIcon("res/img/btn_record.png");
@@ -200,16 +200,12 @@ public class MainView extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == jbtRecord){
-		    Application.closeDevice();
 			Application.switchView(Application.RECORD_VIEW); 
 		}else if(e.getSource() == jbtStaff){
-		    Application.closeDevice();
 			Application.switchView(Application.STAFF_VIEW); 
 		}else if(e.getSource() == jbtSetup){
-		    Application.applySettingsAndOpenDevice();
 			Application.switchView(Application.SETUP_VIEW);
 		}else if(e.getSource() == jbtSignIn){
-		    Application.applySettingsAndOpenDevice();
 			Application.switchView(Application.SIGNIN_VIEW); 
 		}
 	}

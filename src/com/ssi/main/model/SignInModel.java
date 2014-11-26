@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -25,6 +27,18 @@ public class SignInModel {
 	
 	private Map<String, MessageBody> dataMap = new HashMap<String, MessageBody>();
 	
+	private List<TableDataChangeListener> listeners = new ArrayList<TableDataChangeListener>();
+
+	public void addTableDataChangeListener(TableDataChangeListener listener) {
+		listeners.add(listener);
+	}
+
+	public void fireTableDataChanged() {
+		for (TableDataChangeListener table : listeners) {
+			table.dataChanged();
+		}
+	}
+
 	public String lookupMessage(String callback){
 		if(StringUtil.isEmpty(callback)){
 			return null;
@@ -49,6 +63,8 @@ public class SignInModel {
 		}
 		// record sign-in details to subVector
 		msg.getVector().recordDateTime(new Date());
+		fireTableDataChanged();
+		
 		String message = msg.getMessage();
 		
 		if(message.contains("##{time}")){
@@ -59,24 +75,12 @@ public class SignInModel {
 		}
 		
 		if(message.contains("##{weather}")){
-			String weather = "";
-			try {
-			    // 101270101 = 成都
-				weather = new WeatherHandle(SSIConfig.get("weather.city")).getWeather();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
+			String weather = WeatherHandle.getInstance().getWeather();
+			if(StringUtil.isEmpty(weather)){
+				weather = "";
 			}
 			message = message.replaceAll("##\\{weather\\}", weather);
 		}
-		
 		return message;
 	}
 	

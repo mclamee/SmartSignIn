@@ -1,5 +1,5 @@
 package com.ssi.util.weather;
- 
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,115 +19,168 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.ssi.main.SSIConfig;
+
 /**
  * 得到未来6天的天气(含今天)
+ * 
  * @author Chewl
- *
+ * 
  */
-public class WeatherHandle { 
-    String Ctiyid; 
-    URLConnection connectionData; 
-    StringBuilder sb; 
-    BufferedReader br;// 读取data数据流 
-    JSONObject jsonData; 
-    JSONObject info; 
-      
-    public WeatherHandle(String Cityid) throws IOException ,NullPointerException, JSONException{ 
-        // 解析本机ip地址 
-        this.Ctiyid = Cityid; 
-  
-    }
-    
-	public String getWeather() throws MalformedURLException, IOException,
-			UnsupportedEncodingException, JSONException {
-		// 连接中央气象台的API 
-        URL url = new URL("http://m.weather.com.cn/data/" + Ctiyid + ".html"); 
-        connectionData = url.openConnection(); 
-        connectionData.setConnectTimeout(1000); 
-        try { 
-            br = new BufferedReader(new InputStreamReader( 
-                    connectionData.getInputStream(), "UTF-8")); 
-            sb = new StringBuilder(); 
-            String line = null; 
-            while ((line = br.readLine()) != null) 
-                sb.append(line); 
-        } catch (SocketTimeoutException e) { 
-            System.out.println("连接超时"); 
-        } catch (FileNotFoundException e) { 
-            System.out.println("加载文件出错"); 
-        } 
-            String datas = sb.toString();   
-             
-           try {
-            jsonData = new JSONObject(datas);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        } 
-          //  System.out.println(jsonData.toString());  
-           info = jsonData.getJSONObject("weatherinfo"); 
-         
-        //得到1到6天的天气情况
-        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-        for(int i=1;i<=6;i++){
-            //得到未来6天的日期
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.DAY_OF_YEAR, i-1);
-            Date date = cal.getTime();
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-             
-            Map<String,Object> map = new HashMap<String, Object>();
-            map.put("city", info.getString("city").toString());//城市
-            map.put("date_y", sf.format(date));//日期
-            map.put("week", getWeek(cal.get(Calendar.DAY_OF_WEEK)));//星期
-            map.put("fchh", info.getString("fchh").toString());//发布时间
-            map.put("weather", info.getString("weather"+i).toString());//天气
-            map.put("temp", info.getString("temp"+i).toString());//温度
-            map.put("wind", info.getString("wind"+i).toString());//风况
-            map.put("fl", info.getString("fl"+i).toString());//风速
-            map.put("index", info.getString("index").toString());// 今天的穿衣指数 
-            map.put("index_uv", info.getString("index_uv").toString());// 紫外指数 
-            map.put("index_tr", info.getString("index_tr").toString());// 旅游指数 
-            map.put("index_co", info.getString("index_co").toString());// 舒适指数 
-            map.put("index_cl", info.getString("index_cl").toString());// 晨练指数 
-            map.put("index_xc", info.getString("index_xc").toString());//洗车指数 
-            map.put("index_d", info.getString("index_d").toString());//天气详细穿衣指数 
-            list.add(map);
-        }
-        //控制台打印出天气
-       for(int j=0;j<list.size();j++){
-           Map<String,Object> wMap = list.get(j);
-           System.out.println(wMap.get("city")+"\t"+wMap.get("date_y")+"\t"+wMap.get("week")+"\t"
-                   +wMap.get("weather")+"\t"+wMap.get("temp")+"\t"+wMap.get("index_uv"));
-       }
-       
-       Map<String,Object> wMap = list.get(0);
-       String result = wMap.get("city") + "今天" + wMap.get("weather") + ", 气温" + wMap.get("temp");
-       
-       return result;
-	} 
-	
-    private String getWeek(int iw){
-        String weekStr = "";
-        switch (iw) {
-        case 1:weekStr = "星期天";break;
-        case 2:weekStr = "星期一";break;
-        case 3:weekStr = "星期二";break;
-        case 4:weekStr = "星期三";break;
-        case 5:weekStr = "星期四";break;
-        case 6:weekStr = "星期五";break;
-        case 7:weekStr = "星期六";break;
-        default:
-            break;
-        }
-        return weekStr;
-    }
-    public static void main(String[] args) { 
-        try { 
-            String weather = new WeatherHandle("101270101 ").getWeather(); // 101010100(北京)就是你的城市代码
-            System.out.println(weather);
-        } catch (Exception e) { 
-            e.printStackTrace(); 
-        } 
-    } 
+public class WeatherHandle {
+	String Ctiyid;
+	URLConnection connectionData;
+	StringBuilder sb;
+	BufferedReader br;// 读取data数据流
+	JSONObject jsonData;
+	JSONObject info;
+
+	private static WeatherHandle singleton;
+	private String result;
+
+	public static WeatherHandle getInstance() {
+		if (singleton == null) {
+			try {
+				singleton = new WeatherHandle(SSIConfig.get("weather.city"));
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		return singleton;
+	}
+
+	private WeatherHandle(String Cityid) throws IOException,
+			NullPointerException, JSONException {
+		// 解析本机ip地址
+		this.Ctiyid = Cityid;
+
+		// 连接中央气象台的API
+		URL url = new URL("http://m.weather.com.cn/data/" + Ctiyid + ".html");
+		connectionData = url.openConnection();
+		connectionData.setConnectTimeout(5000);
+		connectionData
+				.setRequestProperty("Accept",
+						"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		connectionData
+				.setRequestProperty(
+						"User-Agent",
+						"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36 SE 2.X MetaSr 1.0");
+		connectionData.setDoInput(true);
+		connectionData.setDoOutput(true);
+		connectionData.setUseCaches(false);
+		try {
+			br = new BufferedReader(new InputStreamReader(
+					connectionData.getInputStream(), "UTF-8"));
+			sb = new StringBuilder();
+			String line = null;
+			while ((line = br.readLine()) != null)
+				sb.append(line);
+		} catch (SocketTimeoutException e) {
+			System.out.println("连接超时");
+		} catch (FileNotFoundException e) {
+			System.out.println("加载文件出错");
+		}
+		String datas = sb.toString();
+
+		try {
+			jsonData = new JSONObject(datas);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(jsonData != null){
+			// System.out.println(jsonData.toString());
+			info = jsonData.getJSONObject("weatherinfo");
+
+			// 得到1到6天的天气情况
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			for (int i = 1; i <= 6; i++) {
+				// 得到未来6天的日期
+				Calendar cal = Calendar.getInstance();
+				cal.add(Calendar.DAY_OF_YEAR, i - 1);
+				Date date = cal.getTime();
+				SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("city", info.getString("city").toString());// 城市
+				map.put("date_y", sf.format(date));// 日期
+				map.put("week", getWeek(cal.get(Calendar.DAY_OF_WEEK)));// 星期
+				map.put("fchh", info.getString("fchh").toString());// 发布时间
+				map.put("weather", info.getString("weather" + i).toString());// 天气
+				map.put("temp", info.getString("temp" + i).toString());// 温度
+				map.put("wind", info.getString("wind" + i).toString());// 风况
+				map.put("fl", info.getString("fl" + i).toString());// 风速
+				map.put("index", info.getString("index").toString());// 今天的穿衣指数
+				map.put("index_uv", info.getString("index_uv").toString());// 紫外指数
+				map.put("index_tr", info.getString("index_tr").toString());// 旅游指数
+				map.put("index_co", info.getString("index_co").toString());// 舒适指数
+				map.put("index_cl", info.getString("index_cl").toString());// 晨练指数
+				map.put("index_xc", info.getString("index_xc").toString());// 洗车指数
+				map.put("index_d", info.getString("index_d").toString());// 天气详细穿衣指数
+				list.add(map);
+			}
+			// 控制台打印出天气
+			for (int j = 0; j < list.size(); j++) {
+				Map<String, Object> wMap = list.get(j);
+				System.out.println(wMap.get("city") + "\t" + wMap.get("date_y")
+						+ "\t" + wMap.get("week") + "\t" + wMap.get("weather")
+						+ "\t" + wMap.get("temp") + "\t" + wMap.get("index_uv"));
+			}
+
+			Map<String, Object> wMap = list.get(0);
+			result = wMap.get("city") + "今天" + wMap.get("weather") + ", 气温"
+					+ wMap.get("temp");
+		}
+	}
+
+	public String getWeather() {
+		return result;
+	}
+
+	private String getWeek(int iw) {
+		String weekStr = "";
+		switch (iw) {
+		case 1:
+			weekStr = "星期天";
+			break;
+		case 2:
+			weekStr = "星期一";
+			break;
+		case 3:
+			weekStr = "星期二";
+			break;
+		case 4:
+			weekStr = "星期三";
+			break;
+		case 5:
+			weekStr = "星期四";
+			break;
+		case 6:
+			weekStr = "星期五";
+			break;
+		case 7:
+			weekStr = "星期六";
+			break;
+		default:
+			break;
+		}
+		return weekStr;
+	}
+
+	public static void main(String[] args) {
+		try {
+			String weather = new WeatherHandle("101270101").getWeather(); // 101010100(北京)就是你的城市代码
+			System.out.println(weather);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
