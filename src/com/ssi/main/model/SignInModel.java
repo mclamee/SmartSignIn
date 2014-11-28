@@ -1,8 +1,5 @@
 package com.ssi.main.model;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,10 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.json.JSONException;
-
 import com.ssi.main.Application;
-import com.ssi.main.SSIConfig;
 import com.ssi.main.data.RecordSubVector;
 import com.ssi.main.data.StaffSubVector;
 import com.ssi.util.StringUtil;
@@ -75,7 +69,7 @@ public class SignInModel {
 		}
 		
 		if(message.contains("##{weather}")){
-			String weather = WeatherHandle.getInstance().getWeather();
+			String weather = WeatherHandle.getTodayWeather();
 			if(StringUtil.isEmpty(weather)){
 				weather = "";
 			}

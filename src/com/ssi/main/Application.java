@@ -131,8 +131,8 @@ public class Application {
         new Thread(new Runnable() {
 			@Override
 			public void run() {
-				WeatherHandle instance = WeatherHandle.getInstance();
-				LOG.debug("Init weather instance: " + instance.getWeather());
+				WeatherHandle.initialize(SSIConfig.get("weather.city"));
+				LOG.debug("Init weather instance: " + WeatherHandle.getTodayWeather());
 			}
 		}).start();
     }

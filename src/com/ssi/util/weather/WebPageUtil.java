@@ -52,25 +52,25 @@ public class WebPageUtil {
      */
     private byte[] bytes = new byte[0];
     
-//    /**
-//     * 一个调用WebUtil的例子
-//     * 
-//     * @param args
-//     */
-//    public static void main(String[] args) {
-//        try {
-//            String url = "http://m.weathercn.com/common/province.jsp";
-//            WebPageUtil webPageUtil = new WebPageUtil().processUrl(url);
-//            System.out.println("=======Header :=======\r\n"+webPageUtil.getMsgHeader());
-//            System.out.println("=======Content:=======\r\n"+webPageUtil.getWebContent());
-//            webPageUtil.processUrl("http://www.baidu.com");
-//            System.out.println("=======Header :=======\r\n"+webPageUtil.getMsgHeader());
-//            System.out.println("=======Content:=======\r\n"+webPageUtil.getWebContent());
-//            
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    /**
+     * 一个调用WebUtil的例子
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        try {
+            String url = "http://m.weathercn.com/common/province.jsp";
+            WebPageUtil webPageUtil = new WebPageUtil().processUrl(url);
+            System.out.println("=======Header :=======\r\n"+webPageUtil.getMsgHeader());
+            System.out.println("=======Content:=======\r\n"+webPageUtil.getWebContent());
+            webPageUtil.processUrl("http://www.baidu.com");
+            System.out.println("=======Header :=======\r\n"+webPageUtil.getMsgHeader());
+            System.out.println("=======Content:=======\r\n"+webPageUtil.getWebContent());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 使用Socket请求（获取）一个网页。<br/>

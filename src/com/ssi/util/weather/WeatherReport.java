@@ -1,12 +1,18 @@
 package com.ssi.util.weather;
 
+import java.io.Serializable;
+import java.util.Date;
+
+import com.ssi.main.DataFactory;
+
 /**
  * 天气预报类，天气预报的基本属性。
  * @author siqi
  *
  */
-public class WeatherReport {
-
+public class WeatherReport implements Comparable<WeatherReport>, Serializable{
+    private static final long serialVersionUID = -6048799367528067943L;
+    
     /**
      * 城市（区县）
      */
@@ -14,7 +20,7 @@ public class WeatherReport {
     /**
      * 日期
      */
-    private String date;
+    private Date date;
     /**
      * 星期几
      */
@@ -61,7 +67,7 @@ public class WeatherReport {
      * 获取天气预报的日期，格式为"1月28日"
      * @return
      */
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -69,7 +75,7 @@ public class WeatherReport {
      * 设置天气预报的日期，格式为"1月28日"
      * @param date
      */
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -173,10 +179,61 @@ public class WeatherReport {
      * 天气预报的字符串
      */
     public String toString() {
-        return "WeatherReport [city=" + city + ", date=" + date + ", weekDay="
+        return "WeatherReport [city=" + city + ", date=" + (date==null?"":DataFactory.smfDate.format(date)) + ", weekDay="
                 + weekDay + ", weather=" + weather + ", temperature="
                 + temperature + ", windDir=" + windDir + ", wind=" + wind
                 + ", dayOrNight=" + dayOrNight + "]";
     }
 
+    @Override
+    public int hashCode() {
+        return city.hashCode() * 37 + date.hashCode() * 37 + dayOrNight.hashCode() * 37;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if ((this == null) || (obj == null)) {
+            return false;
+        }
+        if (obj instanceof WeatherReport) {
+            WeatherReport e = (WeatherReport) obj;
+            return WeatherReport.equals(this.getCity(), e.getCity())
+                   && WeatherReport.equals(this.getDate(), e.getDate())
+                   && WeatherReport.equals(this.getDayOrNight(), e.getCity());
+        }
+        return false;
+    }
+
+    @Override
+    public int compareTo(WeatherReport o) {
+        if(WeatherReport.equals(this, o)){
+            return 0;
+        }
+        if(o == null){
+            return 1;
+        }
+        if(!WeatherReport.equals(this.getCity(), o.getCity())){
+            return this.getCity().compareTo(o.getCity());
+        }
+        if(!WeatherReport.equals(this.getDate(), o.getDate())){
+            return this.getDate().compareTo(o.getDate());
+        }
+        if(!WeatherReport.equals(this.getDayOrNight(), o.getCity())){
+            return - this.getDayOrNight().compareTo(o.getDayOrNight());
+        }
+        return 0;
+    }
+    
+    public static boolean equals(Object object1, Object object2) {
+        if (object1 == object2) {
+            return true;
+        }
+        if ((object1 == null) || (object2 == null)) {
+            return false;
+        }
+        return object1.equals(object2);
+    }
 }

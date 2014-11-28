@@ -1,10 +1,14 @@
 package com.ssi.util.weather;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +19,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.ssi.main.DataFactory;
+import com.ssi.util.StringUtil;
 
 /**
  * 中国气象频道手机版("http://m.weathercn.com")获取天气信息， 因为手机版网页内容小，访问速度快。
@@ -26,7 +34,7 @@ import org.w3c.dom.NodeList;
  * 
  */
 public class WeatherUtil {
-
+    public static Logger LOG = Logger.getLogger(WeatherUtil.class);
     /**
      * 省份页面（省）
      */
@@ -65,7 +73,9 @@ public class WeatherUtil {
      */
     public static final String XML_FILE = "./weathercn.xml";
 
-    private List<WeatherReport> weatherReportList = new ArrayList<WeatherReport>();
+    private TreeSet<WeatherReport> weatherReportSet = new TreeSet<WeatherReport>();
+    private String yearStr;
+    private boolean processfirstEntry;
 
     /**
      * 启动的时候，首先检查weathercn.xml是否存在，如果不存在的话，重新从m.weathercn.com获取，
@@ -119,14 +129,15 @@ public class WeatherUtil {
      * @param city
      * @return 返回指定城市的天气预报（7天内），如果指定的城市错误，返回空的list，list.size()=0
      */
-    public List<WeatherReport> getWeatherReports(String city) {
-        List<WeatherReport> list = new ArrayList<WeatherReport>();
+    public TreeSet<WeatherReport> getWeatherReports(String city) {
+        TreeSet<WeatherReport> set = new TreeSet<WeatherReport>();
         try {
 
             String weatherPage = getWeatherReportPage(city);
-
             List<String> reportStrList = getAllMathers(weatherPage,
                     "(?<=class=\"b\">)[\\s\\S]+?<br>[\\s\\S]+?(?=</)");
+            
+            processfirstEntry = true;
             for (String reportStr : reportStrList) {
                 String weather = reportStr.trim().replaceAll(" ", "")
                         .replaceAll("<br>\r\n\r\n", "\r\n")
@@ -140,7 +151,7 @@ public class WeatherUtil {
                     String dateStr = str[i++].trim();
 
                     report.setCity(city);
-                    report.setDate(getMatcher(dateStr, ".+(?=\\()"));
+                    report.setDate(extractDate(dateStr));
                     report.setWeekDay(getMatcher(dateStr, "(?<=\\().+?(?=\\))"));
                     report.setDayOrNight(str[i++].trim());
                     report.setWeather(str[i++].trim());
@@ -148,19 +159,18 @@ public class WeatherUtil {
                     report.setWindDir(str[i++].trim());
                     report.setWind(str[i++].trim());
 
-                    list.add(report);
+                    set.add(report);
                     if (str.length > 10) {
                         report = new WeatherReport();
                         report.setCity(city);
-                        report.setDate(getMatcher(dateStr, ".+(?=\\()"));
-                        report.setWeekDay(getMatcher(dateStr,
-                                "(?<=\\().+?(?=\\))"));
+                        report.setDate(extractDate(dateStr));
+                        report.setWeekDay(getMatcher(dateStr, "(?<=\\().+?(?=\\))"));
                         report.setDayOrNight(str[i++].trim());
                         report.setWeather(str[i++].trim());
                         report.setTemperature(str[i++].trim());
                         report.setWindDir(str[i++].trim());
                         report.setWind(str[i++].trim());
-                        list.add(report);
+                        set.add(report);
                     }
                 }
             }
@@ -169,9 +179,37 @@ public class WeatherUtil {
             e.printStackTrace();
         }
 
-        this.weatherReportList = list;
-        return this.weatherReportList;
+        this.weatherReportSet = set;
+        return this.weatherReportSet;
 
+    }
+
+    private Date extractDate(String dateStr) {
+        String monthAndDayStr = getMatcher(dateStr, ".+(?=\\()");
+        if(processfirstEntry){
+            //第一条记录，当天的天气
+            yearStr = new SimpleDateFormat("yyyy").format(new Date());
+            processfirstEntry = false;
+        }else{
+            //第二天开始的未来天气预报
+            if(monthAndDayStr.equals("1月1日")){
+                //第二天翻年
+                try {
+                    yearStr = ""+(Integer.parseInt(yearStr) + 1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+        if(!StringUtil.isEmpty(monthAndDayStr)){
+            try {
+                return DataFactory.smfDate.parse(yearStr+"年"+monthAndDayStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**
@@ -221,7 +259,7 @@ public class WeatherUtil {
         File file = new File(XML_FILE);
         if (file.exists()) {
             // 提示xml文件位置，不需要可以注释掉。
-            System.out.println("在下面的路径中找到XML文件 " + file.getCanonicalPath());
+            LOG.info("在下面的路径中找到XML文件 " + file.getCanonicalPath());
             return;
         }
 

@@ -70,7 +70,7 @@ public class SSIConfig {
     	
         String weatherCity = SSIConfig.get("weather.city");
         if(StringUtil.isEmpty(weatherCity)){
-            SSIConfig.put("weather.city", "101270101");//101270101 = 成都
+            SSIConfig.put("weather.city", "成都");
         }
         
     	String font = SSIConfig.get("system.font");
