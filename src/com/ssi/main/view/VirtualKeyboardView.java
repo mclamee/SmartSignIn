@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Point;
 import java.awt.Robot;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -27,10 +26,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 
-import com.ssi.util.DrawableUtils;
 import com.ssi.util.StringUtil;
 
 public class VirtualKeyboardView extends JPanel {
@@ -164,7 +161,7 @@ public class VirtualKeyboardView extends JPanel {
         String[] row5Ids = new String[]{"COMMA", "PERIOD", "SHIFT_1", "SHIFT_SLASH", "SHIFT_SEMICOLON", "SHIFT_9", "SHIFT_0", "SHIFT_4", "SHIFT_OPEN_BRACKET", "SHIFT_CLOSE_BRACKET"}; 
         
         // 1 
-        JLabel escKey = createVirtualKeybordLabel("ESCAPE", "Esc", mouseAdapter);
+        JLabel escKey = createVirtualKeybordLabel("ESCAPE", "关闭", mouseAdapter);
         panel1.add(escKey);
         for(char i : row1){
         	JLabel comp = createVirtualKeybordLabel(null, i, mouseAdapter);

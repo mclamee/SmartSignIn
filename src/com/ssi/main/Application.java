@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ import org.jb2011.lnf.beautyeye.BeautyEyeLNFHelper.FrameBorderStyle;
 
 import sun.misc.BASE64Decoder;
 
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.model.AuthorizationException;
 import com.ssi.main.view.AuthView;
 import com.ssi.main.view.MainView;
@@ -37,14 +39,16 @@ import com.ssi.util.weather.WeatherHandle;
 import com.vguang.VguangApi;
 
 public class Application {
-
+	
     static {
         // initialize configurations at first
         SSIConfig.init();
     }
-
+    
+    public static final Locale CURR_LOCALE = new Locale(SSIConfig.get("system.locale.language"), SSIConfig.get("system.locale.country"));
+    
     public static Logger LOG = Logger.getLogger(Application.class);
-
+    
     public static MainView MAIN_FRAME;
     public static AuthView AUTH_FRAME;
 
@@ -54,6 +58,7 @@ public class Application {
     public static SetupView SETUP_VIEW;
     public static SignInView SIGNIN_VIEW;
 
+    
     public static Boolean debugMode = false;
 
     /**
@@ -71,17 +76,22 @@ public class Application {
             }
         }
 
+        // setup language
+        I18NUtil.getInstance(CURR_LOCALE);
+        LOG.info("Current System i18n: " + Application.CURR_LOCALE.toString());
+        
         // setup lnf
         setupApplicationStyle();
-
+        
         // check application authorizations
         if (!debugMode || Boolean.TRUE.equals(SSIConfig.getBoolean("debug.authorization"))) {
             try {
                 Application.authorization();
                 Application.initMainFrame();
             } catch (AuthorizationException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+//                JOptionPane.showMessageDialog(null, e.getMessage());
                 Application.initAuthFrame();
+                AUTH_FRAME.setError(e.getMessage());
             }
         } else {
             Application.initMainFrame();
@@ -124,7 +134,7 @@ public class Application {
         // init starting page
         String startupView = SSIConfig.get("system.startup.view");
         if (!StringUtil.isEmpty(startupView)) {
-            switchView(getViewByName(startupView));
+            switchView(getViewByName(startupView), false);
         }
         MAIN_FRAME.setEnabled(true);
         
@@ -235,10 +245,21 @@ public class Application {
     }
 
     public static void switchView(JPanel view) {
+    	switchView(view, true);
+    }
+    
+    public static void switchView(JPanel view, boolean showPwdInput) {
     	if(view instanceof RecordView || view instanceof StaffView){
 		    Application.closeDevice();
     	}else if(view instanceof SignInView || view instanceof SetupView){
     		Application.applySettingsAndOpenDevice();
+    	}else{
+    		// main view:
+    		String validate = SSIConfig.get("system.verifyviews");
+    		if(showPwdInput && "yes".equalsIgnoreCase(validate)){
+    			Application.MAIN_FRAME.showPwdDialog(view);
+    			return;
+    		}
     	}
     	
         LOG.info("> Switched To View: " + view.getClass().getSimpleName());

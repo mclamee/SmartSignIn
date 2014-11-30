@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.wicky.tdl.ISubDataVector;
 
 public class StaffSubVector extends Vector<Object> implements Serializable, ISubDataVector{
@@ -17,12 +17,12 @@ public class StaffSubVector extends Vector<Object> implements Serializable, ISub
     
     @Override
     public synchronized String toString() {
-        return "{"+Messages.getString("StaffView.table.column_title_qrcode")+":\""+this.get(1)
-                +"\", "+Messages.getString("StaffView.table.column_title_name")+":\""+this.get(2)
-                +"\", "+Messages.getString("StaffView.table.column_title_title")+":\""+this.get(3)
-                +"\", "+Messages.getString("StaffView.table.column_title_customize")+":\""+this.get(4)
-                +"\", "+Messages.getString("StaffView.table.column_title_more")+":\""+this.get(5)
-                +"\", "+Messages.getString("StaffView.table.column_title_choose")+":\""+this.get(6)
+        return "{"+I18NUtil.getInstance().getString("StaffView.table.column_title_qrcode")+":\""+this.get(1)
+                +"\", "+I18NUtil.getInstance().getString("StaffView.table.column_title_name")+":\""+this.get(2)
+                +"\", "+I18NUtil.getInstance().getString("StaffView.table.column_title_title")+":\""+this.get(3)
+                +"\", "+I18NUtil.getInstance().getString("StaffView.table.column_title_customize")+":\""+this.get(4)
+                +"\", "+I18NUtil.getInstance().getString("StaffView.table.column_title_more")+":\""+this.get(5)
+                +"\", "+I18NUtil.getInstance().getString("StaffView.table.column_title_choose")+":\""+this.get(6)
                 +"\"}";
     }
     

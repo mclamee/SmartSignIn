@@ -29,7 +29,7 @@ public class DataFactory {
 	
 	public static SimpleDateFormat smfDate = new SimpleDateFormat("yyyy年M月d日");
 	public static SimpleDateFormat smfTime = new SimpleDateFormat("H:mm:ss");
-	public static SimpleDateFormat smfDateTime = new SimpleDateFormat();
+	public static SimpleDateFormat smfDateTime = new SimpleDateFormat("yyyy年M月d日 H:mm:ss");
 	
 	public static IDataVector<ISubDataVector> createDataVector(IView view) {
 		if(view instanceof RecordView){
@@ -113,4 +113,5 @@ public class DataFactory {
 			});
 		}
 	}
+	
 }

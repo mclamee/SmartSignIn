@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 
@@ -17,9 +17,9 @@ public class SeeMoreDataVector extends Vector<ISubDataVector> implements Seriali
     private String message;
     
 	private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
-            Messages.getString("RecordView.seemore.table.column_title_id"),
-            Messages.getString("RecordView.seemore.table.column_title_date"),
-            Messages.getString("RecordView.seemore.table.column_title_time")
+            I18NUtil.getInstance().getString("RecordView.seemore.table.column_title_id"),
+            I18NUtil.getInstance().getString("RecordView.seemore.table.column_title_date"),
+            I18NUtil.getInstance().getString("RecordView.seemore.table.column_title_time")
             }));
     
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{

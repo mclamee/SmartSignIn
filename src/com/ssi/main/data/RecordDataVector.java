@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 
@@ -16,13 +16,13 @@ public class RecordDataVector extends Vector<ISubDataVector> implements Serializ
     private String message;
     
     private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
-            Messages.getString("RecordView.table.column_title_id"),
-            Messages.getString("RecordView.table.column_title_qrcode"),
-            Messages.getString("RecordView.table.column_title_name"),
-            Messages.getString("RecordView.table.column_title_salutaion"),
-            Messages.getString("RecordView.table.column_title_customize"),
-            Messages.getString("RecordView.table.column_title_more"),
-            Messages.getString("RecordView.table.column_title_choose")
+            I18NUtil.getInstance().getString("RecordView.table.column_title_id"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_qrcode"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_name"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_salutaion"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_customize"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_more"),
+            I18NUtil.getInstance().getString("RecordView.table.column_title_choose")
             }));
     
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{

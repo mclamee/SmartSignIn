@@ -1,8 +1,11 @@
 package com.ssi.main.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,6 +21,13 @@ import com.ssi.main.model.AuthorizationException;
 
 public class AuthView extends JFrame{
     private static final long serialVersionUID = -4907857102233644371L;
+    
+    Timer timer = new Timer();
+    int retry = 10;
+    
+	private JButton btnAuth;
+
+	private JLabel lbErr;
     
     public AuthView() {
         setTitle("Authrization");
@@ -55,6 +65,7 @@ public class AuthView extends JFrame{
         int row1 = topSpace + 0;
         int row2 = row1 + rowSpace + eleHeight;
         int row3 = row2 + rowSpace + eleHeight;
+        int row4 = row3 + rowSpace + eleHeight;
         
         int column1 = leftSpace + 0;
         int column2 = column1 + titleWidth + colSpace;
@@ -75,7 +86,7 @@ public class AuthView extends JFrame{
         txAuth.setText(SSIConfig.get("auth.key"));
         panel.add(txAuth);
         
-        JButton btnAuth = new JButton("Authorize");
+        btnAuth = new JButton("Authorize");
         btnAuth.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -85,9 +96,11 @@ public class AuthView extends JFrame{
                 try {
 					Application.authorization();
 				    Application.initMainFrame();
+				    AuthView.this.cancelTimer();
 				    AuthView.this.dispose();
 				} catch (AuthorizationException e1) {
-                    JOptionPane.showMessageDialog(AuthView.this, e1.getMessage());
+//                    JOptionPane.showMessageDialog(AuthView.this, e1.getMessage());
+					setError(e1.getMessage());
 				}
             }
         });
@@ -103,8 +116,32 @@ public class AuthView extends JFrame{
         btnCancel.setBounds(column2 + titleWidth + colSpace, row3, titleWidth, eleHeight);
         panel.add(btnCancel);
         
+        lbErr = new JLabel();
+        lbErr.setForeground(Color.red);
+        lbErr.setBounds(column1, row4, frameWidth, eleHeight);
+        panel.add(lbErr);
+        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null); 
         this.setVisible(true);
+        
+        timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				btnAuth.setText("Authorize ("+retry--+")");
+				if(retry == -1){
+					retry = 10;
+					btnAuth.doClick();
+				}
+			}
+		}, 0, 1000);
     }
+    
+    public void setError(String error){
+    	lbErr.setText(error);
+    }
+
+	public void cancelTimer() {
+		timer.cancel();
+	}
 }

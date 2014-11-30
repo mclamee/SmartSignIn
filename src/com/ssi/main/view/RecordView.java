@@ -12,13 +12,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -28,7 +28,7 @@ import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.Application;
 import com.ssi.main.DataFactory;
 import com.ssi.main.SSIConfig;
@@ -51,9 +51,7 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
     private JButton btnHome;
     private JButton btnAdd;
     private JButton btnClear;
-    
-    private JTextField template;
-    
+	private JTextField template;
     // init simple to-do table at first
     private SimpleTodoTable todoTable = new SimpleTodoTable(this);
     
@@ -89,12 +87,8 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
         btnClear2.setBounds(100, 40, 150, 25);
         this.add(btnClear2);
         
-        JButton btnExport = getBtnExport();
-        btnExport.setBounds(260, 40, 150, 25);
-        this.add(btnExport);
-        
         JLabel templateLable = new JLabel();
-        templateLable.setText("设置播放模板：");
+        templateLable.setText(I18NUtil.getInstance().getString("RecordView.label_template")); //$NON-NLS-1$
         templateLable.setBounds(430, 40, 100, 25);
         this.add(templateLable);
         
@@ -120,6 +114,10 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
         template.setBounds(520, 40, 500, 25);
         this.add(template);
         
+        JButton btnExport = getBtnExport();
+        btnExport.setBounds(260, 40, 150, 25);
+        this.add(btnExport);
+        
         panelTable = getPanelTable();
         panelTable.setBounds(0, 70, frameWidth, frameHeight - 200);
         this.add(panelTable);
@@ -127,7 +125,7 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
         SubDialogPanel subDialogPanel2 = getSubDialogPanel();
 		this.add(subDialogPanel2);
 		subDialogPanel2.close();
-        
+
         JLabel labelSearch = getLabelSearch();
         labelSearch.setBounds(0, frameHeight - 120, 170, 30);
         this.add(labelSearch);
@@ -138,26 +136,11 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
         
         this.applyVirtualKeyboard(this, "RecordView");
     }
-
-	private SubDialogPanel getSubDialogPanel() {
-		subDialogPanel = new SubDialogPanel(panelTable);
-        return subDialogPanel;
-	}
     
-	@Override
-	public void closeSubDialog(){
-		subDialogPanel.close();
-	}
-	
-	@Override
-	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
-		subDialogPanel.open(title, message, data);
-	}
-	
     private JButton getBtnExport() {
     	Dimension btnSize = new Dimension(150, 25);
     	
-    	JButton btnExport = new JButton("生成报表"); //$NON-NLS-1$
+    	JButton btnExport = new JButton(I18NUtil.getInstance().getString("RecordView.btn_export")); //$NON-NLS-1$
     	btnExport.setPreferredSize(btnSize);
     	btnExport.addActionListener(new ActionListener() {
     		
@@ -168,27 +151,27 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
     			todoTable.refreshTable();
     			String reportPath = ExcelHandle.getInstance().exportCustReport();
     			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), 
-    					"请问是否发送客人报表到：<"+SSIConfig.get("email.recipients") + ">?", 
-                		"确认发送邮件", 
+    					MessageFormat.format(I18NUtil.getInstance().getString("RecordView.email.confirm"), SSIConfig.get("email.recipients")),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                		I18NUtil.getInstance().getString("RecordView.email.title_sending"),  //$NON-NLS-1$
                 		JOptionPane.YES_NO_OPTION);
                 if(result == JOptionPane.YES_OPTION){
                 	try {
-						SendEmail.send("客人报表_" + DataFactory.smfDateTime.format(new Date()), 
-								SSIConfig.get("email.recipients"), "请查看附件", reportPath);
-					}catch (Exception e1) {
+						SendEmail.send(I18NUtil.getInstance().getString("RecordView.email.filename") + "_" + DataFactory.smfDateTime.format(new Date()),  //$NON-NLS-1$
+								SSIConfig.get("email.recipients"), I18NUtil.getInstance().getString("RecordView.email.content"), reportPath); //$NON-NLS-1$ //$NON-NLS-2$
+					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "完成", "发送报表", JOptionPane.INFORMATION_MESSAGE);
+                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), I18NUtil.getInstance().getString("RecordView.email.btn_sent"), I18NUtil.getInstance().getString("RecordView.email.title_sent"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
                 }
     		}
     	});
     	return btnExport;
     }
-    
+
     private JButton getBtnAdd() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnAdd = new JButton(Messages.getString("RecordView.btn_add")); //$NON-NLS-1$
+        btnAdd = new JButton(I18NUtil.getInstance().getString("RecordView.btn_add")); //$NON-NLS-1$
         btnAdd.setPreferredSize(btnSize);
         btnAdd.addActionListener(new ActionListener() {
             @Override
@@ -209,7 +192,7 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
     private JButton getBtnClear() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnClear = new JButton(Messages.getString("RecordView.btn_clear")); //$NON-NLS-1$
+        btnClear = new JButton(I18NUtil.getInstance().getString("RecordView.btn_clear")); //$NON-NLS-1$
         btnClear.setPreferredSize(btnSize);
         btnClear.addActionListener(new ActionListener() {
             
@@ -217,8 +200,8 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
                 tfSearch.setText(null);
-                int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("RecordView.btn_clear_confirm"), 
-                		Messages.getString("RecordView.btn_clear_confirm_title"), 
+                int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), I18NUtil.getInstance().getString("RecordView.btn_clear_confirm"), 
+                		I18NUtil.getInstance().getString("RecordView.btn_clear_confirm_title"), 
                 		JOptionPane.YES_NO_OPTION); 
                 if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
@@ -270,7 +253,7 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
     }
 
     private JLabel getLabelSearch() {
-        JLabel label = new JLabel(Messages.getString("RecordView.label_search")); //$NON-NLS-1$
+        JLabel label = new JLabel(I18NUtil.getInstance().getString("RecordView.label_search")); //$NON-NLS-1$
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         label.setHorizontalTextPosition(SwingConstants.RIGHT);
         label.addMouseListener(new MouseAdapter() {
@@ -281,7 +264,7 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
                 tfSearch.selectAll();
             }
         });
-        label.setToolTipText(Messages.getString("RecordView.label_search_tip")); //$NON-NLS-1$
+        label.setToolTipText(I18NUtil.getInstance().getString("RecordView.label_search_tip")); //$NON-NLS-1$
         return label;
     }
 
@@ -301,6 +284,21 @@ public class RecordView extends VirtualKeyboardView implements IView, ActionList
 	
 	public WindowAdapter getWindowListener(){
 		return todoTable.getWindowListener();
+	}
+	
+	private SubDialogPanel getSubDialogPanel() {
+		subDialogPanel = new SubDialogPanel(panelTable);
+        return subDialogPanel;
+	}
+    
+	@Override
+	public void closeSubDialog(){
+		subDialogPanel.close();
+	}
+	
+	@Override
+	public void openSubDialog(String title, String message, IDataVector<ISubDataVector> data) {
+		subDialogPanel.open(title, message, data);
 	}
 
 	@Override

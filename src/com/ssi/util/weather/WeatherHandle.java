@@ -8,11 +8,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import com.ssi.main.SSIConfig;
+import com.ssi.util.DataUtil;
 
 public class WeatherHandle {
     public static Logger LOG = Logger.getLogger(WeatherHandle.class);
@@ -20,21 +20,42 @@ public class WeatherHandle {
     private static WeatherHandle instance;
     public static void initialize(String city){
         if(instance == null){
-            instance = new WeatherHandle();
+            instance = new WeatherHandle(city);
         }
-        instance.refreshData(city);
+        instance.refreshData();
     }
 
     private TreeSet<WeatherReport> rptSet = new TreeSet<WeatherReport>();
 
-    private Timer timer;
+    private Timer timer = new Timer();
+
+	private File dataFile;
+
+	private String city;
     
-    private WeatherHandle(){
-//        File savedFile = new File();
-//        FileUtils.readFileToString(file);
+	private String getDataFileName() {
+		return "/weather.db";
+	}
+	
+    private WeatherHandle(String city){
+    	this.city = city;
+		String dataFileName = getDataFileName();
+        String profilePath = SSIConfig.get("system.profileHome");
+        dataFile = new File(profilePath, dataFileName);
+        TreeSet<WeatherReport> savedSet = DataUtil.loadDataFromFile(dataFile);
+        if(savedSet != null){
+        	rptSet = savedSet;
+        }
+        int hrs6 = 6 * 60 * 60 * 60 * 1000;
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				instance.refreshData();
+			}
+		}, hrs6, hrs6);
     }
 
-    private void refreshData(String city) {
+    private void refreshData() {
         LOG.info("获取" + city + "未来7天天气预报信息：");
         TreeSet<WeatherReport> weatherReports = new WeatherUtil().getWeatherReports(city);
         if (weatherReports.size() < 1) {
@@ -48,6 +69,9 @@ public class WeatherHandle {
         rptSet.addAll(weatherReports);
         // 移除超过30天的数据
         purge30DaysEarlier();
+
+        // save to file
+        DataUtil.saveDataToFile(dataFile, rptSet);
     }
 
     private void purge30DaysEarlier() {
@@ -112,19 +136,6 @@ public class WeatherHandle {
         return null;
     }
 
-//    private void setupTimerSave(){
-//        // setup timer to support automatic save
-//        int appSaveIntervalMillis = (((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute"))) < 60000)?60000:
-//            ((int) (1000*60*SSIConfig.getDouble("system.saveIntervalMinute")));
-//        this.timer = new Timer();
-//        this.timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//            
-//            }
-//        }, new Date(System.currentTimeMillis() + appSaveIntervalMillis), appSaveIntervalMillis);
-//    }
-    
     public static void main(String[] args) {
         WeatherHandle.initialize(SSIConfig.get("weather.city"));
         LOG.debug("Init weather instance: " + WeatherHandle.getTodayWeather());

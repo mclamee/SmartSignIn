@@ -9,19 +9,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.WriteAbortedException;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -33,8 +20,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -43,12 +28,9 @@ import javax.swing.text.BadLocationException;
 
 import org.apache.log4j.Logger;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.Application;
-import com.ssi.main.SSIConfig;
-import com.ssi.main.model.TableDataChangeListener;
 import com.ssi.main.view.IView;
-import com.ssi.util.StringUtil;
 
 
 /**
@@ -68,8 +50,8 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
     }
     
     public SimpleTodoTable(IView view){
-		String viewName = view == null?"null":view.getClass().getSimpleName();
-        LOG.info("> initializing table for " + viewName + " ...");
+		String viewName = (view == null)?"[NOT VIEW]":view.getClass().getSimpleName();
+        LOG.info("> initializing table for " + viewName + " ... start");
         // 1. create data model
 		dataModel = new SimpleTableModel(view);
         
@@ -105,7 +87,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                 if (e.isPopupTrigger() && e.getComponent() instanceof JTable ) {
                     stopCellEditing();
                     JPopupMenu popup = new JPopupMenu();
-                    JMenuItem delItm = new JMenuItem(Messages.getString("RecordView.table.menu_delete")); //$NON-NLS-1$
+                    JMenuItem delItm = new JMenuItem(I18NUtil.getInstance().getString("RecordView.table.menu_delete")); //$NON-NLS-1$
                     delItm.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -138,7 +120,7 @@ public class SimpleTodoTable extends JTable implements ListSelectionListener, Do
                         stopCellEditing();
                         int rowCount = dataModel.getRowCount();
                         if(rowCount != 0){
-                            int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("RecordView.table.menu_delete_confirm"), Messages.getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
+                            int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), I18NUtil.getInstance().getString("RecordView.table.menu_delete_confirm"), I18NUtil.getInstance().getString("RecordView.table.menu_delete_confirm_title"), JOptionPane.YES_NO_OPTION); //$NON-NLS-1$ //$NON-NLS-2$
                             if(result == JOptionPane.YES_OPTION){
                             	SwingUtilities.invokeLater(new Runnable() {
 									public void run() {

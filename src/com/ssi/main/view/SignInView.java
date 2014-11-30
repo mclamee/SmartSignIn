@@ -15,6 +15,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import org.apache.log4j.Logger;
+
 import com.iflytek.speech.SpeechConfig.RATE;
 import com.iflytek.speech.SpeechError;
 import com.iflytek.speech.SynthesizerPlayer;
@@ -30,6 +32,7 @@ import com.wicky.tdl.ISubDataVector;
 
 public class SignInView extends JPanel implements IView, ActionListener {
 	private static final long serialVersionUID = 4089298273304918969L;
+	private Logger log = Logger.getLogger(this.getClass());
 	
 	private JButton jbtHome;
 	private JTextPane resultArea;
@@ -235,6 +238,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
 
 	public void initDataMap() {
 		this.getModel().initDataMap();
+		log.info("SingInView Data Map initialized successfully!");
 	}
 	
 	@Override

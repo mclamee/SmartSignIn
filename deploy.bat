@@ -35,6 +35,7 @@ xcopy src dist /E /Y /I
 del dist\log4j.properties
 RD /S /Q dist\com
 RD /S /Q dist\samples
+RD /S /Q dist\conf\logs
 
 echo java -jar ssi.jar -debug>dist\test_ssi.bat
 

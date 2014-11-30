@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
 
@@ -16,13 +16,13 @@ public class StaffDataVector extends Vector<ISubDataVector> implements Serializa
     private String message;
     
     private Vector<String> titles = new Vector<String>(Arrays.asList(new String[]{
-            Messages.getString("StaffView.table.column_title_id"),
-            Messages.getString("StaffView.table.column_title_qrcode"),
-            Messages.getString("StaffView.table.column_title_name"),
-            Messages.getString("StaffView.table.column_title_title"),
-            Messages.getString("StaffView.table.column_title_customize"),
-            Messages.getString("StaffView.table.column_title_more"),
-            Messages.getString("StaffView.table.column_title_choose")
+            I18NUtil.getInstance().getString("StaffView.table.column_title_id"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_qrcode"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_name"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_title"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_customize"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_more"),
+            I18NUtil.getInstance().getString("StaffView.table.column_title_choose")
             }));
     
     private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[]{

@@ -12,13 +12,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -28,7 +28,7 @@ import javax.swing.event.DocumentListener;
 
 import org.apache.log4j.Logger;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.Application;
 import com.ssi.main.DataFactory;
 import com.ssi.main.SSIConfig;
@@ -51,7 +51,7 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
     private JButton btnHome;
     private JButton btnAdd;
     private JButton btnClear;
-	
+	private JTextField template;
     // init simple to-do table at first
     private SimpleTodoTable todoTable = new SimpleTodoTable(this);
     
@@ -61,8 +61,6 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
 
 	private JScrollPane panelTable;
 
-	private JTextField template;
-    
     public StaffView() {
         Dimension frameSize = Application.MAIN_FRAME.getSize();
         int frameWidth = (int)frameSize.getWidth();
@@ -71,7 +69,7 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
         this.setOpaque(false);
         this.setLayout(null);
         
-        this.createVirtualKeyboard(this, "StaffView");
+        this.createVirtualKeyboard(this, "StaffView"); //$NON-NLS-1$
         
         ImageIcon imgHome = new ImageIcon("res/img/home.png"); //$NON-NLS-1$
         btnHome = DrawableUtils.createImageButton("", imgHome, null); //$NON-NLS-1$
@@ -90,27 +88,27 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
         this.add(btnClear2);
         
         JLabel templateLable = new JLabel();
-        templateLable.setText("设置播放模板：");
+        templateLable.setText(I18NUtil.getInstance().getString("StaffView.label_template")); //$NON-NLS-1$
         templateLable.setBounds(430, 40, 100, 25);
         this.add(templateLable);
         
         template = new JTextField();
-        template.setText(SSIConfig.get("StaffView.template"));
+        template.setText(SSIConfig.get("StaffView.template")); //$NON-NLS-1$
         template.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				SSIConfig.put("StaffView.template", template.getText());
+				SSIConfig.put("StaffView.template", template.getText()); //$NON-NLS-1$
 			}
 			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				SSIConfig.put("StaffView.template", template.getText());
+				SSIConfig.put("StaffView.template", template.getText()); //$NON-NLS-1$
 			}
 			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				SSIConfig.put("StaffView.template", template.getText());
+				SSIConfig.put("StaffView.template", template.getText()); //$NON-NLS-1$
 			}
 		});
         template.setBounds(520, 40, 500, 25);
@@ -136,13 +134,44 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
         tfSearch2.setBounds(170, frameHeight - 120, frameWidth - 170 - 10, 30);
         this.add(tfSearch2);
         
-        this.applyVirtualKeyboard(this, "StaffView");
+        this.applyVirtualKeyboard(this, "StaffView"); //$NON-NLS-1$
     }
     
+    private JButton getBtnExport() {
+    	Dimension btnSize = new Dimension(150, 25);
+    	
+    	JButton btnExport = new JButton(I18NUtil.getInstance().getString("StaffView.btn_export")); //$NON-NLS-1$
+    	btnExport.setPreferredSize(btnSize);
+    	btnExport.addActionListener(new ActionListener() {
+    		
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			todoTable.stopCellEditing();
+    			tfSearch.setText(null);
+    			todoTable.refreshTable();
+				String reportPath = ExcelHandle.getInstance().exportStaffReport();
+    			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), 
+    					MessageFormat.format(I18NUtil.getInstance().getString("StaffView.email.confirm"), SSIConfig.get("email.recipients")),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                		I18NUtil.getInstance().getString("StaffView.email.title_sending"),  //$NON-NLS-1$
+                		JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION){
+                	try {
+						SendEmail.send(I18NUtil.getInstance().getString("StaffView.email.filename") + "_" + DataFactory.smfDateTime.format(new Date()),  //$NON-NLS-1$
+								SSIConfig.get("email.recipients"), I18NUtil.getInstance().getString("StaffView.email.content"), reportPath); //$NON-NLS-1$ //$NON-NLS-2$
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), I18NUtil.getInstance().getString("StaffView.email.btn_sent"), I18NUtil.getInstance().getString("StaffView.email.title_sent"), JOptionPane.INFORMATION_MESSAGE); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+    		}
+    	});
+    	return btnExport;
+    }
+
     private JButton getBtnAdd() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnAdd = new JButton(Messages.getString("StaffView.btn_add")); //$NON-NLS-1$
+        btnAdd = new JButton(I18NUtil.getInstance().getString("StaffView.btn_add")); //$NON-NLS-1$
         btnAdd.setPreferredSize(btnSize);
         btnAdd.addActionListener(new ActionListener() {
             @Override
@@ -160,43 +189,10 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
         return btnAdd;
     }
     
-    private JButton getBtnExport() {
-    	Dimension btnSize = new Dimension(150, 25);
-    	
-    	JButton btnExport = new JButton("生成报表"); //$NON-NLS-1$
-    	btnExport.setPreferredSize(btnSize);
-    	btnExport.addActionListener(new ActionListener() {
-    		
-    		@Override
-    		public void actionPerformed(ActionEvent e) {
-    			todoTable.stopCellEditing();
-    			tfSearch.setText(null);
-    			todoTable.refreshTable();
-    			
-				String reportPath = ExcelHandle.getInstance().exportStaffReport();
-    			
-    			int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), 
-    					"请问是否发送员工报表到：<"+SSIConfig.get("email.recipients") + ">?", 
-                		"确认发送邮件", 
-                		JOptionPane.YES_NO_OPTION);
-                if(result == JOptionPane.YES_OPTION){
-                	try {
-						SendEmail.send("员工报表_" + DataFactory.smfDateTime.format(new Date()), 
-								SSIConfig.get("email.recipients"), "请查看附件", reportPath);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-                	JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "完成", "发送报表", JOptionPane.INFORMATION_MESSAGE);
-                }
-    		}
-    	});
-    	return btnExport;
-    }
-    
     private JButton getBtnClear() {
         Dimension btnSize = new Dimension(150, 25);
         
-        btnClear = new JButton(Messages.getString("StaffView.btn_clear")); //$NON-NLS-1$
+        btnClear = new JButton(I18NUtil.getInstance().getString("StaffView.btn_clear")); //$NON-NLS-1$
         btnClear.setPreferredSize(btnSize);
         btnClear.addActionListener(new ActionListener() {
             
@@ -204,8 +200,8 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
             public void actionPerformed(ActionEvent e) {
                 todoTable.stopCellEditing();
                 tfSearch.setText(null);
-                int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), Messages.getString("StaffView.btn_clear_confirm"), 
-                		Messages.getString("StaffView.btn_clear_confirm_title"), 
+                int result = JOptionPane.showInternalConfirmDialog(Application.MAIN_FRAME.getContentPane(), I18NUtil.getInstance().getString("StaffView.btn_clear_confirm"),  //$NON-NLS-1$
+                		I18NUtil.getInstance().getString("StaffView.btn_clear_confirm_title"),  //$NON-NLS-1$
                 		JOptionPane.YES_NO_OPTION); 
                 if(result == JOptionPane.YES_OPTION){
                     int rowCount = todoTable.dataModel.getRowCount();
@@ -257,7 +253,7 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
     }
 
     private JLabel getLabelSearch() {
-        JLabel label = new JLabel(Messages.getString("StaffView.label_search")); //$NON-NLS-1$
+        JLabel label = new JLabel(I18NUtil.getInstance().getString("StaffView.label_search")); //$NON-NLS-1$
         label.setHorizontalAlignment(SwingConstants.RIGHT);
         label.setHorizontalTextPosition(SwingConstants.RIGHT);
         label.addMouseListener(new MouseAdapter() {
@@ -268,7 +264,7 @@ public class StaffView extends VirtualKeyboardView implements IView, ActionListe
                 tfSearch.selectAll();
             }
         });
-        label.setToolTipText(Messages.getString("StaffView.label_search_tip")); //$NON-NLS-1$
+        label.setToolTipText(I18NUtil.getInstance().getString("StaffView.label_search_tip")); //$NON-NLS-1$
         return label;
     }
 

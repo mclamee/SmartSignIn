@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.DataFactory;
 import com.wicky.tdl.IDataVector;
 import com.wicky.tdl.ISubDataVector;
@@ -23,11 +23,11 @@ public class TimesheetDataVector extends Vector<ISubDataVector> implements
 
 	private Vector<String> titles = new Vector<String>(
 			Arrays.asList(new String[] {
-					Messages.getString("StaffView.timesheet.table.column_title_id"),
-					Messages.getString("StaffView.timesheet.table.column_title_date"),
-					Messages.getString("StaffView.timesheet.table.column_title_workhrs"),
-					Messages.getString("StaffView.timesheet.table.column_title_counts"),
-					Messages.getString("StaffView.timesheet.table.column_title_detail") }));
+					I18NUtil.getInstance().getString("StaffView.timesheet.table.column_title_id"),
+					I18NUtil.getInstance().getString("StaffView.timesheet.table.column_title_date"),
+					I18NUtil.getInstance().getString("StaffView.timesheet.table.column_title_workhrs"),
+					I18NUtil.getInstance().getString("StaffView.timesheet.table.column_title_counts"),
+					I18NUtil.getInstance().getString("StaffView.timesheet.table.column_title_detail") }));
 
 	private List<Class<?>> columnTypes = Arrays.asList(new Class<?>[] {
 			String.class, String.class, String.class, Integer.class,

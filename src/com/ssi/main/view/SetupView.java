@@ -17,7 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -57,7 +56,7 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.log4j.Logger;
 import org.apache.poi.util.IOUtils;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
 import com.ssi.main.model.SetupModel;
@@ -132,7 +131,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         desktopPane.setBackground(SystemColor.window);
         add(desktopPane);
         
-        fileChooseiFrame = new JInternalFrame(Messages.getString("SetupView.fileChooseiFrame.title"));
+        fileChooseiFrame = new JInternalFrame(I18NUtil.getInstance().getString("SetupView.fileChooseiFrame.title"));
         fileChooseiFrame.setBounds(300, 145, 573, 430);
         desktopPane.add(fileChooseiFrame);
         fileChooseiFrame.setClosable(true);
@@ -171,12 +170,12 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         createVirtualKeyboard(mainPanel, "SetupView");
         
         JPanel panelUI = new JPanel();
-        panelUI.setBorder(new TitledBorder(null, Messages.getString("SetupView.panelUI.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+        panelUI.setBorder(new TitledBorder(null, I18NUtil.getInstance().getString("SetupView.panelUI.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
         panelUI.setBounds(100, 100, 420, 185);
         mainPanel.add(panelUI);
         panelUI.setLayout(null);
         
-        JLabel lbSysLang = new JLabel(Messages.getString("SetupView.lbSysLang.text")); //$NON-NLS-1$
+        JLabel lbSysLang = new JLabel(I18NUtil.getInstance().getString("SetupView.lbSysLang.text")); //$NON-NLS-1$
         lbSysLang.setHorizontalAlignment(SwingConstants.RIGHT);
         lbSysLang.setBounds(0, 35, 180, 25);
         panelUI.add(lbSysLang);
@@ -190,18 +189,16 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 				if(idx == 0){
 					SSIConfig.put("system.locale.language", "zh");
 					SSIConfig.put("system.locale.country", "CN");
-					System.setProperty("locale", "zh_CN");
 				}else if(idx == 1){
 					SSIConfig.put("system.locale.language", "en");
 					SSIConfig.put("system.locale.country", "US");
-					System.setProperty("locale", "en_US");
 				}
 			}
 		});
         cbSysLang.setBounds(190, 35, 200, 25);
         panelUI.add(cbSysLang);
         
-        JLabel lbStartingView = new JLabel(Messages.getString("SetupView.lbStartingView.text")); //$NON-NLS-1$
+        JLabel lbStartingView = new JLabel(I18NUtil.getInstance().getString("SetupView.lbStartingView.text")); //$NON-NLS-1$
         lbStartingView.setHorizontalAlignment(SwingConstants.RIGHT);
         lbStartingView.setBounds(0, 70, 180, 25);
         panelUI.add(lbStartingView);
@@ -217,7 +214,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         cbStartingView.setBounds(190, 70, 200, 25);
         panelUI.add(cbStartingView);
         
-        JLabel lbBgImg = new JLabel(Messages.getString("SetupView.lbBgImg.text")); //$NON-NLS-1$
+        JLabel lbBgImg = new JLabel(I18NUtil.getInstance().getString("SetupView.lbBgImg.text")); //$NON-NLS-1$
         lbBgImg.setHorizontalAlignment(SwingConstants.RIGHT);
         lbBgImg.setBounds(0, 105, 180, 25);
         panelUI.add(lbBgImg);
@@ -234,7 +231,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelUI.add(tfBgImg);
         tfBgImg.setColumns(10);
         
-        JButton btnChoose = new JButton(Messages.getString("SetupView.btnChoose.text")); //$NON-NLS-1$
+        JButton btnChoose = new JButton(I18NUtil.getInstance().getString("SetupView.btnChoose.text")); //$NON-NLS-1$
         btnChoose.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -245,12 +242,12 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         btnChoose.setBounds(320, 105, 70, 25);
         panelUI.add(btnChoose);
         
-        JLabel lbVerifyViews = new JLabel(Messages.getString("SetupView.lbVerifyViews.text")); //$NON-NLS-1$
+        JLabel lbVerifyViews = new JLabel(I18NUtil.getInstance().getString("SetupView.lbVerifyViews.text")); //$NON-NLS-1$
         lbVerifyViews.setHorizontalAlignment(SwingConstants.RIGHT);
         lbVerifyViews.setBounds(0, 140, 180, 25);
         panelUI.add(lbVerifyViews);
         
-        rdbtnYes_VerifyViews = new JRadioButton(Messages.getString("SetupView.rdbtnYes_VerifyViews.text"));
+        rdbtnYes_VerifyViews = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnYes_VerifyViews.text"));
         rdbtnYes_VerifyViews.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -270,10 +267,11 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         rdbtnYes_VerifyViews.setBounds(190, 140, 50, 25);
         panelUI.add(rdbtnYes_VerifyViews);
         
-        rdbtnNo_VerifyViews = new JRadioButton(Messages.getString("SetupView.rdbtnNo_VerifyViews.text"));
+        rdbtnNo_VerifyViews = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnNo_VerifyViews.text"));
         rdbtnNo_VerifyViews.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
+            	pwfVerifyViews.setText("");
                 pwfVerifyViews.setEnabled(false);
                 SSIConfig.put("system.verifyviews", "no");
             }
@@ -298,8 +296,6 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         		char[] password = pwfVerifyViews.getPassword();
         		if(password == null || password.length == 0){
         			rdbtnNo_VerifyViews.doClick();
-        		}else{
-        			JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), "密码已设置", "消息", JOptionPane.INFORMATION_MESSAGE);
         		}
         	}
 		});
@@ -308,11 +304,11 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         
         JPanel panelSynth = new JPanel();
         panelSynth.setLayout(null);
-        panelSynth.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Messages.getString("SetupView.panelSynth.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
+        panelSynth.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), I18NUtil.getInstance().getString("SetupView.panelSynth.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
         panelSynth.setBounds(100, 305, 420, 185);
         mainPanel.add(panelSynth);
         
-        JLabel lbSynthVoice = new JLabel(Messages.getString("SetupView.lbSynthVoice.text")); //$NON-NLS-1$
+        JLabel lbSynthVoice = new JLabel(I18NUtil.getInstance().getString("SetupView.lbSynthVoice.text")); //$NON-NLS-1$
         lbSynthVoice.setHorizontalAlignment(SwingConstants.RIGHT);
         lbSynthVoice.setBounds(0, 35, 180, 25);
         panelSynth.add(lbSynthVoice);
@@ -338,7 +334,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         cbSynthVoice.setBounds(190, 35, 200, 25);
         panelSynth.add(cbSynthVoice);
         
-        JLabel lbSynthSpeed = new JLabel(Messages.getString("SetupView.lbSynthSpeed.text")); //$NON-NLS-1$
+        JLabel lbSynthSpeed = new JLabel(I18NUtil.getInstance().getString("SetupView.lbSynthSpeed.text")); //$NON-NLS-1$
         lbSynthSpeed.setHorizontalAlignment(SwingConstants.RIGHT);
         lbSynthSpeed.setBounds(0, 70, 180, 25);
         panelSynth.add(lbSynthSpeed);
@@ -357,7 +353,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         sdSynthSpeed.setBounds(190, 70, 200, 25);
         panelSynth.add(sdSynthSpeed);
         
-        JLabel lbSynthRate = new JLabel(Messages.getString("SetupView.lbSynthRate.text")); //$NON-NLS-1$
+        JLabel lbSynthRate = new JLabel(I18NUtil.getInstance().getString("SetupView.lbSynthRate.text")); //$NON-NLS-1$
         lbSynthRate.setHorizontalAlignment(SwingConstants.RIGHT);
         lbSynthRate.setBounds(0, 105, 180, 25);
         panelSynth.add(lbSynthRate);
@@ -377,7 +373,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         sdSynthRate.setBounds(190, 105, 200, 25);
         panelSynth.add(sdSynthRate);
         
-        JLabel lbSynthVolume = new JLabel(Messages.getString("SetupView.lbSynthVolume.text")); //$NON-NLS-1$
+        JLabel lbSynthVolume = new JLabel(I18NUtil.getInstance().getString("SetupView.lbSynthVolume.text")); //$NON-NLS-1$
         lbSynthVolume.setHorizontalAlignment(SwingConstants.RIGHT);
         lbSynthVolume.setBounds(0, 140, 180, 25);
         panelSynth.add(lbSynthVolume);
@@ -399,16 +395,16 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         
         JPanel panelScanner = new JPanel();
         panelScanner.setLayout(null);
-        panelScanner.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Messages.getString("SetupView.panelScanner.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
+        panelScanner.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), I18NUtil.getInstance().getString("SetupView.panelScanner.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
         panelScanner.setBounds(560, 100, 420, 290);
         mainPanel.add(panelScanner);
         
-        JLabel lbCode = new JLabel(Messages.getString("SetupView.lbCode.text")); //$NON-NLS-1$
+        JLabel lbCode = new JLabel(I18NUtil.getInstance().getString("SetupView.lbCode.text")); //$NON-NLS-1$
         lbCode.setHorizontalAlignment(SwingConstants.RIGHT);
         lbCode.setBounds(0, 35, 180, 25);
         panelScanner.add(lbCode);
         
-        cbCodeQr = new JCheckBox(Messages.getString("SetupView.cbCodeQr.text"));
+        cbCodeQr = new JCheckBox(I18NUtil.getInstance().getString("SetupView.cbCodeQr.text"));
         cbCodeQr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -422,7 +418,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         cbCodeQr.setBounds(190, 36, 50, 25);
         panelScanner.add(cbCodeQr);
         
-        cbCodeDm = new JCheckBox(Messages.getString("SetupView.cbCodeDm.text"));
+        cbCodeDm = new JCheckBox(I18NUtil.getInstance().getString("SetupView.cbCodeDm.text"));
         cbCodeDm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -436,7 +432,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         cbCodeDm.setBounds(235, 35, 50, 25);
         panelScanner.add(cbCodeDm);
         
-        cbCodeBar = new JCheckBox(Messages.getString("SetupView.cbCodeBar.text"));
+        cbCodeBar = new JCheckBox(I18NUtil.getInstance().getString("SetupView.cbCodeBar.text"));
         cbCodeBar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -450,7 +446,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         cbCodeBar.setBounds(280, 35, 55, 25);
         panelScanner.add(cbCodeBar);
         
-        JLabel lbInterval = new JLabel(Messages.getString("SetupView.lbInterval.text")); //$NON-NLS-1$
+        JLabel lbInterval = new JLabel(I18NUtil.getInstance().getString("SetupView.lbInterval.text")); //$NON-NLS-1$
         lbInterval.setHorizontalAlignment(SwingConstants.RIGHT);
         lbInterval.setBounds(0, 70, 180, 25);
         panelScanner.add(lbInterval);
@@ -466,16 +462,16 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelScanner.add(tfInterval);
         tfInterval.setColumns(10);
         
-        JLabel lbIntervalUnit = new JLabel(Messages.getString("SetupView.lbIntervalUnit.text")); //$NON-NLS-1$
+        JLabel lbIntervalUnit = new JLabel(I18NUtil.getInstance().getString("SetupView.lbIntervalUnit.text")); //$NON-NLS-1$
         lbIntervalUnit.setBounds(320, 70, 50, 25);
         panelScanner.add(lbIntervalUnit);
         
-        JLabel lbAi = new JLabel(Messages.getString("SetupView.lbAi.text")); //$NON-NLS-1$
+        JLabel lbAi = new JLabel(I18NUtil.getInstance().getString("SetupView.lbAi.text")); //$NON-NLS-1$
         lbAi.setHorizontalAlignment(SwingConstants.RIGHT);
         lbAi.setBounds(0, 105, 180, 25);
         panelScanner.add(lbAi);
         
-        rdbtnYes_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Ai.text"));
+        rdbtnYes_Ai = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnYes_Ai.text"));
         rdbtnYes_Ai.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -486,7 +482,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         rdbtnYes_Ai.setBounds(190, 105, 50, 25);
         panelScanner.add(rdbtnYes_Ai);
         
-        rdbtnNo_Ai = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Ai.text"));
+        rdbtnNo_Ai = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnNo_Ai.text"));
         rdbtnNo_Ai.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -495,7 +491,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             }
         });
         
-        JLabel lbAiTimePrefix = new JLabel(Messages.getString("SetupView.lbAiTimePrefix.text")); //$NON-NLS-1$
+        JLabel lbAiTimePrefix = new JLabel(I18NUtil.getInstance().getString("SetupView.lbAiTimePrefix.text")); //$NON-NLS-1$
         lbAiTimePrefix.setBounds(285, 105, 25, 25);
         panelScanner.add(lbAiTimePrefix);
         rdbtnNo_Ai.setBounds(235, 105, 50, 25);
@@ -516,16 +512,16 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelScanner.add(tfAiTime);
         tfAiTime.setColumns(10);
         
-        JLabel lbAiTimeSuffix = new JLabel(Messages.getString("SetupView.lbAiTimeSuffix.text")); //$NON-NLS-1$
+        JLabel lbAiTimeSuffix = new JLabel(I18NUtil.getInstance().getString("SetupView.lbAiTimeSuffix.text")); //$NON-NLS-1$
         lbAiTimeSuffix.setBounds(355, 105, 50, 25);
         panelScanner.add(lbAiTimeSuffix);
         
-        JLabel lbBeep = new JLabel(Messages.getString("SetupView.lbBeep.text")); //$NON-NLS-1$
+        JLabel lbBeep = new JLabel(I18NUtil.getInstance().getString("SetupView.lbBeep.text")); //$NON-NLS-1$
         lbBeep.setHorizontalAlignment(SwingConstants.RIGHT);
         lbBeep.setBounds(0, 140, 180, 25);
         panelScanner.add(lbBeep);
         
-        rdbtnYes_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Beep.text"));
+        rdbtnYes_Beep = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnYes_Beep.text"));
         rdbtnYes_Beep.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -536,7 +532,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         rdbtnYes_Beep.setBounds(190, 140, 50, 25);
         panelScanner.add(rdbtnYes_Beep);
         
-        rdbtnNo_Beep = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Beep.text"));
+        rdbtnNo_Beep = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnNo_Beep.text"));
         rdbtnNo_Beep.addActionListener(new ActionListener() {
             @Override
 			public void actionPerformed(ActionEvent e) {
@@ -562,16 +558,16 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tfBeepTimes.setBounds(300, 142, 50, 21);
         panelScanner.add(tfBeepTimes);
         
-        JLabel lbBeepTimes = new JLabel(Messages.getString("SetupView.lbBeepTimes.text")); //$NON-NLS-1$
+        JLabel lbBeepTimes = new JLabel(I18NUtil.getInstance().getString("SetupView.lbBeepTimes.text")); //$NON-NLS-1$
         lbBeepTimes.setBounds(355, 140, 50, 25);
         panelScanner.add(lbBeepTimes);
         
-        JLabel lbLight = new JLabel(Messages.getString("SetupView.lbLight.text")); //$NON-NLS-1$
+        JLabel lbLight = new JLabel(I18NUtil.getInstance().getString("SetupView.lbLight.text")); //$NON-NLS-1$
         lbLight.setHorizontalAlignment(SwingConstants.RIGHT);
         lbLight.setBounds(0, 170, 180, 25);
         panelScanner.add(lbLight);
         
-        JRadioButton rdbtnYes_Light = new JRadioButton(Messages.getString("SetupView.rdbtnYes_Light.text")); //$NON-NLS-1$
+        JRadioButton rdbtnYes_Light = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnYes_Light.text")); //$NON-NLS-1$
         rdbtnYes_Light.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -583,7 +579,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         rdbtnYes_Light.setBounds(190, 170, 50, 25);
         panelScanner.add(rdbtnYes_Light);
         
-        JRadioButton rdbtnNo_Light = new JRadioButton(Messages.getString("SetupView.rdbtnNo_Light.text")); //$NON-NLS-1$
+        JRadioButton rdbtnNo_Light = new JRadioButton(I18NUtil.getInstance().getString("SetupView.rdbtnNo_Light.text")); //$NON-NLS-1$
         rdbtnNo_Light.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -598,7 +594,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         btng_Light.add(rdbtnYes_Light);
         btng_Light.add(rdbtnNo_Light);
         
-        JButton btnOpen = new JButton(Messages.getString("SetupView.btnOpen.text")); //$NON-NLS-1$
+        JButton btnOpen = new JButton(I18NUtil.getInstance().getString("SetupView.btnOpen.text")); //$NON-NLS-1$
         btnOpen.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -608,19 +604,19 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         btnOpen.setBounds(20, 240, 120, 25);
         panelScanner.add(btnOpen);
         
-        JButton btnClose = new JButton(Messages.getString("SetupView.btnClose.text")); //$NON-NLS-1$
+        JButton btnClose = new JButton(I18NUtil.getInstance().getString("SetupView.btnClose.text")); //$NON-NLS-1$
         btnClose.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
         		VguangApi.closeDevice();
-                lbDeviceState.setText(Messages.getString("SetupView.lbDeviceState.inactive.text"));
+                lbDeviceState.setText(I18NUtil.getInstance().getString("SetupView.lbDeviceState.inactive.text"));
                 lbDeviceState.setEnabled(false);
         	}
         });
         btnClose.setBounds(150, 240, 120, 25);
         panelScanner.add(btnClose);
         
-        JButton btnApply = new JButton(Messages.getString("SetupView.btnApply.text")); //$NON-NLS-1$
+        JButton btnApply = new JButton(I18NUtil.getInstance().getString("SetupView.btnApply.text")); //$NON-NLS-1$
         btnApply.addActionListener(new ActionListener() {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -630,22 +626,22 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         btnApply.setBounds(280, 240, 120, 25);
         panelScanner.add(btnApply);
         
-        JLabel lbDevice = new JLabel(Messages.getString("SetupView.lbDevice.text")); //$NON-NLS-1$
+        JLabel lbDevice = new JLabel(I18NUtil.getInstance().getString("SetupView.lbDevice.text")); //$NON-NLS-1$
         lbDevice.setBounds(0, 205, 180, 25);
         panelScanner.add(lbDevice);
         lbDevice.setHorizontalAlignment(SwingConstants.RIGHT);
         
-        lbDeviceState = new JLabel(Messages.getString("SetupView.lbDeviceState.active.text"));
+        lbDeviceState = new JLabel(I18NUtil.getInstance().getString("SetupView.lbDeviceState.active.text"));
         lbDeviceState.setBounds(190, 205, 80, 25);
         panelScanner.add(lbDeviceState);
         
         JPanel panelDecode = new JPanel();
         panelDecode.setLayout(null);
-        panelDecode.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Messages.getString("SetupView.panelDecode.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
+        panelDecode.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), I18NUtil.getInstance().getString("SetupView.panelDecode.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
         panelDecode.setBounds(560, 410, 420, 280);
         mainPanel.add(panelDecode);
         
-        JLabel lbScanResult = new JLabel(Messages.getString("SetupView.lbScanResult.text")); //$NON-NLS-1$
+        JLabel lbScanResult = new JLabel(I18NUtil.getInstance().getString("SetupView.lbScanResult.text")); //$NON-NLS-1$
         lbScanResult.setHorizontalAlignment(SwingConstants.RIGHT);
         lbScanResult.setBounds(0, 35, 100, 25);
         panelDecode.add(lbScanResult);
@@ -654,7 +650,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tpScanResult.setBounds(110, 35, 290, 100);
         panelDecode.add(tpScanResult);
         
-        JLabel lbDecodeResult = new JLabel(Messages.getString("SetupView.lbDecodeResult.text")); //$NON-NLS-1$
+        JLabel lbDecodeResult = new JLabel(I18NUtil.getInstance().getString("SetupView.lbDecodeResult.text")); //$NON-NLS-1$
         lbDecodeResult.setHorizontalAlignment(SwingConstants.RIGHT);
         lbDecodeResult.setBounds(0, 145, 100, 25);
         panelDecode.add(lbDecodeResult);
@@ -665,11 +661,11 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         
         JPanel panelReport = new JPanel();
         panelReport.setLayout(null);
-        panelReport.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), Messages.getString("SetupView.panelReport.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
+        panelReport.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), I18NUtil.getInstance().getString("SetupView.panelReport.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-2$
         panelReport.setBounds(100, 510, 420, 180);
         mainPanel.add(panelReport);
         
-        JLabel lbEmailSenderAddress = new JLabel(Messages.getString("SetupView.lbEmailSenderAddress.text")); //$NON-NLS-1$
+        JLabel lbEmailSenderAddress = new JLabel(I18NUtil.getInstance().getString("SetupView.lbEmailSenderAddress.text")); //$NON-NLS-1$
         lbEmailSenderAddress.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSenderAddress.setBounds(0, 35, 180, 25);
         panelReport.add(lbEmailSenderAddress);
@@ -685,7 +681,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         panelReport.add(tfEmailSenderAddress);
         tfEmailSenderAddress.setColumns(10);
         
-        JLabel lbEmailSenderPwd = new JLabel(Messages.getString("SetupView.lbEmailMailBoxPwd.text")); //$NON-NLS-1$
+        JLabel lbEmailSenderPwd = new JLabel(I18NUtil.getInstance().getString("SetupView.lbEmailMailBoxPwd.text")); //$NON-NLS-1$
         lbEmailSenderPwd.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSenderPwd.setBounds(0, 70, 180, 25);
         panelReport.add(lbEmailSenderPwd);
@@ -701,7 +697,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         pfEmailSenderPwd.setBounds(190, 70, 200, 25);
         panelReport.add(pfEmailSenderPwd);
         
-        JLabel lbEmailSmtpServer = new JLabel(Messages.getString("SetupView.lbEmailSmtpServer.text")); //$NON-NLS-1$
+        JLabel lbEmailSmtpServer = new JLabel(I18NUtil.getInstance().getString("SetupView.lbEmailSmtpServer.text")); //$NON-NLS-1$
         lbEmailSmtpServer.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailSmtpServer.setBounds(0, 105, 180, 25);
         panelReport.add(lbEmailSmtpServer);
@@ -717,7 +713,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tfEmailSmtpServer.setBounds(190, 105, 200, 25);
         panelReport.add(tfEmailSmtpServer);
         
-        JLabel lbEmailRecipientAddress = new JLabel(Messages.getString("SetupView.lbEmailRecipientAddress.text")); //$NON-NLS-1$
+        JLabel lbEmailRecipientAddress = new JLabel(I18NUtil.getInstance().getString("SetupView.lbEmailRecipientAddress.text")); //$NON-NLS-1$
         lbEmailRecipientAddress.setHorizontalAlignment(SwingConstants.RIGHT);
         lbEmailRecipientAddress.setBounds(0, 140, 180, 25);
         panelReport.add(lbEmailRecipientAddress);
@@ -734,7 +730,7 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         tfEmailRecipientAddress.setBounds(190, 140, 200, 25);
         panelReport.add(tfEmailRecipientAddress);
         
-        JButton btnAboutSoftware = new JButton(Messages.getString("SetupView.btnAboutSoftware.text")); //$NON-NLS-1$
+        JButton btnAboutSoftware = new JButton(I18NUtil.getInstance().getString("SetupView.btnAboutSoftware.text")); //$NON-NLS-1$
         btnAboutSoftware.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -758,13 +754,13 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 						}
 					}
 				}
-				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, Messages.getString("SetupView.btnAboutSoftware.text"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, I18NUtil.getInstance().getString("SetupView.btnAboutSoftware.text"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
         btnAboutSoftware.setBounds(230, 65, 120, 25);
         mainPanel.add(btnAboutSoftware);
         
-        JButton btnAboutThisVersion = new JButton(Messages.getString("SetupView.btnAboutThisVersion.text")); //$NON-NLS-1$
+        JButton btnAboutThisVersion = new JButton(I18NUtil.getInstance().getString("SetupView.btnAboutThisVersion.text")); //$NON-NLS-1$
         btnAboutThisVersion.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -788,13 +784,13 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
 						}
 					}
 				}
-				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, Messages.getString("SetupView.btnAboutThisVersion.text"), JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showInternalMessageDialog(Application.MAIN_FRAME.getContentPane(), message, I18NUtil.getInstance().getString("SetupView.btnAboutThisVersion.text"), JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
         btnAboutThisVersion.setBounds(360, 65, 120, 25);
         mainPanel.add(btnAboutThisVersion);
         
-        JButton btnRestart = new JButton(Messages.getString("SetupView.btnRestart.text"));
+        JButton btnRestart = new JButton(I18NUtil.getInstance().getString("SetupView.btnRestart.text"));
         btnRestart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -893,6 +889,15 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             fileChooseiFrame.doDefaultCloseAction();
         }
         
+        String locale = Application.CURR_LOCALE.toString();
+        if(!StringUtil.isEmpty(locale)){
+        	if(locale.equals("zh_CN")){
+        		cbSysLang.setSelectedItem("中文");
+        	}else if(locale.equals("en_US")){
+        		cbSysLang.setSelectedItem("English");
+        	}
+        }
+
         String startView = SSIConfig.get("system.startup.view");
         if(!StringUtil.isEmpty(startView)){
             cbStartingView.setSelectedItem(startView);
@@ -1025,6 +1030,8 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
         VguangApi.setAIResponseTime(300);
         //设置扬声器状态
         VguangApi.setBeepable(rdbtnYes_Beep.isSelected());
+        
+        LOG.info("Device Setttings Applied!");
     }
     
     @Override
@@ -1051,10 +1058,10 @@ public class SetupView extends VirtualKeyboardView implements IView, ActionListe
             @Override
 			public void run() {
                 if(istatus == VguangApi.DEVICE_VALID){
-                    lbDeviceState.setText(Messages.getString("SetupView.lbDeviceState.active.text"));
+                    lbDeviceState.setText(I18NUtil.getInstance().getString("SetupView.lbDeviceState.active.text"));
                     lbDeviceState.setEnabled(true);
                 }else{
-                    lbDeviceState.setText(Messages.getString("SetupView.lbDeviceState.inactive.text"));
+                    lbDeviceState.setText(I18NUtil.getInstance().getString("SetupView.lbDeviceState.inactive.text"));
                     lbDeviceState.setEnabled(false);
                 }
             }

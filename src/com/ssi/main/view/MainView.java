@@ -16,22 +16,33 @@ package com.ssi.main.view;
 
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 
 import org.apache.log4j.Logger;
 
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.Application;
 import com.ssi.main.SSIConfig;
 import com.ssi.util.DrawableUtils;
@@ -61,13 +72,27 @@ public class MainView extends JFrame implements ActionListener {
 
     private JLabel label;
 	
+    private JDialog pwdDialog = new JDialog(this, true);
+
+	private JPasswordField jfPwd;
+
+	private JPanel nextView;
+
+	private JButton btnPwdOk;
+    
+	public void showPwdDialog(JPanel view) {
+		nextView = view;
+		pwdDialog.setLocationRelativeTo(null);
+		pwdDialog.setVisible(true);
+		jfPwd.requestFocus();
+	}
+    
 	/**
 	 * 界面初始化.
 	 * 
 	 */
 	public MainView()
 	{
-
 	    log.debug("Current Resoluation: "+DrawableUtils.getScreenWidth()+" x "+DrawableUtils.getScreenHeight());
 	    
 		ImageIcon background = getBackgroundImage();
@@ -143,6 +168,75 @@ public class MainView extends JFrame implements ActionListener {
 			Rectangle bounds = new Rectangle( screenSize );
 			this.setBounds(bounds);
 		}
+		
+		createPwdDialog();
+	}
+
+	private void createPwdDialog() {
+		pwdDialog = new JDialog(this);
+		pwdDialog.setModal(true);
+		pwdDialog.setTitle(I18NUtil.getInstance().getString("Application.password.dialog.title"));
+		pwdDialog.setPreferredSize(new Dimension(300, 120));
+		pwdDialog.setSize(new Dimension(300, 120));
+		pwdDialog.setResizable(false);
+		pwdDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		pwdDialog.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				jfPwd.setText("");
+				nextView = null;
+			}
+		});
+		JLabel lbPwd = new JLabel(I18NUtil.getInstance().getString("Application.password.dialog.text"));
+		jfPwd = new JPasswordField();
+		jfPwd.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					btnPwdOk.doClick();
+				}
+			}
+		});
+		Container contentPane = pwdDialog.getContentPane();
+//		VirtualKeyboardView contentPane = new VirtualKeyboardView();
+//		pwdDialog.setContentPane(contentPane);
+//		contentPane.createVirtualKeyboard(contentPane, "pwdDialog"); //$NON-NLS-1$
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(lbPwd, BorderLayout.NORTH);
+		contentPane.add(jfPwd, BorderLayout.CENTER);
+		JPanel southPan = new JPanel();
+		btnPwdOk = new JButton(I18NUtil.getInstance().getString("Application.password.dialog.btn_ok"));
+		btnPwdOk.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String sysPwd = SSIConfig.get("system.password");
+				String curPwd = new String(jfPwd.getPassword());
+				if(sysPwd.equals(curPwd)){
+					Application.switchView(nextView, false);
+					jfPwd.setText("");
+					nextView = null;
+					pwdDialog.dispose();
+				}else{
+					JOptionPane.showMessageDialog(pwdDialog, I18NUtil.getInstance().getString("Application.password.dialog.incorrect"));
+					jfPwd.selectAll();
+					jfPwd.requestFocus();
+				}
+			}
+		});
+		southPan.add(btnPwdOk);
+		JButton btnPwdCancel = new JButton(I18NUtil.getInstance().getString("Application.password.dialog.btn_cancel"));
+		btnPwdCancel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				jfPwd.setText("");
+				nextView = null;
+				pwdDialog.dispose();
+			}
+		});
+		southPan.add(btnPwdCancel);
+		contentPane.add(southPan, BorderLayout.SOUTH);
+		
+//		contentPane.applyVirtualKeyboard(contentPane, "pwdDialog");
 	}
 
     private ImageIcon getBackgroundImage() {

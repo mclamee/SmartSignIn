@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
 
-import com.ssi.i18n.Messages;
+import com.ssi.i18n.I18NUtil;
 import com.ssi.main.DataFactory;
 import com.wicky.tdl.ISubDataVector;
 
@@ -21,8 +21,8 @@ public class SeeMoreSubVector extends Vector<Object> implements Serializable, IS
     
     @Override
     public synchronized String toString() {
-        return "{"+Messages.getString("RecordView.seemore.table.column_title_date")+":\""+this.get(1)
-                +"\", "+Messages.getString("RecordView.seemore.table.column_title_time")+":\""+this.get(2)
+        return "{"+I18NUtil.getInstance().getString("RecordView.seemore.table.column_title_date")+":\""+this.get(1)
+                +"\", "+I18NUtil.getInstance().getString("RecordView.seemore.table.column_title_time")+":\""+this.get(2)
                 +"\"}";
     }
     
