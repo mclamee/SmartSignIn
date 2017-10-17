@@ -147,9 +147,6 @@ public class Application {
 		}).start();
     }
 
-    /**
-     * @author williamz@synnex.com
-     */
     public static JPanel getViewByName(String startupView) {
         if(startupView.equals("SignInView"))
             return Application.SIGNIN_VIEW;

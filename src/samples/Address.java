@@ -2,10 +2,6 @@ package samples;
 
 import java.io.Serializable;
 
-/**
- * 
- * @author williamz@synnex.com 2014年10月29日
- */
 public class Address implements Serializable {
     private static final long serialVersionUID = -6597807526106389640L;
     private String country;

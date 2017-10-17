@@ -1,12 +1,3 @@
-/**
- * package com.ssi.main.view
- * class com.ssi.main.view.NewSetupView
- * Created on 2014年10月23日, 下午1:01:30
- * @author williamz
- *
- * Copyright (c) 2013, Synnex and/or its affiliates. All rights reserved.
- * SYNNEX PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.ssi.main.view;
 
 import java.awt.BorderLayout;

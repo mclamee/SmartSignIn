@@ -165,12 +165,7 @@ public class SignInView extends JPanel implements IView, ActionListener {
 		}
 	};
 
-    /**
-     * <b>Decode call back</b>: 
-     * @param callback string
-     * @author williamz@synnex.com
-     */
-    public void setResultString(String callback) {
+	public void setResultString(String callback) {
         SynthesizerPlayer synthesizer = SynthesizerPlayer
                 .getSynthesizerPlayer();
         
